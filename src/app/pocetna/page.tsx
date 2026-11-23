@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { trebaPreusmeravanjeNaPrijavu } from "@/lib/auth-guard";
 import { jeDozvoljenaAdminPrijava } from "@/lib/admin-dev-gate";
+import { trebaPreusmeravanjeNaOnboarding } from "@/lib/onboarding-guard";
+import { getBusinessForUser } from "@/lib/business";
 import { OdjavaButton } from "./OdjavaButton";
 
 // Stranica zavisi od sesije (headers()), ne može da se unapred generiše statički.
@@ -15,9 +17,17 @@ export default async function PocetnaPage() {
     redirect("/prijava");
   }
 
+  const biznis = await getBusinessForUser(session!.user.id);
+
+  if (trebaPreusmeravanjeNaOnboarding(biznis?.onboardingCompletedAt)) {
+    redirect("/onboarding");
+  }
+
   return (
     <main>
-      <p>Prijavljen si kao {session!.user.email}.</p>
+      <p>
+        {biznis!.name}, PIB {biznis!.pib}
+      </p>
       <OdjavaButton />
     </main>
   );

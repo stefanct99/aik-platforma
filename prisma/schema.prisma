@@ -19,6 +19,7 @@ model User {
   role          String?   @default("user")
   sessions      Session[]
   accounts      Account[]
+  businesses    Business[]
 
   @@unique([email])
   @@map("user")
@@ -70,4 +71,47 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+// Spec 3.1. Model NAMERNO ne ograničava ownerId na @unique: v1 dozvoljava samo jednu firmu po
+// korisniku, ali to je pravilo APLIKACIJE (vidi src/lib/business.ts), ne šeme, da višestruke firme
+// kasnije ne traže migraciju. PIB je jedinstven u celoj bazi (spec 3.1).
+model Business {
+  id        String @id @default(cuid())
+  ownerId   String
+  owner     User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  name          String
+  ownerName     String
+  pib           String   @unique
+  mb            String
+  delatnostCode String
+  delatnostName String
+  regDate       DateTime
+
+  street       String?
+  city         String?
+  zip          String?
+  contactEmail String?
+  phone        String?
+  logoUrl      String?
+
+  // Adresa za prijem mejlova banke (spec 3.1): "<slug>-<kod>@<domen>". Domen je env konstanta
+  // (još ne postoji, vidi src/lib/inbound-mail.ts), ovde se čuvaju samo slug i kod.
+  inboundSlug String
+  inboundCode String
+
+  // Status onboardinga: koji je korak (1-4) sledeći za prikaz, i kad je završen.
+  onboardingStep        Int       @default(1)
+  onboardingCompletedAt DateTime?
+
+  // Rešenje Poreske uprave ne postoji još (budući korak), ovo je samo podrazumevana vrednost.
+  taxDecisionStatus String @default("nije_dodato")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([inboundSlug, inboundCode])
+  @@index([ownerId])
+  @@map("business")
 }

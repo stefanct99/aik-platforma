@@ -3,7 +3,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { isValidMb, isValidPib, isValidZip } from "@/lib/identifiers";
+import { isValidMb, isValidPib, isValidZip, jePibFormatIspravan } from "@/lib/identifiers";
 import { findKD2025, isValidKD2025Code } from "@/lib/kd-sifre";
 import {
   finishOnboarding,
@@ -57,7 +57,8 @@ export async function saveStep1Action(
   const errors: Step1Stanje["errors"] = {};
   if (!values.ownerName) errors.ownerName = "Unesi ime i prezime";
   if (!values.name) errors.name = "Unesi poslovno ime";
-  if (!isValidPib(values.pib)) errors.pib = "PIB mora imati 9 cifara";
+  if (!jePibFormatIspravan(values.pib)) errors.pib = "PIB mora imati 9 cifara";
+  else if (!isValidPib(values.pib)) errors.pib = "PIB nije ispravan, proveri cifre";
   if (!isValidMb(values.mb)) errors.mb = "Matični broj mora imati 8 cifara";
   if (!isValidKD2025Code(values.delatnostCode)) errors.delatnostCode = "Izaberi šifru delatnosti";
   if (!values.regDate) errors.regDate = "Unesi datum otvaranja";

@@ -8,9 +8,10 @@ import {
   saveOnboardingStep2,
 } from "./business";
 
-// Integracioni testovi: povezuju se na pravu lokalnu bazu (aik_dev), isto kao aplikacija. Svaki test
-// pravi sopstvene korisnike sa nasumičnim mejlom/PIB-om da ne sudara sa drugim testovima ili sa
-// podacima iz ručne provere, i sve što napravi briše na kraju (afterAll).
+// Integracioni testovi: povezuju se na pravu bazu, ALI na posebnu test bazu (aik_test, videti
+// vitest.setup.ts i src/lib/test-db-safety.ts), nikad na razvojnu (aik_dev). Svaki test pravi sopstvene
+// korisnike sa nasumičnim mejlom/PIB-om da ne sudara sa drugim testovima, i sve što napravi briše na
+// kraju (afterAll).
 
 const napravljeniKorisnici: string[] = [];
 

@@ -15,14 +15,16 @@ referenca za čitanje. Ne menjaju se i nisu deo koda koji se isporučuje.
    npm install
    ```
 
-2. Pobrini se da lokalni PostgreSQL radi i da baza `aik_dev` postoji:
+2. Pobrini se da lokalni PostgreSQL radi i da baze `aik_dev` (prava razvojna baza) i `aik_test`
+   (posebna baza samo za automatske testove, videti odeljak ispod) postoje:
 
    ```bash
    brew services start postgresql@17
    createdb aik_dev
+   createdb aik_test
    ```
 
-3. Kopiraj `.env.example` u `.env.local` i popuni stvarne vrednosti (`DATABASE_URL`,
+3. Kopiraj `.env.example` u `.env.local` i popuni stvarne vrednosti (`DATABASE_URL`, `DATABASE_URL_TEST`,
    `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`; `INBOUND_MAIL_DOMAIN` za sada može ostati prazan, ima
    podrazumevanu vrednost u kodu). `.env.local` se nikad ne komituje u git (vidi `.gitignore`).
 
@@ -30,11 +32,12 @@ referenca za čitanje. Ne menjaju se i nisu deo koda koji se isporučuje.
    cp .env.example .env.local
    ```
 
-4. Generiši Prisma klijent i primeni migracije (pravi tabele u bazi):
+4. Generiši Prisma klijent i primeni migracije (pravi tabele u obe baze):
 
    ```bash
    npx prisma generate
    npx prisma migrate dev
+   npm run test:db:pripremi
    ```
 
 5. Pokreni razvojni server:
@@ -59,15 +62,29 @@ npm run make-admin -- mejl@primer.rs
 Dok ne postoji dvostepena (TOTP) prijava za admina, admin se magic linkom može prijaviti samo u
 razvojnom režimu (vidi `src/lib/admin-dev-gate.ts`).
 
+## Test baza (aik_test)
+
+Automatski testovi koji diraju bazu (izolacija podataka, jedinstvenost PIB-a, onboarding...) NIKAD ne
+rade nad `aik_dev`, nego nad posebnom bazom `aik_test`. `vitest.setup.ts` to sam proverava pre svakog
+pokretanja testova: ako ime baze na koju bi se testovi povezali ne završava na `_test`, testovi se
+prekidaju sa jasnom greškom, pre bilo kakvog upisa (videti `src/lib/test-db-safety.ts`).
+
+Posle svake nove migracije (`prisma/migrations/`), primeni je i na test bazu:
+
+```bash
+npm run test:db:pripremi
+```
+
 ## Ostale komande
 
 ```bash
-npm run test          # Vitest
-npx tsc --noEmit       # provera tipova
-npm run lint           # ESLint
-npm run format:check   # Prettier, samo provera
-npm run format         # Prettier, sređuje fajlove
-npm run build           # produkcioni build
+npm run test             # Vitest (nad aik_test)
+npm run test:db:pripremi # primeni Prisma migracije na aik_test
+npx tsc --noEmit          # provera tipova
+npm run lint              # ESLint
+npm run format:check      # Prettier, samo provera
+npm run format            # Prettier, sređuje fajlove
+npm run build              # produkcioni build
 ```
 
 ## Struktura

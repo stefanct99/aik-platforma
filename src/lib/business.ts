@@ -17,6 +17,21 @@ export type Step2Podaci = {
   zip: string;
 };
 
+export type ProfilFirmePodaci = {
+  name: string;
+  ownerName: string;
+  pib: string;
+  mb: string;
+  delatnostCode: string;
+  delatnostName: string;
+  regDate: Date;
+  street: string;
+  city: string;
+  zip: string;
+  contactEmail: string;
+  phone: string;
+};
+
 // JEDINO mesto koje čita firmu iz baze po korisniku. Svaka druga funkcija ovde prvo prolazi kroz ovu
 // (ili kroz already-fetched instancu), nikad ne prima id firme spolja (iz forme/klijenta), zato
 // korisnik A ne može ni da pročita ni da izmeni firmu korisnika B (vidi business.test.ts).
@@ -77,6 +92,34 @@ export async function setOnboardingStep(userId: string, step: number) {
   return prisma.business.update({
     where: { id: biznis.id },
     data: { onboardingStep: step },
+  });
+}
+
+// Podešavanja > Profil i firma (Korak 4, spec 7.13). Firma se, kao i svuda u ovom fajlu, uzima ISKLJUČIVO
+// preko getBusinessForUser(userId), nikad preko id-a firme iz forme, da korisnik A ne može da izmeni
+// firmu korisnika B.
+export async function updateBusinessProfile(userId: string, podaci: ProfilFirmePodaci) {
+  const biznis = await getBusinessForUser(userId);
+  if (!biznis) throw new Error("Firma ne postoji.");
+
+  await prisma.user.update({ where: { id: userId }, data: { name: podaci.ownerName } });
+
+  return prisma.business.update({
+    where: { id: biznis.id },
+    data: {
+      name: podaci.name,
+      ownerName: podaci.ownerName,
+      pib: podaci.pib,
+      mb: podaci.mb,
+      delatnostCode: podaci.delatnostCode,
+      delatnostName: podaci.delatnostName,
+      regDate: podaci.regDate,
+      street: podaci.street,
+      city: podaci.city,
+      zip: podaci.zip,
+      contactEmail: podaci.contactEmail || null,
+      phone: podaci.phone || null,
+    },
   });
 }
 

@@ -1,0 +1,46 @@
+.polje {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.polje label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-ink-muted);
+}
+
+.unos {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  height: 48px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  color: var(--color-ink);
+}
+
+.unos:focus {
+  outline: 0;
+  border-color: var(--color-forest-900);
+  box-shadow: 0 0 0 3px var(--color-lime-100);
+}
+
+.unos:disabled {
+  color: var(--color-ink-muted);
+  background: var(--color-bone);
+}
+
+.pomocniTekst {
+  font-size: 0.75rem;
+  color: var(--color-ink-muted);
+}
+
+.greska .unos {
+  border-color: var(--color-danger);
+}
+.greska .pomocniTekst {
+  color: var(--color-danger);
+}

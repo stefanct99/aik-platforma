@@ -1,0 +1,149 @@
+.mobilniNaslov {
+  display: block;
+  margin: 0 0 var(--space-4);
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.5rem;
+}
+@media (min-width: 1280px) {
+  .mobilniNaslov {
+    display: none;
+  }
+}
+
+.profil {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  box-sizing: border-box;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+}
+
+@media (min-width: 1280px) {
+  .profil {
+    padding: var(--space-5);
+  }
+}
+
+.avatar {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background: var(--color-lime-400);
+  color: var(--color-forest-900);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+@media (min-width: 1280px) {
+  .avatar {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+.profilIme {
+  font-size: 1.25rem;
+}
+
+.profilPodnaslov {
+  color: var(--color-ink-muted);
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+@media (min-width: 1280px) {
+  .lista {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+  }
+}
+
+.stavka {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 56px;
+  padding: 0 var(--space-4);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-ink);
+}
+.stavka:first-child {
+  border-top: 0;
+}
+
+@media (min-width: 1280px) {
+  .stavka {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+    box-sizing: border-box;
+    padding: var(--space-5);
+    border-top: 0;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    background: var(--color-white);
+  }
+}
+
+.stavkaIkona {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--color-lime-100);
+  color: var(--color-forest-900);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stavkaTekst {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stavkaNaziv {
+  font-size: 1rem;
+}
+@media (min-width: 1280px) {
+  .stavkaNaziv {
+    font-size: 1.25rem;
+  }
+}
+
+.stavkaOpis {
+  font-size: 0.875rem;
+  color: var(--color-ink-muted);
+}
+
+.strelica {
+  flex: none;
+  color: var(--color-ink-muted);
+}
+@media (min-width: 1280px) {
+  .strelica {
+    display: none;
+  }
+}

@@ -1,0 +1,59 @@
+/*
+ * Dizajn tokeni, preuzeti iz referenca/korak4/KORAK4_PAKET/dizajn-sistem/tokens.json (Korak 4).
+ * Ne menjati ove vrednosti ručno; ako se tokeni promene, ponovo ih preneti odavde iz izvora.
+ * Tamni izgled se ne pravi sada (Korak 4), ali sve boje su promenljive zato da se doda kasnije bez
+ * prepravke ostatka koda.
+ */
+
+:root {
+  /* Boje */
+  --color-forest-900: #0f2a22;
+  --color-forest-800: #163d31;
+  --color-forest-700: #23523f;
+  --color-lime-400: #c8f169;
+  --color-lime-100: #e6f8b8;
+  --color-bone: #f4f3ee;
+  --color-white: #ffffff;
+  --color-border: #e3e2da;
+  --color-ink: #1c211e;
+  --color-ink-muted: #5e6b63;
+  --color-ink-inverse: #f4f3ee;
+  --color-ink-inverse-muted: #b9c4bd;
+  --color-success: #1f7a4d;
+  --color-success-bg: #e3f3ea;
+  --color-warning: #9a5b00;
+  --color-warning-bg: #fff1d6;
+  --color-danger: #b42318;
+  --color-danger-bg: #fde7e5;
+  --color-info: #1d5fa8;
+  --color-info-bg: #e4eefa;
+
+  /* Tipografija */
+  --font-heading: var(--font-manrope), system-ui, sans-serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+
+  /* Razmaci */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Zaobljenja */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-full: 999px;
+
+  /* Senke */
+  --shadow-card: 0 1px 2px rgba(15, 42, 34, 0.06), 0 8px 24px rgba(15, 42, 34, 0.06);
+  --shadow-overlay: 0 24px 64px rgba(15, 42, 34, 0.22);
+
+  /* Raspored */
+  --sidebar-width: 264px;
+  --content-max-width: 1120px;
+}

@@ -1,0 +1,86 @@
+.traka {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 var(--space-4);
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-border);
+}
+
+@media (min-width: 1280px) {
+  .traka {
+    height: auto;
+    padding: var(--space-5) var(--space-5) 0;
+    border-bottom: 0;
+    background: transparent;
+  }
+}
+
+.mobilnoLevo {
+  display: flex;
+}
+@media (min-width: 1280px) {
+  .mobilnoLevo {
+    display: none;
+  }
+}
+
+.pretraga {
+  display: none;
+}
+@media (min-width: 1280px) {
+  .pretraga {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: 320px;
+    height: 40px;
+    padding: 0 var(--space-3);
+    border-radius: var(--radius-sm);
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    color: var(--color-ink-muted);
+    font-size: 0.875rem;
+  }
+}
+
+.desno {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.zvonce {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-ink);
+  flex: none;
+}
+
+@media (min-width: 1280px) {
+  .avatarMobilni {
+    display: none;
+  }
+}
+
+.avatarMobilni {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--color-lime-400);
+  color: var(--color-forest-900);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.875rem;
+}

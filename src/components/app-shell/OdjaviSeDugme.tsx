@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 
-export function OdjavaButton() {
+export function OdjaviSeDugme({ className }: { className?: string }) {
   const router = useRouter();
 
   async function odjaviSe() {
@@ -11,5 +11,9 @@ export function OdjavaButton() {
     router.push("/prijava");
   }
 
-  return <button onClick={odjaviSe}>Odjava</button>;
+  return (
+    <button type="button" onClick={odjaviSe} className={className}>
+      Odjavi se
+    </button>
+  );
 }

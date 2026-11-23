@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
@@ -5,12 +6,14 @@ import { trebaPreusmeravanjeNaPrijavu } from "@/lib/auth-guard";
 import { jeDozvoljenaAdminPrijava } from "@/lib/admin-dev-gate";
 import { trebaPreusmeravanjeNaOnboarding } from "@/lib/onboarding-guard";
 import { getBusinessForUser } from "@/lib/business";
-import { OdjavaButton } from "./OdjavaButton";
+import { AppShell } from "@/components/app-shell/AppShell";
 
-// Stranica zavisi od sesije (headers()), ne može da se unapred generiše statički.
+// Zavisi od sesije (headers()), ne može da se unapred generiše statički.
 export const instant = false;
 
-export default async function PocetnaPage() {
+// Zajednički okvir (Korak 4) za sve ekrane prijavljenih korisnika sa završenim onboardingom: isti
+// zaštitni kod kao ranije u svakoj stranici posebno (/pocetna, /onboarding), sad na jednom mestu.
+export default async function AppLayout({ children }: { children: ReactNode }) {
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (trebaPreusmeravanjeNaPrijavu(session, jeDozvoljenaAdminPrijava())) {
@@ -24,11 +27,8 @@ export default async function PocetnaPage() {
   }
 
   return (
-    <main>
-      <p>
-        {biznis!.name}, PIB {biznis!.pib}
-      </p>
-      <OdjavaButton />
-    </main>
+    <AppShell ime={session!.user.name || "Korisnik"} firma={biznis!.name}>
+      {children}
+    </AppShell>
   );
 }

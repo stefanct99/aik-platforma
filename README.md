@@ -89,11 +89,23 @@ npm run build              # produkcioni build
 
 ## Struktura
 
-- `src/app`: Next.js App Router (ekrani i API rute).
+- `src/app`: Next.js App Router (ekrani i API rute). `src/app/(app)/`: svi ekrani za prijavljene
+  korisnike sa završenim onboardingom (Početna, Fakture, Knjiga prihoda, Kalendar, Porez i rokovi,
+  Mejlovi banke, AI knjigovođa, Podešavanja), zajednički zaštićeni i uokvireni u `(app)/layout.tsx`.
+  `src/app/onboarding` i `src/app/prijava` su van tog okvira (bez dizajna, Korak 5).
+- `src/components/ui`: zajedničke komponente dizajn sistema (dugme, polje, kartica, značka, ikonice).
+- `src/components/app-shell`: okvir aplikacije (levi meni, gornja i donja traka, "Više" na telefonu).
+- `src/components/settings`: deljeni delovi Podešavanja (sedam tabova, bočna navigacija).
+- `src/styles/tokens.css`: CSS promenljive dizajn sistema (boje, tipografija, razmaci), preuzete iz
+  `referenca/korak4/KORAK4_PAKET/dizajn-sistem/tokens.json`. Tamni izgled još nije napravljen, ali sve
+  boje su već promenljive zbog toga.
 - `src/lib`: pomoćne funkcije i podešavanja (Prisma klijent, Better Auth, pravila), testirane Vitest-om.
-- `src/proxy.ts`: štiti `/pocetna` i `/onboarding` i preusmerava između njih prema stanju onboardinga.
+- `src/proxy.ts`: štiti ceo okvir aplikacije (`/pocetna`, `/podesavanja/*` itd.) i `/onboarding`, i
+  preusmerava između njih prema stanju onboardinga.
 - `prisma/`: šema baze i migracije.
 - `scripts/`: skripte koje se pokreću ručno (npr. `make-admin`).
 - `referenca/prototip`: stari HTML/CSS/JS prototip, samo za čitanje, izvor istine za izgled dok se ekrani
   ne prenesu.
 - `referenca/specifikacije`: specifikacija platforme i admina, samo za čitanje.
+- `referenca/korak4`: paket dizajn sistema i frejmova za Korak 4 (raspakovan iz `KORAK4_PAKET.zip`), samo
+  za čitanje.

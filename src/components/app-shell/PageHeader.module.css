@@ -1,0 +1,25 @@
+.zaglavlje {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.naslov {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 1280px) {
+  .naslov {
+    font-size: 2rem;
+  }
+}
+
+.opis {
+  margin: 0;
+  color: var(--color-ink-muted);
+  max-width: 640px;
+}

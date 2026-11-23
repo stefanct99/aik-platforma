@@ -27,5 +27,16 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/pocetna", "/onboarding"],
+  matcher: [
+    "/pocetna",
+    "/onboarding",
+    "/fakture",
+    "/knjiga-prihoda",
+    "/kalendar",
+    "/porez",
+    "/mejlovi-banke",
+    "/ai",
+    "/podesavanja",
+    "/podesavanja/:path*",
+  ],
 };

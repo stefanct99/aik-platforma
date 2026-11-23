@@ -1,0 +1,14 @@
+<!-- @dsCard group="Osnovno" height=300 subtitle="Polje, popunila AI, greška" -->
+<!doctype html><html><head><meta charset="utf-8"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet"><style>
+*{box-sizing:border-box}body{margin:0;font-family:var(--font-body);color:var(--ink);background:var(--bone)}
+.wrap{padding:24px;display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}
+.lbl{font-size:0.75rem;font-weight:600;letter-spacing:.04em;color:var(--ink-muted);text-transform:uppercase;width:100%;margin-top:8px}
+</style><style>.f{display:flex;flex-direction:column;gap:6px;width:280px}.f label{font-size:0.875rem;font-weight:600}
+.in{font-family:var(--font-body);font-size:1rem;height:48px;padding:0 14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--white);color:var(--ink)}
+.in:focus{outline:0;border-color:var(--forest-900);box-shadow:0 0 0 3px var(--lime-100)}
+.ai .in{background:var(--lime-100);border-color:var(--lime-400)}
+.err .in{border-color:var(--danger)}.hint{font-size:0.75rem;color:var(--ink-muted)}.err .hint{color:var(--danger)}
+.tag{font-size:0.75rem;font-weight:600;background:var(--forest-900);color:var(--lime-400);border-radius:var(--radius-full);padding:2px 8px;margin-left:6px}</style></head><body><div class="wrap">
+<div class="f"><label>Opis usluge</label><input class="in" placeholder="Npr. Izrada sajta"><span class="hint">Pojavljuje se na fakturi.</span></div>
+<div class="f ai"><label>Klijent <span class="tag">AI</span></label><input class="in" value="Acme GmbH"><span class="hint">AI je popunila iz prethodne fakture. Proveri.</span></div>
+<div class="f err"><label>Iznos</label><input class="in" value="0,00"><span class="hint">Iznos mora biti veći od nule.</span></div></div></body></html>

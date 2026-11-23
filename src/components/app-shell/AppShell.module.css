@@ -1,0 +1,27 @@
+.sadrzaj {
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+@media (min-width: 1280px) {
+  .sadrzaj {
+    margin-left: var(--sidebar-width);
+    padding-bottom: 0;
+  }
+}
+
+.glavni {
+  box-sizing: border-box;
+  padding: var(--space-4);
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+@media (min-width: 1280px) {
+  .glavni {
+    padding: var(--space-5) var(--space-6) var(--space-7);
+  }
+}

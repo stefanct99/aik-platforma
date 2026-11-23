@@ -1,0 +1,65 @@
+.dugme {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  border: 0;
+  border-radius: var(--radius-md);
+  padding: 0 var(--space-5);
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dugme:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.primarno {
+  background: var(--color-forest-900);
+  color: var(--color-ink-inverse);
+}
+.primarno:hover:not(:disabled) {
+  background: var(--color-forest-800);
+}
+
+.akcent {
+  background: var(--color-lime-400);
+  color: var(--color-forest-900);
+}
+.akcent:hover:not(:disabled) {
+  filter: brightness(0.96);
+}
+
+.sekundarno {
+  background: var(--color-white);
+  color: var(--color-ink);
+  box-shadow: inset 0 0 0 1px var(--color-border);
+}
+.sekundarno:hover:not(:disabled) {
+  background: var(--color-bone);
+}
+
+.tiho {
+  background: transparent;
+  color: var(--color-forest-900);
+}
+.tiho:hover:not(:disabled) {
+  background: var(--color-bone);
+}
+
+.opasno {
+  background: var(--color-danger);
+  color: var(--color-white);
+}
+.opasno:hover:not(:disabled) {
+  filter: brightness(0.92);
+}
+
+.puniRed {
+  width: 100%;
+}

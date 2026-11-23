@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Referenca (prototip, specifikacije) se ne menja i nije deo koda koji se isporučuje.
+    "referenca/**",
   ]),
 ]);
 

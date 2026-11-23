@@ -1,0 +1,176 @@
+[
+  {
+    "name": "PorH — Porez i rokovi",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PorH.dc.html",
+    "device": "desktop",
+    "route": "app/porez",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "PorOk — Uspeh (sve je podeseno)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PorOk.dc.html",
+    "device": "desktop",
+    "route": "app/porez/dodato",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "PorNov — Novo rešenje",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PorNov.dc.html",
+    "device": "desktop",
+    "route": "app/porez/novo-resenje",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "Pay1 — Plaćanje, QR kod (ništa plaćeno)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Pay1.dc.html",
+    "device": "desktop",
+    "route": "app/porez/plati/2026-11",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "Pay2 — Plaćanje, QR kod (deo plaćen)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Pay2.dc.html",
+    "device": "desktop",
+    "route": "app/porez/plati/2026-11",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.Actions.Porez.markPaid('2026-11','porez');"
+  },
+  {
+    "name": "Pay3 — Trajni nalog u banci",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Pay3.dc.html",
+    "device": "desktop",
+    "route": "app/porez/plati/2026-11",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.inv-seg button')).find(b=>b.textContent.trim().indexOf('Trajni nalog')===0).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Rez2 — Dodaj rešenje (upload)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Rez2.dc.html",
+    "device": "desktop",
+    "route": "app/porez/dodaj-resenje",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({taxDecision:null});"
+  },
+  {
+    "name": "Rez3 — Čitanje rešenja",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Rez3.dc.html",
+    "device": "desktop",
+    "route": "app/porez/dodaj-resenje",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({taxDecision:null});",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Izaberi fajl sa računara').click();",
+    "afterNavWait": 300
+  },
+  {
+    "name": "Rez4c — Provera pročitanih podataka",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Rez4c.dc.html",
+    "device": "desktop",
+    "route": "app/porez/dodaj-resenje",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({taxDecision:null});",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Izaberi fajl sa računara').click();",
+    "afterNavWait": 1500
+  },
+  {
+    "name": "Rez5 — Pogrešan PIB",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Rez5.dc.html",
+    "device": "desktop",
+    "route": "app/porez/dodaj-resenje",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({taxDecision:null});",
+    "afterNav": "Array.from(document.querySelectorAll('a')).find(a=>a.textContent.trim().indexOf('simuliraj pogrešan PIB')>=0).click();",
+    "afterNavWait": 1500
+  },
+  {
+    "name": "Rez6b — Unesi iznose ručno",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Rez6b.dc.html",
+    "device": "desktop",
+    "route": "app/porez/dodaj-resenje",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({taxDecision:null});",
+    "afterNav": "Array.from(document.querySelectorAll('a')).find(a=>a.textContent.trim()==='Unesi iznose ručno').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhPorH — Porez i rokovi",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhPorH.dc.html",
+    "device": "phone",
+    "route": "app/porez",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "PhPorOk — Uspeh (sve je podeseno)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhPorOk.dc.html",
+    "device": "phone",
+    "route": "app/porez/dodato",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "PhPorNov — Novo rešenje",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhPorNov.dc.html",
+    "device": "phone",
+    "route": "app/porez/novo-resenje",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "PhPay1 — Plaćanje, QR kod (ništa plaćeno)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhPay1.dc.html",
+    "device": "phone",
+    "route": "app/porez/plati/2026-11",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "PhPay2 — Plaćanje, QR kod (deo plaćen)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhPay2.dc.html",
+    "device": "phone",
+    "route": "app/porez/plati/2026-11",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.Actions.Porez.markPaid('2026-11','porez');"
+  },
+  {
+    "name": "PhPay3 — Trajni nalog u banci",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhPay3.dc.html",
+    "device": "phone",
+    "route": "app/porez/plati/2026-11",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.inv-seg button')).find(b=>b.textContent.trim().indexOf('Trajni nalog')===0).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhRez2 — Dodaj rešenje (upload)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhRez2.dc.html",
+    "device": "phone",
+    "route": "app/porez/dodaj-resenje",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({taxDecision:null});"
+  },
+  {
+    "name": "PhRez3 — Čitanje rešenja",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhRez3.dc.html",
+    "device": "phone",
+    "route": "app/porez/dodaj-resenje",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({taxDecision:null});",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Izaberi fajl sa računara').click();",
+    "afterNavWait": 300
+  },
+  {
+    "name": "PhRez4c — Provera pročitanih podataka",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhRez4c.dc.html",
+    "device": "phone",
+    "route": "app/porez/dodaj-resenje",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({taxDecision:null});",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Izaberi fajl sa računara').click();",
+    "afterNavWait": 1500
+  },
+  {
+    "name": "PhRez5 — Pogrešan PIB",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhRez5.dc.html",
+    "device": "phone",
+    "route": "app/porez/dodaj-resenje",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({taxDecision:null});",
+    "afterNav": "Array.from(document.querySelectorAll('a')).find(a=>a.textContent.trim().indexOf('simuliraj pogrešan PIB')>=0).click();",
+    "afterNavWait": 1500
+  },
+  {
+    "name": "PhRez6b — Unesi iznose ručno",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhRez6b.dc.html",
+    "device": "phone",
+    "route": "app/porez/dodaj-resenje",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({taxDecision:null});",
+    "afterNav": "Array.from(document.querySelectorAll('a')).find(a=>a.textContent.trim()==='Unesi iznose ručno').click();",
+    "afterNavWait": 150
+  }
+]

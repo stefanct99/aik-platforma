@@ -1,0 +1,284 @@
+[
+  {
+    "name": "Ak1 — Pozdrav (prazno)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Ak1.dc.html",
+    "device": "desktop",
+    "route": "app/ai",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});"
+  },
+  {
+    "name": "PhAk1 — Pozdrav (prazno, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhAk1.dc.html",
+    "device": "phone",
+    "route": "app/ai",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});"
+  },
+  {
+    "name": "Ak2 — Odgovor sa podacima",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Ak2.dc.html",
+    "device": "desktop",
+    "route": "app/ai/conv1",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});"
+  },
+  {
+    "name": "PhAk2 — Odgovor sa podacima (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhAk2.dc.html",
+    "device": "phone",
+    "route": "app/ai/conv1",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});"
+  },
+  {
+    "name": "Ak3 — Odgovor o propisu",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Ak3.dc.html",
+    "device": "desktop",
+    "route": "app/ai/conv4",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});"
+  },
+  {
+    "name": "PhAk3 — Odgovor o propisu (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhAk3.dc.html",
+    "device": "phone",
+    "route": "app/ai/conv4",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});"
+  },
+  {
+    "name": "Ak4 — Odgovor po scenarijima",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Ak4.dc.html",
+    "device": "desktop",
+    "route": "app/ai",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});",
+    "afterNav": "var id=window.AIK.Actions.AI.newConversation(); window.AIK.Actions.AI.sendMessage(id,'Klijent mi je vratio deo novca, kako to da knjižim?');",
+    "afterNavWait": 1400
+  },
+  {
+    "name": "PhAk4 — Odgovor po scenarijima (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhAk4.dc.html",
+    "device": "phone",
+    "route": "app/ai",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});",
+    "afterNav": "var id=window.AIK.Actions.AI.newConversation(); window.AIK.Actions.AI.sendMessage(id,'Klijent mi je vratio deo novca, kako to da knjižim?');",
+    "afterNavWait": 1400
+  },
+  {
+    "name": "Ak5 — Predložena radnja",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Ak5.dc.html",
+    "device": "desktop",
+    "route": "app/ai/conv2",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});"
+  },
+  {
+    "name": "PhAk5 — Predložena radnja (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhAk5.dc.html",
+    "device": "phone",
+    "route": "app/ai/conv2",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});"
+  },
+  {
+    "name": "Ak6 — Odbijanje van teme",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Ak6.dc.html",
+    "device": "desktop",
+    "route": "app/ai",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});",
+    "afterNav": "var id=window.AIK.Actions.AI.newConversation(); window.AIK.Actions.AI.sendMessage(id,'Koji je glavni grad Turske?');",
+    "afterNavWait": 1400
+  },
+  {
+    "name": "PhAk6 — Odbijanje van teme (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhAk6.dc.html",
+    "device": "phone",
+    "route": "app/ai",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});",
+    "afterNav": "var id=window.AIK.Actions.AI.newConversation(); window.AIK.Actions.AI.sendMessage(id,'Koji je glavni grad Turske?');",
+    "afterNavWait": 1400
+  },
+  {
+    "name": "Ak7 — Analiza priloga",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Ak7.dc.html",
+    "device": "desktop",
+    "route": "app/ai",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});",
+    "afterNav": "var id=window.AIK.Actions.AI.newConversation(); window.AIK.Actions.AI.sendMessage(id,'Šta ima u ovom izvodu?',{name:'Izvod_novembar.pdf', size:'212 KB'});",
+    "afterNavWait": 1400
+  },
+  {
+    "name": "PhAk7 — Analiza priloga (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhAk7.dc.html",
+    "device": "phone",
+    "route": "app/ai",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});",
+    "afterNav": "var id=window.AIK.Actions.AI.newConversation(); window.AIK.Actions.AI.sendMessage(id,'Šta ima u ovom izvodu?',{name:'Izvod_novembar.pdf', size:'212 KB'});",
+    "afterNavWait": 1400
+  },
+  {
+    "name": "Ak8 — Šta sam radio",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Ak8.dc.html",
+    "device": "desktop",
+    "route": "app/ai/conv1",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});",
+    "afterNav": "(function(){ var btns=Array.from(document.querySelectorAll('button')); var b=btns.find(x=>x.textContent.trim()==='Šta sam radio'); if(b) b.click(); })();",
+    "afterNavWait": 250
+  },
+  {
+    "name": "PhAk8 — Šta sam radio (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhAk8.dc.html",
+    "device": "phone",
+    "route": "app/ai/conv1",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});",
+    "afterNav": "(function(){ var btns=Array.from(document.querySelectorAll('button')); var b=btns.find(x=>x.textContent.trim()==='Šta sam radio'); if(b) b.click(); })();",
+    "afterNavWait": 250
+  },
+  {
+    "name": "Ak9 — Brzi panel (Knjiga prihoda)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Ak9.dc.html",
+    "device": "desktop",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});",
+    "afterNav": "(function(){ var a=Array.from(document.querySelectorAll('a')).find(x=>x.textContent.trim()==='Pitaj AI'); if(a) a.click(); })();",
+    "afterNavWait": 1400
+  },
+  {
+    "name": "PhAk9 — Brzi panel (telefon, Knjiga prihoda)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhAk9.dc.html",
+    "device": "phone",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});",
+    "afterNav": "(function(){ var a=Array.from(document.querySelectorAll('a')).find(x=>x.textContent.trim()==='Pitaj AI'); if(a) a.click(); })();",
+    "afterNavWait": 1400
+  },
+  {
+    "name": "Ak10 — Lista razgovora",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Ak10.dc.html",
+    "device": "desktop",
+    "route": "app/ai",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});"
+  },
+  {
+    "name": "PhAk10 — Lista razgovora (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhAk10.dc.html",
+    "device": "phone",
+    "route": "app/ai",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});"
+  },
+  {
+    "name": "Ak11 — Proaktivni AI",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Ak11.dc.html",
+    "device": "desktop",
+    "route": "app/ai",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "(function(){ var s=window.AIK.store.getState(); var c=s.conversations.find(x=>x.proactive); if(c) window.AIK.store.navigate('app/ai/'+c.id); })();",
+    "afterNavWait": 250
+  },
+  {
+    "name": "PhAk11 — Proaktivni AI (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhAk11.dc.html",
+    "device": "phone",
+    "route": "app/ai",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "(function(){ var s=window.AIK.store.getState(); var c=s.conversations.find(x=>x.proactive); if(c) window.AIK.store.navigate('app/ai/'+c.id); })();",
+    "afterNavWait": 250
+  },
+  {
+    "name": "Ak12 — Radi (loading)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Ak12.dc.html",
+    "device": "desktop",
+    "route": "app/ai",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});",
+    "afterNav": "var id=window.AIK.Actions.AI.newConversation(); window.AIK.Actions.AI.sendMessage(id,'Koliko sam zaradio ovog meseca i koliko mi fali do limita?');",
+    "afterNavWait": 500
+  },
+  {
+    "name": "PhAk12 — Radi, loading (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhAk12.dc.html",
+    "device": "phone",
+    "route": "app/ai",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});",
+    "afterNav": "var id=window.AIK.Actions.AI.newConversation(); window.AIK.Actions.AI.sendMessage(id,'Koliko sam zaradio ovog meseca i koliko mi fali do limita?');",
+    "afterNavWait": 500
+  },
+  {
+    "name": "Ak13 — Greška",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Ak13.dc.html",
+    "device": "desktop",
+    "route": "app/ai",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})(), dev: Object.assign({}, window.AIK.store.getState().dev, {aiForceError:true})});",
+    "afterNav": "var id=window.AIK.Actions.AI.newConversation(); window.AIK.Actions.AI.sendMessage(id,'Koliko sam zaradio ovog meseca i koliko mi fali do limita?');",
+    "afterNavWait": 1500
+  },
+  {
+    "name": "PhAk13 — Greška (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhAk13.dc.html",
+    "device": "phone",
+    "route": "app/ai",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})(), dev: Object.assign({}, window.AIK.store.getState().dev, {aiForceError:true})});",
+    "afterNav": "var id=window.AIK.Actions.AI.newConversation(); window.AIK.Actions.AI.sendMessage(id,'Koliko sam zaradio ovog meseca i koliko mi fali do limita?');",
+    "afterNavWait": 1500
+  },
+  {
+    "name": "Ak14 — Kvota potrošena",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Ak14.dc.html",
+    "device": "desktop",
+    "route": "app/ai/conv1",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})(), dev: Object.assign({}, window.AIK.store.getState().dev, {aiForceQuotaFull:true})});"
+  },
+  {
+    "name": "PhAk14 — Kvota potrošena (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhAk14.dc.html",
+    "device": "phone",
+    "route": "app/ai/conv1",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})(), dev: Object.assign({}, window.AIK.store.getState().dev, {aiForceQuotaFull:true})});"
+  },
+  {
+    "name": "Ak15 — Ocena odgovora",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Ak15.dc.html",
+    "device": "desktop",
+    "route": "app/ai/conv1",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});",
+    "afterNav": "(function(){ var btns=Array.from(document.querySelectorAll('button')); var b=btns.find(x=>x.textContent.trim()==='Nije korisno'); if(b) b.click(); })();",
+    "afterNavWait": 250
+  },
+  {
+    "name": "PhAk15 — Ocena odgovora (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhAk15.dc.html",
+    "device": "phone",
+    "route": "app/ai/conv1",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});",
+    "afterNav": "(function(){ var btns=Array.from(document.querySelectorAll('button')); var b=btns.find(x=>x.textContent.trim()==='Nije korisno'); if(b) b.click(); })();",
+    "afterNavWait": 250
+  },
+  {
+    "name": "Ak16 — Meni razgovora",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Ak16.dc.html",
+    "device": "desktop",
+    "route": "app/ai/conv1",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});",
+    "afterNav": "(function(){ var b=document.querySelector('.ai-pane-head .ai-icon-btn'); if(b) b.click(); })();",
+    "afterNavWait": 250
+  },
+  {
+    "name": "PhAk16 — Meni razgovora (telefon, iz liste)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhAk16.dc.html",
+    "device": "phone",
+    "route": "app/ai",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});",
+    "afterNav": "(function(){ var rows=Array.from(document.querySelectorAll('.ai-rail-item')); var row=rows.find(r=>r.textContent.includes('Koliko sam do limita?')); if(row){ var m=row.querySelector('.ai-rail-item-menu'); if(m) m.click(); } })();",
+    "afterNavWait": 250
+  },
+  {
+    "name": "Ak17 — Potvrda brisanja",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Ak17.dc.html",
+    "device": "desktop",
+    "route": "app/ai/conv1",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});",
+    "afterNav": "(function(){ var b=document.querySelector('.ai-pane-head .ai-icon-btn'); if(b) b.click(); setTimeout(function(){ var btns=Array.from(document.querySelectorAll('.ai-menu button')); var d=btns.find(x=>x.textContent.trim()==='Obriši razgovor'); if(d) d.click(); },80); })();",
+    "afterNavWait": 400
+  },
+  {
+    "name": "PhAk17 — Potvrda brisanja (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhAk17.dc.html",
+    "device": "phone",
+    "route": "app/ai",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({aiProactiveShownDate: (function(){var T=window.AIK.Seed.TODAY,U=window.AIK.Util; return U.monthKey(T)+'-'+String(T.getDate()).padStart(2,'0');})()});",
+    "afterNav": "(function(){ var rows=Array.from(document.querySelectorAll('.ai-rail-item')); var row=rows.find(r=>r.textContent.includes('Koliko sam do limita?')); if(row){ var m=row.querySelector('.ai-rail-item-menu'); if(m) m.click(); } setTimeout(function(){ var btns=Array.from(document.querySelectorAll('.ai-conv-sheet-row')); var d=btns.find(x=>x.textContent.trim().indexOf('Obriši razgovor')===0); if(d) d.click(); },150); })();",
+    "afterNavWait": 450
+  }
+]

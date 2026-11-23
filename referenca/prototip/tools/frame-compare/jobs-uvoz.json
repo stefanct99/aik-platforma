@@ -1,0 +1,122 @@
+[
+  {
+    "name": "Uv0 — Ulaz iz Knjige prihoda",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/uvoz_new/UVOZ/dizajn/Uv0.dc.html",
+    "device": "desktop",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({incomesFx:[], incomesRsd:[]}));",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhUv0 — Ulaz (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/uvoz_new/UVOZ/dizajn/PhUv0.dc.html",
+    "device": "phone",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({incomesFx:[], incomesRsd:[]}));",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Uv1 — Izbor načina",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/uvoz_new/UVOZ/dizajn/Uv1.dc.html",
+    "device": "desktop",
+    "route": "app/uvoz",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "PhUv1 — Izbor načina (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/uvoz_new/UVOZ/dizajn/PhUv1.dc.html",
+    "device": "phone",
+    "route": "app/uvoz",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "Uv2 — Učitavanje dokumenata",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/uvoz_new/UVOZ/dizajn/Uv2.dc.html",
+    "device": "desktop",
+    "route": "app/uvoz",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "(async()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Dalje').click(); await new Promise(r=>setTimeout(r,60)); const input=document.querySelector('input[type=file]'); const files=[new File(['x'],'Knjiga_prihoda_2026.xlsx',{type:'application/vnd.ms-excel'}), new File(['x'],'Faktura_25-26-03.pdf',{type:'application/pdf'}), new File(['x'],'Izvod_maj_2026.pdf',{type:'application/pdf'})]; const dt=new DataTransfer(); files.forEach(f=>dt.items.add(f)); input.files=dt.files; input.dispatchEvent(new Event('change',{bubbles:true})); })()",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhUv2 — Učitavanje (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/uvoz_new/UVOZ/dizajn/PhUv2.dc.html",
+    "device": "phone",
+    "route": "app/uvoz",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "(async()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Dalje').click(); await new Promise(r=>setTimeout(r,60)); const input=document.querySelector('input[type=file]'); const files=[new File(['x'],'Knjiga_prihoda_2026.xlsx',{type:'application/vnd.ms-excel'}), new File(['x'],'Faktura_25-26-03.pdf',{type:'application/pdf'}), new File(['x'],'Izvod_maj_2026.pdf',{type:'application/pdf'})]; const dt=new DataTransfer(); files.forEach(f=>dt.items.add(f)); input.files=dt.files; input.dispatchEvent(new Event('change',{bubbles:true})); })()",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Uv3 — Čitanje (sredina animacije)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/uvoz_new/UVOZ/dizajn/Uv3.dc.html",
+    "device": "desktop",
+    "route": "app/uvoz",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "(async()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Dalje').click(); await new Promise(r=>setTimeout(r,50)); const input=document.querySelector('input[type=file]'); const file=new File(['x'],'test.pdf',{type:'application/pdf'}); const dt=new DataTransfer(); dt.items.add(file); input.files=dt.files; input.dispatchEvent(new Event('change',{bubbles:true})); await new Promise(r=>setTimeout(r,50)); Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Pročitaj dokumenta').click(); await new Promise(r=>setTimeout(r,1150)); })()",
+    "afterNavWait": 100
+  },
+  {
+    "name": "PhUv3 — Čitanje (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/uvoz_new/UVOZ/dizajn/PhUv3.dc.html",
+    "device": "phone",
+    "route": "app/uvoz",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "(async()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Dalje').click(); await new Promise(r=>setTimeout(r,50)); const input=document.querySelector('input[type=file]'); const file=new File(['x'],'test.pdf',{type:'application/pdf'}); const dt=new DataTransfer(); dt.items.add(file); input.files=dt.files; input.dispatchEvent(new Event('change',{bubbles:true})); await new Promise(r=>setTimeout(r,50)); Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Pročitaj dokumenta').click(); await new Promise(r=>setTimeout(r,1150)); })()",
+    "afterNavWait": 100
+  },
+  {
+    "name": "Uv4 — Provera pročitanog",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/uvoz_new/UVOZ/dizajn/Uv4.dc.html",
+    "device": "desktop",
+    "route": "app/uvoz",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "(async()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Dalje').click(); await new Promise(r=>setTimeout(r,50)); const input=document.querySelector('input[type=file]'); const file=new File(['x'],'test.pdf',{type:'application/pdf'}); const dt=new DataTransfer(); dt.items.add(file); input.files=dt.files; input.dispatchEvent(new Event('change',{bubbles:true})); await new Promise(r=>setTimeout(r,50)); Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Pročitaj dokumenta').click(); await new Promise(r=>setTimeout(r,2700)); })()",
+    "afterNavWait": 100
+  },
+  {
+    "name": "PhUv4 — Provera (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/uvoz_new/UVOZ/dizajn/PhUv4.dc.html",
+    "device": "phone",
+    "route": "app/uvoz",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "(async()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Dalje').click(); await new Promise(r=>setTimeout(r,50)); const input=document.querySelector('input[type=file]'); const file=new File(['x'],'test.pdf',{type:'application/pdf'}); const dt=new DataTransfer(); dt.items.add(file); input.files=dt.files; input.dispatchEvent(new Event('change',{bubbles:true})); await new Promise(r=>setTimeout(r,50)); Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Pročitaj dokumenta').click(); await new Promise(r=>setTimeout(r,2700)); })()",
+    "afterNavWait": 100
+  },
+  {
+    "name": "Uv5 — Ručni unos",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/uvoz_new/UVOZ/dizajn/Uv5.dc.html",
+    "device": "desktop",
+    "route": "app/uvoz",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "(async()=>{ const els=Array.from(document.querySelectorAll('.uvoz-radio-card')); els.find(e=>e.textContent.includes('Unesi ručno')).click(); await new Promise(r=>setTimeout(r,80)); Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Dalje').click(); })()",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhUv5 — Ručni unos (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/uvoz_new/UVOZ/dizajn/PhUv5.dc.html",
+    "device": "phone",
+    "route": "app/uvoz",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "(async()=>{ const els=Array.from(document.querySelectorAll('.uvoz-radio-card')); els.find(e=>e.textContent.includes('Unesi ručno')).click(); await new Promise(r=>setTimeout(r,80)); Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Dalje').click(); })()",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Uv6 — Gotovo",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/uvoz_new/UVOZ/dizajn/Uv6.dc.html",
+    "device": "desktop",
+    "route": "app/uvoz",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "(async()=>{ function wait(ms){return new Promise(r=>setTimeout(r,ms));} async function find(sel){ for(let i=0;i<20;i++){ const el=document.querySelector(sel); if(el) return el; await wait(50);} return null; } async function findBtn(label){ for(let i=0;i<20;i++){ const el=Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()===label); if(el) return el; await wait(50);} return null; } const radio=Array.from(document.querySelectorAll('.uvoz-radio-card')).find(e=>e.textContent.includes('Unesi ručno')); radio.click(); await wait(80); (await findBtn('Dalje')).click(); const setter=Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,'value').set; const di=await find('input[type=date]'); setter.call(di,'2026-04-10'); di.dispatchEvent(new Event('input',{bubbles:true})); const ci=await find('input[placeholder=\\'Izaberi klijenta\\']'); setter.call(ci,'Test Klijent'); ci.dispatchEvent(new Event('input',{bubbles:true})); const ai=await find('input[type=number]'); setter.call(ai,'500'); ai.dispatchEvent(new Event('input',{bubbles:true})); await wait(100); (await findBtn('Sačuvaj prihode')).click(); await wait(200); })()",
+    "afterNavWait": 100
+  },
+  {
+    "name": "PhUv6 — Gotovo (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/uvoz_new/UVOZ/dizajn/PhUv6.dc.html",
+    "device": "phone",
+    "route": "app/uvoz",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "(async()=>{ function wait(ms){return new Promise(r=>setTimeout(r,ms));} async function find(sel){ for(let i=0;i<20;i++){ const el=document.querySelector(sel); if(el) return el; await wait(50);} return null; } async function findBtn(label){ for(let i=0;i<20;i++){ const el=Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()===label); if(el) return el; await wait(50);} return null; } const radio=Array.from(document.querySelectorAll('.uvoz-radio-card')).find(e=>e.textContent.includes('Unesi ručno')); radio.click(); await wait(80); (await findBtn('Dalje')).click(); const setter=Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,'value').set; const di=await find('input[type=date]'); setter.call(di,'2026-04-10'); di.dispatchEvent(new Event('input',{bubbles:true})); const ci=await find('input[placeholder=\\'Izaberi klijenta\\']'); setter.call(ci,'Test Klijent'); ci.dispatchEvent(new Event('input',{bubbles:true})); const ai=await find('input[type=number]'); setter.call(ai,'500'); ai.dispatchEvent(new Event('input',{bubbles:true})); await wait(100); (await findBtn('Sačuvaj prihode')).click(); await wait(200); })()",
+    "afterNavWait": 100
+  }
+]

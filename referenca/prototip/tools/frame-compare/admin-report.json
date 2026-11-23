@@ -1,0 +1,7245 @@
+{
+ "summary": {
+  "jobs": 11,
+  "totalFrameElements": 1228,
+  "totalMatched": 1094,
+  "totalDiffs": 964,
+  "rangeOverflows": []
+ },
+ "results": [
+  {
+   "name": "Adm1 — Pregled",
+   "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/Adm1.dc.html",
+   "device": "desktop",
+   "route": "app/admin",
+   "light": {
+    "frameElementCount": 56,
+    "protoElementCount": 64,
+    "matchedCount": 53,
+    "missingInProto": [
+     "Mejlovi banke1",
+     "1",
+     "Pretraži korisnike i pretplate"
+    ],
+    "extraInProtoCount": 11,
+    "diffs": [
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "lineHeight",
+      "frame": "12px",
+      "proto": "normal"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgba(0, 0, 0, 0)",
+      "proto": "rgb(200, 241, 105)"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "marginLeft",
+      "frame": "0px",
+      "proto": "34.7812px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "borderRadius",
+      "frame": "0px",
+      "proto": "999px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "width",
+      "frame": 5,
+      "proto": 22
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "height",
+      "frame": 12,
+      "proto": 22
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "400",
+      "proto": "500"
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(74, 82, 76)"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(74, 82, 76)"
+     },
+     {
+      "text": "Pregled aplikacije. Vidiš samo zbirne brojke i podatke o pretplatama, ne fakture, iznose ni klijente korisnika.",
+      "tag": "p",
+      "prop": "lineHeight",
+      "frame": "24px",
+      "proto": "normal"
+     },
+     {
+      "text": "Pregled aplikacije. Vidiš samo zbirne brojke i podatke o pretplatama, ne fakture, iznose ni klijente korisnika.",
+      "tag": "p",
+      "prop": "color",
+      "frame": "rgb(107, 112, 108)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Pregled aplikacije. Vidiš samo zbirne brojke i podatke o pretplatama, ne fakture, iznose ni klijente korisnika.",
+      "tag": "p",
+      "prop": "marginTop",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Pregled aplikacije. Vidiš samo zbirne brojke i podatke o pretplatama, ne fakture, iznose ni klijente korisnika.",
+      "tag": "p",
+      "prop": "marginBottom",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Pregled aplikacije. Vidiš samo zbirne brojke i podatke o pretplatama, ne fakture, iznose ni klijente korisnika.",
+      "tag": "p",
+      "prop": "borderTopColor",
+      "frame": "rgb(107, 112, 108)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Pregled aplikacije. Vidiš samo zbirne brojke i podatke o pretplatama, ne fakture, iznose ni klijente korisnika.",
+      "tag": "p",
+      "prop": "height",
+      "frame": 48,
+      "proto": 40
+     },
+     {
+      "text": "Poslednjih 30 dana",
+      "tag": "span",
+      "prop": "gap",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "width",
+      "frame": 79,
+      "proto": 81
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Od registracije do plaćanja",
+      "tag": "span",
+      "prop": "width",
+      "frame": 385,
+      "proto": 387
+     },
+     {
+      "text": "Korišćenje funkcija",
+      "tag": "span",
+      "prop": "width",
+      "frame": 143,
+      "proto": 613
+     },
+     {
+      "text": "Prosek po aktivnom korisniku mesečno",
+      "tag": "span",
+      "prop": "width",
+      "frame": 259,
+      "proto": 613
+     },
+     {
+      "text": "Zahteva pažnju",
+      "tag": "span",
+      "prop": "width",
+      "frame": 385,
+      "proto": 387
+     }
+    ]
+   },
+   "dark": {
+    "frameElementCount": 56,
+    "protoElementCount": 64,
+    "matchedCount": 53,
+    "missingInProto": [
+     "Mejlovi banke1",
+     "1",
+     "Pretraži korisnike i pretplate"
+    ],
+    "extraInProtoCount": 11,
+    "diffs": [
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "lineHeight",
+      "frame": "12px",
+      "proto": "normal"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgba(0, 0, 0, 0)",
+      "proto": "rgb(200, 241, 105)"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "marginLeft",
+      "frame": "0px",
+      "proto": "34.7812px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "borderRadius",
+      "frame": "0px",
+      "proto": "999px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "width",
+      "frame": 5,
+      "proto": 22
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "height",
+      "frame": 12,
+      "proto": 22
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "400",
+      "proto": "500"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(241, 243, 239)",
+      "proto": "rgb(196, 202, 197)"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(241, 243, 239)",
+      "proto": "rgb(196, 202, 197)"
+     },
+     {
+      "text": "Pregled aplikacije. Vidiš samo zbirne brojke i podatke o pretplatama, ne fakture, iznose ni klijente korisnika.",
+      "tag": "p",
+      "prop": "lineHeight",
+      "frame": "24px",
+      "proto": "normal"
+     },
+     {
+      "text": "Pregled aplikacije. Vidiš samo zbirne brojke i podatke o pretplatama, ne fakture, iznose ni klijente korisnika.",
+      "tag": "p",
+      "prop": "color",
+      "frame": "rgb(140, 148, 142)",
+      "proto": "rgb(241, 243, 239)"
+     },
+     {
+      "text": "Pregled aplikacije. Vidiš samo zbirne brojke i podatke o pretplatama, ne fakture, iznose ni klijente korisnika.",
+      "tag": "p",
+      "prop": "marginTop",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Pregled aplikacije. Vidiš samo zbirne brojke i podatke o pretplatama, ne fakture, iznose ni klijente korisnika.",
+      "tag": "p",
+      "prop": "marginBottom",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Pregled aplikacije. Vidiš samo zbirne brojke i podatke o pretplatama, ne fakture, iznose ni klijente korisnika.",
+      "tag": "p",
+      "prop": "borderTopColor",
+      "frame": "rgb(140, 148, 142)",
+      "proto": "rgb(241, 243, 239)"
+     },
+     {
+      "text": "Pregled aplikacije. Vidiš samo zbirne brojke i podatke o pretplatama, ne fakture, iznose ni klijente korisnika.",
+      "tag": "p",
+      "prop": "height",
+      "frame": 48,
+      "proto": 40
+     },
+     {
+      "text": "Poslednjih 30 dana",
+      "tag": "span",
+      "prop": "gap",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgba(255, 255, 255, 0.15)"
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "width",
+      "frame": 79,
+      "proto": 81
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Od registracije do plaćanja",
+      "tag": "span",
+      "prop": "width",
+      "frame": 385,
+      "proto": 387
+     },
+     {
+      "text": "Korišćenje funkcija",
+      "tag": "span",
+      "prop": "width",
+      "frame": 143,
+      "proto": 613
+     },
+     {
+      "text": "Prosek po aktivnom korisniku mesečno",
+      "tag": "span",
+      "prop": "width",
+      "frame": 259,
+      "proto": 613
+     },
+     {
+      "text": "Zahteva pažnju",
+      "tag": "span",
+      "prop": "width",
+      "frame": 385,
+      "proto": 387
+     }
+    ]
+   },
+   "rangeCheck": {
+    "width": 1280,
+    "scrollWidth": 1280,
+    "clientWidth": 1280,
+    "overflow": false
+   }
+  },
+  {
+   "name": "PhAdm1 — Pregled (telefon)",
+   "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/PhAdm1.dc.html",
+   "device": "phone",
+   "route": "app/admin",
+   "light": {
+    "frameElementCount": 46,
+    "protoElementCount": 52,
+    "matchedCount": 45,
+    "missingInProto": [
+     "Zbirne brojke i pretplate. Bez faktura, iznosa i klijenata korisnika."
+    ],
+    "extraInProtoCount": 7,
+    "diffs": [
+     {
+      "text": "Admin",
+      "tag": "h1",
+      "prop": "fontSize",
+      "frame": "24px",
+      "proto": "32px"
+     },
+     {
+      "text": "Admin",
+      "tag": "h1",
+      "prop": "lineHeight",
+      "frame": "28.8px",
+      "proto": "normal"
+     },
+     {
+      "text": "Admin",
+      "tag": "h1",
+      "prop": "height",
+      "frame": 29,
+      "proto": 39
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "width",
+      "frame": 79,
+      "proto": 81
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Nove registracije po danima",
+      "tag": "span",
+      "prop": "width",
+      "frame": 299,
+      "proto": 175
+     },
+     {
+      "text": "Nove registracije po danima",
+      "tag": "span",
+      "prop": "height",
+      "frame": 20,
+      "proto": 40
+     },
+     {
+      "text": "Ukupno 39 za 30 dana",
+      "tag": "span",
+      "prop": "width",
+      "frame": 299,
+      "proto": 124
+     },
+     {
+      "text": "Ukupno 39 za 30 dana",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 34
+     }
+    ]
+   },
+   "dark": {
+    "frameElementCount": 46,
+    "protoElementCount": 52,
+    "matchedCount": 45,
+    "missingInProto": [
+     "Zbirne brojke i pretplate. Bez faktura, iznosa i klijenata korisnika."
+    ],
+    "extraInProtoCount": 7,
+    "diffs": [
+     {
+      "text": "Admin",
+      "tag": "h1",
+      "prop": "fontSize",
+      "frame": "24px",
+      "proto": "32px"
+     },
+     {
+      "text": "Admin",
+      "tag": "h1",
+      "prop": "lineHeight",
+      "frame": "28.8px",
+      "proto": "normal"
+     },
+     {
+      "text": "Admin",
+      "tag": "h1",
+      "prop": "height",
+      "frame": 29,
+      "proto": 39
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgba(255, 255, 255, 0.15)"
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "width",
+      "frame": 79,
+      "proto": 81
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Nove registracije po danima",
+      "tag": "span",
+      "prop": "width",
+      "frame": 299,
+      "proto": 175
+     },
+     {
+      "text": "Nove registracije po danima",
+      "tag": "span",
+      "prop": "height",
+      "frame": 20,
+      "proto": 40
+     },
+     {
+      "text": "Ukupno 39 za 30 dana",
+      "tag": "span",
+      "prop": "width",
+      "frame": 299,
+      "proto": 124
+     },
+     {
+      "text": "Ukupno 39 za 30 dana",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 34
+     }
+    ]
+   },
+   "rangeCheck": {
+    "width": 390,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "overflow": false
+   }
+  },
+  {
+   "name": "Adm2 — Korisnici i pretplate",
+   "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/Adm2.dc.html",
+   "device": "desktop",
+   "route": "app/admin/korisnici",
+   "light": {
+    "frameElementCount": 99,
+    "protoElementCount": 114,
+    "matchedCount": 87,
+    "missingInProto": [
+     "Mejlovi banke1",
+     "1",
+     "Pretraži korisnike i pretplate",
+     "Svi128",
+     "128",
+     "SM",
+     "Besplatan pristup",
+     "Admin, besplatno",
+     "01.11.2026.",
+     "Danas",
+     "Bez roka",
+     "Prikazano 8 od 128"
+    ],
+    "extraInProtoCount": 27,
+    "diffs": [
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "lineHeight",
+      "frame": "12px",
+      "proto": "normal"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgba(0, 0, 0, 0)",
+      "proto": "rgb(200, 241, 105)"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "marginLeft",
+      "frame": "0px",
+      "proto": "34.7812px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "borderRadius",
+      "frame": "0px",
+      "proto": "999px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "width",
+      "frame": 5,
+      "proto": 22
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "height",
+      "frame": 12,
+      "proto": 22
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "500",
+      "proto": "400"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(74, 82, 76)"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgb(238, 248, 210)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(74, 82, 76)"
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "400",
+      "proto": "500"
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(74, 82, 76)"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(74, 82, 76)"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "lineHeight",
+      "frame": "24px",
+      "proto": "normal"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "color",
+      "frame": "rgb(107, 112, 108)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "marginTop",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "marginBottom",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "borderTopColor",
+      "frame": "rgb(107, 112, 108)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "height",
+      "frame": 48,
+      "proto": 40
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "width",
+      "frame": 155,
+      "proto": 157
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Probni18",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Aktivni79",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Naplata nije uspela5",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Otkazani26",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Svi planovi",
+      "tag": "span",
+      "prop": "gap",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "Poslednja aktivnost",
+      "tag": "span",
+      "prop": "gap",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "Korisnik",
+      "tag": "span",
+      "prop": "width",
+      "frame": 237,
+      "proto": 230
+     },
+     {
+      "text": "Plan",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Aktivna, 12 meseci",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Aktivna, 3 meseca",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Probni period",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Aktivna, 6 meseci",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Probni period",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Otkazana",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Aktivna, 1 mesec",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "width",
+      "frame": 68,
+      "proto": 80
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 19
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "width",
+      "frame": 53,
+      "proto": 65
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 19
+     }
+    ]
+   },
+   "dark": {
+    "frameElementCount": 99,
+    "protoElementCount": 114,
+    "matchedCount": 87,
+    "missingInProto": [
+     "Mejlovi banke1",
+     "1",
+     "Pretraži korisnike i pretplate",
+     "Svi128",
+     "128",
+     "SM",
+     "Besplatan pristup",
+     "Admin, besplatno",
+     "01.11.2026.",
+     "Danas",
+     "Bez roka",
+     "Prikazano 8 od 128"
+    ],
+    "extraInProtoCount": 27,
+    "diffs": [
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "lineHeight",
+      "frame": "12px",
+      "proto": "normal"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgba(0, 0, 0, 0)",
+      "proto": "rgb(200, 241, 105)"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "marginLeft",
+      "frame": "0px",
+      "proto": "34.7812px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "borderRadius",
+      "frame": "0px",
+      "proto": "999px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "width",
+      "frame": 5,
+      "proto": 22
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "height",
+      "frame": 12,
+      "proto": 22
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "500",
+      "proto": "400"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(241, 243, 239)",
+      "proto": "rgb(196, 202, 197)"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgba(200, 241, 105, 0.14)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(241, 243, 239)",
+      "proto": "rgb(196, 202, 197)"
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "400",
+      "proto": "500"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(241, 243, 239)",
+      "proto": "rgb(196, 202, 197)"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(241, 243, 239)",
+      "proto": "rgb(196, 202, 197)"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "lineHeight",
+      "frame": "24px",
+      "proto": "normal"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "color",
+      "frame": "rgb(140, 148, 142)",
+      "proto": "rgb(241, 243, 239)"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "marginTop",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "marginBottom",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "borderTopColor",
+      "frame": "rgb(140, 148, 142)",
+      "proto": "rgb(241, 243, 239)"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "height",
+      "frame": 48,
+      "proto": 40
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgba(255, 255, 255, 0.15)"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "width",
+      "frame": 155,
+      "proto": 157
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Probni18",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Aktivni79",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Naplata nije uspela5",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Otkazani26",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Svi planovi",
+      "tag": "span",
+      "prop": "gap",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "Poslednja aktivnost",
+      "tag": "span",
+      "prop": "gap",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "Korisnik",
+      "tag": "span",
+      "prop": "width",
+      "frame": 237,
+      "proto": 230
+     },
+     {
+      "text": "Plan",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Aktivna, 12 meseci",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Aktivna, 3 meseca",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Probni period",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Aktivna, 6 meseci",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Probni period",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Otkazana",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Aktivna, 1 mesec",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "width",
+      "frame": 68,
+      "proto": 80
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 19
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "width",
+      "frame": 53,
+      "proto": 65
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 19
+     }
+    ]
+   },
+   "rangeCheck": {
+    "width": 1280,
+    "scrollWidth": 1280,
+    "clientWidth": 1280,
+    "overflow": false
+   }
+  },
+  {
+   "name": "PhAdm2 — Korisnici i pretplate (telefon)",
+   "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/PhAdm2.dc.html",
+   "device": "phone",
+   "route": "app/admin/korisnici",
+   "light": {
+    "frameElementCount": 84,
+    "protoElementCount": 120,
+    "matchedCount": 81,
+    "missingInProto": [
+     "Nalozi sa planom i statusom naplate. Sadržaj naloga nije vidljiv.",
+     "Svi128",
+     "128"
+    ],
+    "extraInProtoCount": 39,
+    "diffs": [
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "h1",
+      "prop": "fontSize",
+      "frame": "24px",
+      "proto": "32px"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "h1",
+      "prop": "lineHeight",
+      "frame": "28.8px",
+      "proto": "normal"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "h1",
+      "prop": "height",
+      "frame": 29,
+      "proto": 39
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "width",
+      "frame": 155,
+      "proto": 157
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "fontSize",
+      "frame": "16px",
+      "proto": "14px"
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Pretraži korisnike",
+      "tag": "div",
+      "prop": "color",
+      "frame": "rgb(107, 112, 108)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Pretraži korisnike",
+      "tag": "div",
+      "prop": "borderTopColor",
+      "frame": "rgba(22, 26, 23, 0.08)",
+      "proto": "rgba(22, 26, 23, 0.18)"
+     },
+     {
+      "text": "Pretraži korisnike",
+      "tag": "div",
+      "prop": "gap",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "Probni18",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Aktivni79",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Naplata nije uspela5",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Otkazani26",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "MP",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "12px"
+     },
+     {
+      "text": "MP",
+      "tag": "span",
+      "prop": "width",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "MP",
+      "tag": "span",
+      "prop": "height",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "Marko Petrović",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "Petrović Dizajn",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "12.03.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 77
+     },
+     {
+      "text": "Danas",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 42
+     },
+     {
+      "text": "15.03.2027.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 75
+     },
+     {
+      "text": "JI",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "12px"
+     },
+     {
+      "text": "JI",
+      "tag": "span",
+      "prop": "width",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "JI",
+      "tag": "span",
+      "prop": "height",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "Jelena Ilić",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "Ilić Prevodi",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "28.09.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 80
+     },
+     {
+      "text": "Juče",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 32
+     },
+     {
+      "text": "28.12.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 76
+     },
+     {
+      "text": "NJ",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "12px"
+     },
+     {
+      "text": "NJ",
+      "tag": "span",
+      "prop": "width",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "NJ",
+      "tag": "span",
+      "prop": "height",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "Nikola Jovanović",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "NJ Foto",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "10.11.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 71
+     },
+     {
+      "text": "Pre 2 dana",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 71
+     },
+     {
+      "text": "23.11.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 73
+     },
+     {
+      "text": "AS",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "12px"
+     },
+     {
+      "text": "AS",
+      "tag": "span",
+      "prop": "width",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "AS",
+      "tag": "span",
+      "prop": "height",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "Ana Stojanović",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "Stojanović Web",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "02.06.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 80
+     },
+     {
+      "text": "Pre 5 dana",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 71
+     },
+     {
+      "text": "Pokušaj 22.11.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 91
+     },
+     {
+      "text": "LM",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "12px"
+     },
+     {
+      "text": "LM",
+      "tag": "span",
+      "prop": "width",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "LM",
+      "tag": "span",
+      "prop": "height",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "Luka Marković",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "Marković Audio",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "17.11.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 68
+     },
+     {
+      "text": "Danas",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 42
+     },
+     {
+      "text": "02.12.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 77
+     },
+     {
+      "text": "MĐ",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "12px"
+     },
+     {
+      "text": "MĐ",
+      "tag": "span",
+      "prop": "width",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "MĐ",
+      "tag": "span",
+      "prop": "height",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "Milica Đorđević",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "MD Kopirajting",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "14.01.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 75
+     },
+     {
+      "text": "Pre 18 dana",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 77
+     },
+     {
+      "text": "Pristup do 14.12.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 67
+     },
+     {
+      "text": "Pristup do 14.12.",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 34
+     }
+    ]
+   },
+   "dark": {
+    "frameElementCount": 84,
+    "protoElementCount": 120,
+    "matchedCount": 81,
+    "missingInProto": [
+     "Nalozi sa planom i statusom naplate. Sadržaj naloga nije vidljiv.",
+     "Svi128",
+     "128"
+    ],
+    "extraInProtoCount": 39,
+    "diffs": [
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "h1",
+      "prop": "fontSize",
+      "frame": "24px",
+      "proto": "32px"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "h1",
+      "prop": "lineHeight",
+      "frame": "28.8px",
+      "proto": "normal"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "h1",
+      "prop": "height",
+      "frame": 29,
+      "proto": 39
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgba(255, 255, 255, 0.15)"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "width",
+      "frame": 155,
+      "proto": 157
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "fontSize",
+      "frame": "16px",
+      "proto": "14px"
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Pretraži korisnike",
+      "tag": "div",
+      "prop": "color",
+      "frame": "rgb(140, 148, 142)",
+      "proto": "rgb(241, 243, 239)"
+     },
+     {
+      "text": "Pretraži korisnike",
+      "tag": "div",
+      "prop": "borderTopColor",
+      "frame": "rgba(255, 255, 255, 0.1)",
+      "proto": "rgba(255, 255, 255, 0.216)"
+     },
+     {
+      "text": "Pretraži korisnike",
+      "tag": "div",
+      "prop": "gap",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "Probni18",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Aktivni79",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Naplata nije uspela5",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Otkazani26",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "MP",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "12px"
+     },
+     {
+      "text": "MP",
+      "tag": "span",
+      "prop": "width",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "MP",
+      "tag": "span",
+      "prop": "height",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "Marko Petrović",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "Petrović Dizajn",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "12.03.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 77
+     },
+     {
+      "text": "Danas",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 42
+     },
+     {
+      "text": "15.03.2027.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 75
+     },
+     {
+      "text": "JI",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "12px"
+     },
+     {
+      "text": "JI",
+      "tag": "span",
+      "prop": "width",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "JI",
+      "tag": "span",
+      "prop": "height",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "Jelena Ilić",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "Ilić Prevodi",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "28.09.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 80
+     },
+     {
+      "text": "Juče",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 32
+     },
+     {
+      "text": "28.12.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 76
+     },
+     {
+      "text": "NJ",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "12px"
+     },
+     {
+      "text": "NJ",
+      "tag": "span",
+      "prop": "width",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "NJ",
+      "tag": "span",
+      "prop": "height",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "Nikola Jovanović",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "NJ Foto",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "10.11.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 71
+     },
+     {
+      "text": "Pre 2 dana",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 71
+     },
+     {
+      "text": "23.11.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 73
+     },
+     {
+      "text": "AS",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "12px"
+     },
+     {
+      "text": "AS",
+      "tag": "span",
+      "prop": "width",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "AS",
+      "tag": "span",
+      "prop": "height",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "Ana Stojanović",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "Stojanović Web",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "02.06.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 80
+     },
+     {
+      "text": "Pre 5 dana",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 71
+     },
+     {
+      "text": "Pokušaj 22.11.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 91
+     },
+     {
+      "text": "LM",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "12px"
+     },
+     {
+      "text": "LM",
+      "tag": "span",
+      "prop": "width",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "LM",
+      "tag": "span",
+      "prop": "height",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "Luka Marković",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "Marković Audio",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "17.11.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 68
+     },
+     {
+      "text": "Danas",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 42
+     },
+     {
+      "text": "02.12.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 77
+     },
+     {
+      "text": "MĐ",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "12px"
+     },
+     {
+      "text": "MĐ",
+      "tag": "span",
+      "prop": "width",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "MĐ",
+      "tag": "span",
+      "prop": "height",
+      "frame": 40,
+      "proto": 32
+     },
+     {
+      "text": "Milica Đorđević",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "MD Kopirajting",
+      "tag": "span",
+      "prop": "width",
+      "frame": 215,
+      "proto": 203
+     },
+     {
+      "text": "14.01.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 75
+     },
+     {
+      "text": "Pre 18 dana",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 77
+     },
+     {
+      "text": "Pristup do 14.12.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 94,
+      "proto": 67
+     },
+     {
+      "text": "Pristup do 14.12.",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 34
+     }
+    ]
+   },
+   "rangeCheck": {
+    "width": 390,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "overflow": false
+   }
+  },
+  {
+   "name": "Adm3 — Odobri besplatan pristup (modal)",
+   "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/Adm3.dc.html",
+   "device": "desktop",
+   "route": "app/admin/korisnici",
+   "light": {
+    "frameElementCount": 113,
+    "protoElementCount": 129,
+    "matchedCount": 99,
+    "missingInProto": [
+     "Mejlovi banke1",
+     "1",
+     "Pretraži korisnike i pretplate",
+     "Svi128",
+     "128",
+     "SM",
+     "Besplatan pristup",
+     "Admin, besplatno",
+     "01.11.2026.",
+     "Danas",
+     "Prikazano 8 od 128",
+     "Petar Nikolić, Nikolić Konsalting",
+     "Bez roka",
+     "Partner, testira aplikaciju"
+    ],
+    "extraInProtoCount": 30,
+    "diffs": [
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "lineHeight",
+      "frame": "12px",
+      "proto": "normal"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgba(0, 0, 0, 0)",
+      "proto": "rgb(200, 241, 105)"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "marginLeft",
+      "frame": "0px",
+      "proto": "34.7812px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "borderRadius",
+      "frame": "0px",
+      "proto": "999px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "width",
+      "frame": 5,
+      "proto": 22
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "height",
+      "frame": 12,
+      "proto": 22
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "500",
+      "proto": "400"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(74, 82, 76)"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgb(238, 248, 210)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(74, 82, 76)"
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "400",
+      "proto": "500"
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(74, 82, 76)"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(74, 82, 76)"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "lineHeight",
+      "frame": "24px",
+      "proto": "normal"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "color",
+      "frame": "rgb(107, 112, 108)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "marginTop",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "marginBottom",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "borderTopColor",
+      "frame": "rgb(107, 112, 108)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "height",
+      "frame": 48,
+      "proto": 40
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "width",
+      "frame": 155,
+      "proto": 157
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Probni18",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Aktivni79",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Naplata nije uspela5",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Otkazani26",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Svi planovi",
+      "tag": "span",
+      "prop": "gap",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "Poslednja aktivnost",
+      "tag": "span",
+      "prop": "gap",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "Korisnik",
+      "tag": "span",
+      "prop": "width",
+      "frame": 237,
+      "proto": 230
+     },
+     {
+      "text": "Plan",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Aktivna, 12 meseci",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Aktivna, 3 meseca",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Probni period",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Aktivna, 6 meseci",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Probni period",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Otkazana",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(74, 82, 76)",
+      "proto": "rgb(255, 255, 255)"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgba(0, 0, 0, 0)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "14px"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "14px"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(74, 82, 76)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "borderRadius",
+      "frame": "0px",
+      "proto": "9999px"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "gap",
+      "frame": "normal",
+      "proto": "8px"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "width",
+      "frame": 120,
+      "proto": 88
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 40
+     },
+     {
+      "text": "Aktivna, 1 mesec",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "width",
+      "frame": 68,
+      "proto": 80
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 19
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "width",
+      "frame": 53,
+      "proto": 65
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 19
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "20px",
+      "proto": "24px"
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "span",
+      "prop": "width",
+      "frame": 470,
+      "proto": 266
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "span",
+      "prop": "height",
+      "frame": 24,
+      "proto": 29
+     },
+     {
+      "text": "Nalog dobija pun plan bez naplate. Ne ulazi u mesečni prihod u statistici.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 470,
+      "proto": 432
+     },
+     {
+      "text": "Korisnik",
+      "tag": "span",
+      "prop": "width",
+      "frame": 470,
+      "proto": 432
+     },
+     {
+      "text": "Plan",
+      "tag": "span",
+      "prop": "width",
+      "frame": 470,
+      "proto": 432
+     },
+     {
+      "text": "Pun plan, svi delovi aplikacije",
+      "tag": "div",
+      "prop": "gap",
+      "frame": "normal",
+      "proto": "8px"
+     },
+     {
+      "text": "Pun plan, svi delovi aplikacije",
+      "tag": "div",
+      "prop": "width",
+      "frame": 470,
+      "proto": 432
+     },
+     {
+      "text": "Trajanje",
+      "tag": "span",
+      "prop": "width",
+      "frame": 470,
+      "proto": 432
+     },
+     {
+      "text": "Besplatan pristup možeš da ukineš u bilo kom trenutku.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 470,
+      "proto": 432
+     },
+     {
+      "text": "Interna napomena",
+      "tag": "span",
+      "prop": "width",
+      "frame": 470,
+      "proto": 432
+     },
+     {
+      "text": "Vidi samo admin. Ne prikazuje se korisniku.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 470,
+      "proto": 432
+     },
+     {
+      "text": "Odobri pristup",
+      "tag": "button",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Odobri pristup",
+      "tag": "button",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Odobri pristup",
+      "tag": "button",
+      "prop": "width",
+      "frame": 127,
+      "proto": 129
+     }
+    ]
+   },
+   "dark": {
+    "frameElementCount": 113,
+    "protoElementCount": 129,
+    "matchedCount": 99,
+    "missingInProto": [
+     "Mejlovi banke1",
+     "1",
+     "Pretraži korisnike i pretplate",
+     "Svi128",
+     "128",
+     "SM",
+     "Besplatan pristup",
+     "Admin, besplatno",
+     "01.11.2026.",
+     "Danas",
+     "Prikazano 8 od 128",
+     "Petar Nikolić, Nikolić Konsalting",
+     "Bez roka",
+     "Partner, testira aplikaciju"
+    ],
+    "extraInProtoCount": 30,
+    "diffs": [
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "lineHeight",
+      "frame": "12px",
+      "proto": "normal"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgba(0, 0, 0, 0)",
+      "proto": "rgb(200, 241, 105)"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "marginLeft",
+      "frame": "0px",
+      "proto": "34.7812px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "borderRadius",
+      "frame": "0px",
+      "proto": "999px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "width",
+      "frame": 5,
+      "proto": 22
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "height",
+      "frame": 12,
+      "proto": 22
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "500",
+      "proto": "400"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(241, 243, 239)",
+      "proto": "rgb(196, 202, 197)"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgba(200, 241, 105, 0.14)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(241, 243, 239)",
+      "proto": "rgb(196, 202, 197)"
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "400",
+      "proto": "500"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(241, 243, 239)",
+      "proto": "rgb(196, 202, 197)"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(241, 243, 239)",
+      "proto": "rgb(196, 202, 197)"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "lineHeight",
+      "frame": "24px",
+      "proto": "normal"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "color",
+      "frame": "rgb(140, 148, 142)",
+      "proto": "rgb(241, 243, 239)"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "marginTop",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "marginBottom",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "borderTopColor",
+      "frame": "rgb(140, 148, 142)",
+      "proto": "rgb(241, 243, 239)"
+     },
+     {
+      "text": "Lista svih naloga sa planom i statusom naplate. Sadržaj naloga (fakture, klijenti, mejlovi) nije vidljiv.",
+      "tag": "p",
+      "prop": "height",
+      "frame": 48,
+      "proto": 40
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgba(255, 255, 255, 0.15)"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "width",
+      "frame": 155,
+      "proto": 157
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Probni18",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Aktivni79",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Naplata nije uspela5",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Otkazani26",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Svi planovi",
+      "tag": "span",
+      "prop": "gap",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "Poslednja aktivnost",
+      "tag": "span",
+      "prop": "gap",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "Korisnik",
+      "tag": "span",
+      "prop": "width",
+      "frame": 237,
+      "proto": 230
+     },
+     {
+      "text": "Plan",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Aktivna, 12 meseci",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Aktivna, 3 meseca",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Probni period",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Aktivna, 6 meseci",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Probni period",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Otkazana",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(196, 202, 197)",
+      "proto": "rgb(255, 255, 255)"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgba(0, 0, 0, 0)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "14px"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "14px"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(196, 202, 197)",
+      "proto": "rgba(255, 255, 255, 0.15)"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "borderRadius",
+      "frame": "0px",
+      "proto": "9999px"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "gap",
+      "frame": "normal",
+      "proto": "8px"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "width",
+      "frame": 120,
+      "proto": 88
+     },
+     {
+      "text": "Bez roka",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 40
+     },
+     {
+      "text": "Aktivna, 1 mesec",
+      "tag": "span",
+      "prop": "width",
+      "frame": 163,
+      "proto": 170
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "width",
+      "frame": 68,
+      "proto": 80
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 19
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "width",
+      "frame": 53,
+      "proto": 65
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 19
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "20px",
+      "proto": "24px"
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "span",
+      "prop": "width",
+      "frame": 470,
+      "proto": 266
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "span",
+      "prop": "height",
+      "frame": 24,
+      "proto": 29
+     },
+     {
+      "text": "Nalog dobija pun plan bez naplate. Ne ulazi u mesečni prihod u statistici.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 470,
+      "proto": 432
+     },
+     {
+      "text": "Korisnik",
+      "tag": "span",
+      "prop": "width",
+      "frame": 470,
+      "proto": 432
+     },
+     {
+      "text": "Plan",
+      "tag": "span",
+      "prop": "width",
+      "frame": 470,
+      "proto": 432
+     },
+     {
+      "text": "Pun plan, svi delovi aplikacije",
+      "tag": "div",
+      "prop": "gap",
+      "frame": "normal",
+      "proto": "8px"
+     },
+     {
+      "text": "Pun plan, svi delovi aplikacije",
+      "tag": "div",
+      "prop": "width",
+      "frame": 470,
+      "proto": 432
+     },
+     {
+      "text": "Trajanje",
+      "tag": "span",
+      "prop": "width",
+      "frame": 470,
+      "proto": 432
+     },
+     {
+      "text": "Besplatan pristup možeš da ukineš u bilo kom trenutku.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 470,
+      "proto": 432
+     },
+     {
+      "text": "Interna napomena",
+      "tag": "span",
+      "prop": "width",
+      "frame": 470,
+      "proto": 432
+     },
+     {
+      "text": "Vidi samo admin. Ne prikazuje se korisniku.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 470,
+      "proto": 432
+     },
+     {
+      "text": "Odobri pristup",
+      "tag": "button",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Odobri pristup",
+      "tag": "button",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Odobri pristup",
+      "tag": "button",
+      "prop": "width",
+      "frame": 127,
+      "proto": 129
+     }
+    ]
+   },
+   "rangeCheck": {
+    "width": 1280,
+    "scrollWidth": 1280,
+    "clientWidth": 1280,
+    "overflow": false
+   }
+  },
+  {
+   "name": "PhAdm3 — Odobri besplatan pristup (sheet, telefon)",
+   "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/PhAdm3.dc.html",
+   "device": "phone",
+   "route": "app/admin/korisnici",
+   "light": {
+    "frameElementCount": 21,
+    "protoElementCount": 135,
+    "matchedCount": 19,
+    "missingInProto": [
+     "Nalozi sa planom i statusom naplate. Sadržaj naloga nije vidljiv.",
+     "Partner, testira aplikaciju"
+    ],
+    "extraInProtoCount": 116,
+    "diffs": [
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "h1",
+      "prop": "fontSize",
+      "frame": "24px",
+      "proto": "32px"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "h1",
+      "prop": "lineHeight",
+      "frame": "28.8px",
+      "proto": "normal"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "h1",
+      "prop": "height",
+      "frame": 29,
+      "proto": 39
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "width",
+      "frame": 155,
+      "proto": 157
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "fontSize",
+      "frame": "16px",
+      "proto": "14px"
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "span",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Nalog dobija pun plan bez naplate. Ne ulazi u prihod od pretplata.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Korisnik",
+      "tag": "span",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Petar Nikolić",
+      "tag": "div",
+      "prop": "backgroundColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Petar Nikolić",
+      "tag": "div",
+      "prop": "paddingRight",
+      "frame": "14px",
+      "proto": "0px"
+     },
+     {
+      "text": "Petar Nikolić",
+      "tag": "div",
+      "prop": "paddingLeft",
+      "frame": "14px",
+      "proto": "0px"
+     },
+     {
+      "text": "Petar Nikolić",
+      "tag": "div",
+      "prop": "borderTopColor",
+      "frame": "rgba(22, 26, 23, 0.18)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Petar Nikolić",
+      "tag": "div",
+      "prop": "borderTopStyle",
+      "frame": "solid",
+      "proto": "none"
+     },
+     {
+      "text": "Petar Nikolić",
+      "tag": "div",
+      "prop": "borderRadius",
+      "frame": "8px",
+      "proto": "0px"
+     },
+     {
+      "text": "Petar Nikolić",
+      "tag": "div",
+      "prop": "width",
+      "frame": 333,
+      "proto": 203
+     },
+     {
+      "text": "Petar Nikolić",
+      "tag": "div",
+      "prop": "height",
+      "frame": 44,
+      "proto": 20
+     },
+     {
+      "text": "Plan",
+      "tag": "span",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Pun plan",
+      "tag": "div",
+      "prop": "fontSize",
+      "frame": "16px",
+      "proto": "14px"
+     },
+     {
+      "text": "Pun plan",
+      "tag": "div",
+      "prop": "gap",
+      "frame": "normal",
+      "proto": "8px"
+     },
+     {
+      "text": "Pun plan",
+      "tag": "div",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Pun plan",
+      "tag": "div",
+      "prop": "height",
+      "frame": 44,
+      "proto": 40
+     },
+     {
+      "text": "Trajanje",
+      "tag": "span",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Bez roka",
+      "tag": "div",
+      "prop": "fontSize",
+      "frame": "16px",
+      "proto": "14px"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "div",
+      "prop": "color",
+      "frame": "rgb(22, 26, 23)",
+      "proto": "rgb(255, 255, 255)"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "div",
+      "prop": "backgroundColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "div",
+      "prop": "borderTopColor",
+      "frame": "rgba(22, 26, 23, 0.18)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "div",
+      "prop": "borderRadius",
+      "frame": "8px",
+      "proto": "9999px"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "div",
+      "prop": "gap",
+      "frame": "normal",
+      "proto": "8px"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "div",
+      "prop": "width",
+      "frame": 333,
+      "proto": 88
+     },
+     {
+      "text": "Bez roka",
+      "tag": "div",
+      "prop": "height",
+      "frame": 44,
+      "proto": 40
+     },
+     {
+      "text": "Možeš da ga ukineš u bilo kom trenutku.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Interna napomena",
+      "tag": "span",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Vidi samo admin.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Odobri pristup",
+      "tag": "button",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Odobri pristup",
+      "tag": "button",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Odobri pristup",
+      "tag": "button",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Otkaži",
+      "tag": "button",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     }
+    ]
+   },
+   "dark": {
+    "frameElementCount": 21,
+    "protoElementCount": 135,
+    "matchedCount": 19,
+    "missingInProto": [
+     "Nalozi sa planom i statusom naplate. Sadržaj naloga nije vidljiv.",
+     "Partner, testira aplikaciju"
+    ],
+    "extraInProtoCount": 116,
+    "diffs": [
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "h1",
+      "prop": "fontSize",
+      "frame": "24px",
+      "proto": "32px"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "h1",
+      "prop": "lineHeight",
+      "frame": "28.8px",
+      "proto": "normal"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "h1",
+      "prop": "height",
+      "frame": 29,
+      "proto": 39
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgba(255, 255, 255, 0.15)"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "width",
+      "frame": 155,
+      "proto": 157
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "fontSize",
+      "frame": "16px",
+      "proto": "14px"
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "button",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Odobri besplatan pristup",
+      "tag": "span",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Nalog dobija pun plan bez naplate. Ne ulazi u prihod od pretplata.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Korisnik",
+      "tag": "span",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Petar Nikolić",
+      "tag": "div",
+      "prop": "backgroundColor",
+      "frame": "rgb(23, 27, 24)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Petar Nikolić",
+      "tag": "div",
+      "prop": "paddingRight",
+      "frame": "14px",
+      "proto": "0px"
+     },
+     {
+      "text": "Petar Nikolić",
+      "tag": "div",
+      "prop": "paddingLeft",
+      "frame": "14px",
+      "proto": "0px"
+     },
+     {
+      "text": "Petar Nikolić",
+      "tag": "div",
+      "prop": "borderTopColor",
+      "frame": "rgba(255, 255, 255, 0.216)",
+      "proto": "rgb(241, 243, 239)"
+     },
+     {
+      "text": "Petar Nikolić",
+      "tag": "div",
+      "prop": "borderTopStyle",
+      "frame": "solid",
+      "proto": "none"
+     },
+     {
+      "text": "Petar Nikolić",
+      "tag": "div",
+      "prop": "borderRadius",
+      "frame": "8px",
+      "proto": "0px"
+     },
+     {
+      "text": "Petar Nikolić",
+      "tag": "div",
+      "prop": "width",
+      "frame": 333,
+      "proto": 203
+     },
+     {
+      "text": "Petar Nikolić",
+      "tag": "div",
+      "prop": "height",
+      "frame": 44,
+      "proto": 20
+     },
+     {
+      "text": "Plan",
+      "tag": "span",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Pun plan",
+      "tag": "div",
+      "prop": "fontSize",
+      "frame": "16px",
+      "proto": "14px"
+     },
+     {
+      "text": "Pun plan",
+      "tag": "div",
+      "prop": "gap",
+      "frame": "normal",
+      "proto": "8px"
+     },
+     {
+      "text": "Pun plan",
+      "tag": "div",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Pun plan",
+      "tag": "div",
+      "prop": "height",
+      "frame": 44,
+      "proto": 40
+     },
+     {
+      "text": "Trajanje",
+      "tag": "span",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Bez roka",
+      "tag": "div",
+      "prop": "fontSize",
+      "frame": "16px",
+      "proto": "14px"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "div",
+      "prop": "color",
+      "frame": "rgb(241, 243, 239)",
+      "proto": "rgb(255, 255, 255)"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "div",
+      "prop": "backgroundColor",
+      "frame": "rgb(23, 27, 24)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "div",
+      "prop": "borderTopColor",
+      "frame": "rgba(255, 255, 255, 0.216)",
+      "proto": "rgba(255, 255, 255, 0.15)"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "div",
+      "prop": "borderRadius",
+      "frame": "8px",
+      "proto": "9999px"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "div",
+      "prop": "gap",
+      "frame": "normal",
+      "proto": "8px"
+     },
+     {
+      "text": "Bez roka",
+      "tag": "div",
+      "prop": "width",
+      "frame": 333,
+      "proto": 88
+     },
+     {
+      "text": "Bez roka",
+      "tag": "div",
+      "prop": "height",
+      "frame": 44,
+      "proto": 40
+     },
+     {
+      "text": "Možeš da ga ukineš u bilo kom trenutku.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Interna napomena",
+      "tag": "span",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Vidi samo admin.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Odobri pristup",
+      "tag": "button",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Odobri pristup",
+      "tag": "button",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Odobri pristup",
+      "tag": "button",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     },
+     {
+      "text": "Otkaži",
+      "tag": "button",
+      "prop": "width",
+      "frame": 333,
+      "proto": 325
+     }
+    ]
+   },
+   "rangeCheck": {
+    "width": 390,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "overflow": false
+   }
+  },
+  {
+   "name": "Adm4 — Dnevnik radnji",
+   "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/Adm4.dc.html",
+   "device": "desktop",
+   "route": "app/admin/dnevnik",
+   "light": {
+    "frameElementCount": 60,
+    "protoElementCount": 70,
+    "matchedCount": 46,
+    "missingInProto": [
+     "Mejlovi banke1",
+     "1",
+     "Pretraži korisnike i pretplate",
+     "14.11.2026. 10:12",
+     "Izvezen izveštaj",
+     "Sistem",
+     "Korisnici, 01. do 14. nov",
+     "12.11.2026. 18:44",
+     "Jelena Ilić",
+     "Iz 1 meseca u 3 meseca",
+     "08.11.2026. 12:01",
+     "Odobren besplatan pristup",
+     "Pun plan, bez roka",
+     "Prikazano 7 od 48"
+    ],
+    "extraInProtoCount": 24,
+    "diffs": [
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "lineHeight",
+      "frame": "12px",
+      "proto": "normal"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgba(0, 0, 0, 0)",
+      "proto": "rgb(200, 241, 105)"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "marginLeft",
+      "frame": "0px",
+      "proto": "34.7812px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "borderRadius",
+      "frame": "0px",
+      "proto": "999px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "width",
+      "frame": 5,
+      "proto": 22
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "height",
+      "frame": 12,
+      "proto": 22
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "500",
+      "proto": "400"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(74, 82, 76)"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgb(238, 248, 210)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(74, 82, 76)"
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "400",
+      "proto": "500"
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(74, 82, 76)"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(74, 82, 76)"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "lineHeight",
+      "frame": "24px",
+      "proto": "normal"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "color",
+      "frame": "rgb(107, 112, 108)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "marginTop",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "marginBottom",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "borderTopColor",
+      "frame": "rgb(107, 112, 108)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "height",
+      "frame": 24,
+      "proto": 20
+     },
+     {
+      "text": "Poslednjih 30 dana",
+      "tag": "span",
+      "prop": "gap",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "width",
+      "frame": 122,
+      "proto": 124
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Sve radnje48",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Sve radnje48",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Sve radnje48",
+      "tag": "span",
+      "prop": "width",
+      "frame": 124,
+      "proto": 126
+     },
+     {
+      "text": "Besplatan pristup9",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Popusti i produženja17",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Promene plana14",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Izvozi8",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Korisnik",
+      "tag": "span",
+      "prop": "width",
+      "frame": 257,
+      "proto": 296
+     },
+     {
+      "text": "Detalj",
+      "tag": "span",
+      "prop": "width",
+      "frame": 335,
+      "proto": 296
+     },
+     {
+      "text": "Petar Nikolić",
+      "tag": "span",
+      "prop": "width",
+      "frame": 257,
+      "proto": 296
+     },
+     {
+      "text": "Pun plan, bez roka",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "16px"
+     },
+     {
+      "text": "Pun plan, bez roka",
+      "tag": "span",
+      "prop": "width",
+      "frame": 335,
+      "proto": 296
+     },
+     {
+      "text": "Pun plan, bez roka",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 20
+     },
+     {
+      "text": "Nikola Jovanović",
+      "tag": "span",
+      "prop": "width",
+      "frame": 257,
+      "proto": 296
+     },
+     {
+      "text": "+7 dana, do 30.11.2026.",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "16px"
+     },
+     {
+      "text": "+7 dana, do 30.11.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 335,
+      "proto": 296
+     },
+     {
+      "text": "+7 dana, do 30.11.2026.",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 20
+     },
+     {
+      "text": "Ana Stojanović",
+      "tag": "span",
+      "prop": "width",
+      "frame": 257,
+      "proto": 296
+     },
+     {
+      "text": "20% na sledeću naplatu",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "16px"
+     },
+     {
+      "text": "20% na sledeću naplatu",
+      "tag": "span",
+      "prop": "width",
+      "frame": 335,
+      "proto": 296
+     },
+     {
+      "text": "20% na sledeću naplatu",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 20
+     },
+     {
+      "text": "Dragan Lazić",
+      "tag": "span",
+      "prop": "width",
+      "frame": 257,
+      "proto": 296
+     },
+     {
+      "text": "Pun plan vraćen na probni",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "16px"
+     },
+     {
+      "text": "Pun plan vraćen na probni",
+      "tag": "span",
+      "prop": "width",
+      "frame": 335,
+      "proto": 296
+     },
+     {
+      "text": "Pun plan vraćen na probni",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 20
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "width",
+      "frame": 68,
+      "proto": 80
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 19
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "width",
+      "frame": 53,
+      "proto": 65
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 19
+     }
+    ]
+   },
+   "dark": {
+    "frameElementCount": 60,
+    "protoElementCount": 70,
+    "matchedCount": 46,
+    "missingInProto": [
+     "Mejlovi banke1",
+     "1",
+     "Pretraži korisnike i pretplate",
+     "14.11.2026. 10:12",
+     "Izvezen izveštaj",
+     "Sistem",
+     "Korisnici, 01. do 14. nov",
+     "12.11.2026. 18:44",
+     "Jelena Ilić",
+     "Iz 1 meseca u 3 meseca",
+     "08.11.2026. 12:01",
+     "Odobren besplatan pristup",
+     "Pun plan, bez roka",
+     "Prikazano 7 od 48"
+    ],
+    "extraInProtoCount": 24,
+    "diffs": [
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "lineHeight",
+      "frame": "12px",
+      "proto": "normal"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgba(0, 0, 0, 0)",
+      "proto": "rgb(200, 241, 105)"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "marginLeft",
+      "frame": "0px",
+      "proto": "34.7812px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "borderRadius",
+      "frame": "0px",
+      "proto": "999px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "width",
+      "frame": 5,
+      "proto": 22
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "height",
+      "frame": 12,
+      "proto": 22
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "500",
+      "proto": "400"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(241, 243, 239)",
+      "proto": "rgb(196, 202, 197)"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgba(200, 241, 105, 0.14)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(241, 243, 239)",
+      "proto": "rgb(196, 202, 197)"
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "400",
+      "proto": "500"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(241, 243, 239)",
+      "proto": "rgb(196, 202, 197)"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(241, 243, 239)",
+      "proto": "rgb(196, 202, 197)"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "lineHeight",
+      "frame": "24px",
+      "proto": "normal"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "color",
+      "frame": "rgb(140, 148, 142)",
+      "proto": "rgb(241, 243, 239)"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "marginTop",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "marginBottom",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "borderTopColor",
+      "frame": "rgb(140, 148, 142)",
+      "proto": "rgb(241, 243, 239)"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "height",
+      "frame": 24,
+      "proto": 20
+     },
+     {
+      "text": "Poslednjih 30 dana",
+      "tag": "span",
+      "prop": "gap",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgba(255, 255, 255, 0.15)"
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "width",
+      "frame": 122,
+      "proto": 124
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Sve radnje48",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgba(255, 255, 255, 0.15)"
+     },
+     {
+      "text": "Sve radnje48",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Sve radnje48",
+      "tag": "span",
+      "prop": "width",
+      "frame": 124,
+      "proto": 126
+     },
+     {
+      "text": "Besplatan pristup9",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Popusti i produženja17",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Promene plana14",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Izvozi8",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Korisnik",
+      "tag": "span",
+      "prop": "width",
+      "frame": 257,
+      "proto": 296
+     },
+     {
+      "text": "Detalj",
+      "tag": "span",
+      "prop": "width",
+      "frame": 335,
+      "proto": 296
+     },
+     {
+      "text": "Petar Nikolić",
+      "tag": "span",
+      "prop": "width",
+      "frame": 257,
+      "proto": 296
+     },
+     {
+      "text": "Pun plan, bez roka",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "16px"
+     },
+     {
+      "text": "Pun plan, bez roka",
+      "tag": "span",
+      "prop": "width",
+      "frame": 335,
+      "proto": 296
+     },
+     {
+      "text": "Pun plan, bez roka",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 20
+     },
+     {
+      "text": "Nikola Jovanović",
+      "tag": "span",
+      "prop": "width",
+      "frame": 257,
+      "proto": 296
+     },
+     {
+      "text": "+7 dana, do 30.11.2026.",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "16px"
+     },
+     {
+      "text": "+7 dana, do 30.11.2026.",
+      "tag": "span",
+      "prop": "width",
+      "frame": 335,
+      "proto": 296
+     },
+     {
+      "text": "+7 dana, do 30.11.2026.",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 20
+     },
+     {
+      "text": "Ana Stojanović",
+      "tag": "span",
+      "prop": "width",
+      "frame": 257,
+      "proto": 296
+     },
+     {
+      "text": "20% na sledeću naplatu",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "16px"
+     },
+     {
+      "text": "20% na sledeću naplatu",
+      "tag": "span",
+      "prop": "width",
+      "frame": 335,
+      "proto": 296
+     },
+     {
+      "text": "20% na sledeću naplatu",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 20
+     },
+     {
+      "text": "Dragan Lazić",
+      "tag": "span",
+      "prop": "width",
+      "frame": 257,
+      "proto": 296
+     },
+     {
+      "text": "Pun plan vraćen na probni",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "16px"
+     },
+     {
+      "text": "Pun plan vraćen na probni",
+      "tag": "span",
+      "prop": "width",
+      "frame": 335,
+      "proto": 296
+     },
+     {
+      "text": "Pun plan vraćen na probni",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 20
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "width",
+      "frame": 68,
+      "proto": 80
+     },
+     {
+      "text": "Prethodna",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 19
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "width",
+      "frame": 53,
+      "proto": 65
+     },
+     {
+      "text": "Sledeća",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 19
+     }
+    ]
+   },
+   "rangeCheck": {
+    "width": 1280,
+    "scrollWidth": 1280,
+    "clientWidth": 1280,
+    "overflow": false
+   }
+  },
+  {
+   "name": "PhAdm4 — Dnevnik radnji (telefon)",
+   "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/PhAdm4.dc.html",
+   "device": "phone",
+   "route": "app/admin/dnevnik",
+   "light": {
+    "frameElementCount": 43,
+    "protoElementCount": 54,
+    "matchedCount": 33,
+    "missingInProto": [
+     "Izvezen izveštaj",
+     "Sistem",
+     "Korisnici, 01. do 14. nov",
+     "14.11.2026. 10:12",
+     "Jelena Ilić",
+     "Iz 1 meseca u 3 meseca",
+     "12.11.2026. 18:44",
+     "Odobren besplatan pristup",
+     "Pun plan, bez roka",
+     "08.11.2026. 12:01"
+    ],
+    "extraInProtoCount": 21,
+    "diffs": [
+     {
+      "text": "Dnevnik radnji",
+      "tag": "h1",
+      "prop": "fontSize",
+      "frame": "24px",
+      "proto": "32px"
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "h1",
+      "prop": "lineHeight",
+      "frame": "28.8px",
+      "proto": "normal"
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "h1",
+      "prop": "height",
+      "frame": 29,
+      "proto": 39
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "lineHeight",
+      "frame": "24px",
+      "proto": "normal"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "color",
+      "frame": "rgb(107, 112, 108)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "marginTop",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "marginBottom",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "borderTopColor",
+      "frame": "rgb(107, 112, 108)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "height",
+      "frame": 48,
+      "proto": 40
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "width",
+      "frame": 122,
+      "proto": 124
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Sve radnje48",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Sve radnje48",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Sve radnje48",
+      "tag": "span",
+      "prop": "width",
+      "frame": 124,
+      "proto": 126
+     },
+     {
+      "text": "Besplatan pristup9",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Popusti i produženja17",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Promene plana14",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Izvozi8",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Odobren besplatan pristup",
+      "tag": "span",
+      "prop": "width",
+      "frame": 202,
+      "proto": 299
+     },
+     {
+      "text": "20.11.2026. 11:42",
+      "tag": "span",
+      "prop": "paddingTop",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "20.11.2026. 11:42",
+      "tag": "span",
+      "prop": "height",
+      "frame": 28,
+      "proto": 26
+     },
+     {
+      "text": "Produžen probni period",
+      "tag": "span",
+      "prop": "width",
+      "frame": 178,
+      "proto": 299
+     },
+     {
+      "text": "19.11.2026. 16:05",
+      "tag": "span",
+      "prop": "paddingTop",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "19.11.2026. 16:05",
+      "tag": "span",
+      "prop": "height",
+      "frame": 28,
+      "proto": 26
+     },
+     {
+      "text": "Ručni popust",
+      "tag": "span",
+      "prop": "width",
+      "frame": 99,
+      "proto": 299
+     },
+     {
+      "text": "19.11.2026. 09:18",
+      "tag": "span",
+      "prop": "paddingTop",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "19.11.2026. 09:18",
+      "tag": "span",
+      "prop": "height",
+      "frame": 28,
+      "proto": 26
+     },
+     {
+      "text": "Ukinut besplatan pristup",
+      "tag": "span",
+      "prop": "width",
+      "frame": 184,
+      "proto": 299
+     },
+     {
+      "text": "17.11.2026. 14:30",
+      "tag": "span",
+      "prop": "paddingTop",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "17.11.2026. 14:30",
+      "tag": "span",
+      "prop": "height",
+      "frame": 28,
+      "proto": 26
+     },
+     {
+      "text": "Promenjen plan",
+      "tag": "span",
+      "prop": "width",
+      "frame": 118,
+      "proto": 299
+     }
+    ]
+   },
+   "dark": {
+    "frameElementCount": 43,
+    "protoElementCount": 54,
+    "matchedCount": 33,
+    "missingInProto": [
+     "Izvezen izveštaj",
+     "Sistem",
+     "Korisnici, 01. do 14. nov",
+     "14.11.2026. 10:12",
+     "Jelena Ilić",
+     "Iz 1 meseca u 3 meseca",
+     "12.11.2026. 18:44",
+     "Odobren besplatan pristup",
+     "Pun plan, bez roka",
+     "08.11.2026. 12:01"
+    ],
+    "extraInProtoCount": 21,
+    "diffs": [
+     {
+      "text": "Dnevnik radnji",
+      "tag": "h1",
+      "prop": "fontSize",
+      "frame": "24px",
+      "proto": "32px"
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "h1",
+      "prop": "lineHeight",
+      "frame": "28.8px",
+      "proto": "normal"
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "h1",
+      "prop": "height",
+      "frame": 29,
+      "proto": 39
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "lineHeight",
+      "frame": "24px",
+      "proto": "normal"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "color",
+      "frame": "rgb(140, 148, 142)",
+      "proto": "rgb(241, 243, 239)"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "marginTop",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "marginBottom",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "borderTopColor",
+      "frame": "rgb(140, 148, 142)",
+      "proto": "rgb(241, 243, 239)"
+     },
+     {
+      "text": "Svaka radnja admina se beleži. Zapisi se ne mogu menjati ni brisati.",
+      "tag": "p",
+      "prop": "height",
+      "frame": 48,
+      "proto": 40
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgba(255, 255, 255, 0.15)"
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "width",
+      "frame": 122,
+      "proto": 124
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Sve radnje48",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgba(255, 255, 255, 0.15)"
+     },
+     {
+      "text": "Sve radnje48",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Sve radnje48",
+      "tag": "span",
+      "prop": "width",
+      "frame": 124,
+      "proto": 126
+     },
+     {
+      "text": "Besplatan pristup9",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Popusti i produženja17",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Promene plana14",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Izvozi8",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Odobren besplatan pristup",
+      "tag": "span",
+      "prop": "width",
+      "frame": 202,
+      "proto": 299
+     },
+     {
+      "text": "20.11.2026. 11:42",
+      "tag": "span",
+      "prop": "paddingTop",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "20.11.2026. 11:42",
+      "tag": "span",
+      "prop": "height",
+      "frame": 28,
+      "proto": 26
+     },
+     {
+      "text": "Produžen probni period",
+      "tag": "span",
+      "prop": "width",
+      "frame": 178,
+      "proto": 299
+     },
+     {
+      "text": "19.11.2026. 16:05",
+      "tag": "span",
+      "prop": "paddingTop",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "19.11.2026. 16:05",
+      "tag": "span",
+      "prop": "height",
+      "frame": 28,
+      "proto": 26
+     },
+     {
+      "text": "Ručni popust",
+      "tag": "span",
+      "prop": "width",
+      "frame": 99,
+      "proto": 299
+     },
+     {
+      "text": "19.11.2026. 09:18",
+      "tag": "span",
+      "prop": "paddingTop",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "19.11.2026. 09:18",
+      "tag": "span",
+      "prop": "height",
+      "frame": 28,
+      "proto": 26
+     },
+     {
+      "text": "Ukinut besplatan pristup",
+      "tag": "span",
+      "prop": "width",
+      "frame": 184,
+      "proto": 299
+     },
+     {
+      "text": "17.11.2026. 14:30",
+      "tag": "span",
+      "prop": "paddingTop",
+      "frame": "10px",
+      "proto": "8px"
+     },
+     {
+      "text": "17.11.2026. 14:30",
+      "tag": "span",
+      "prop": "height",
+      "frame": 28,
+      "proto": 26
+     },
+     {
+      "text": "Promenjen plan",
+      "tag": "span",
+      "prop": "width",
+      "frame": 118,
+      "proto": 299
+     }
+    ]
+   },
+   "rangeCheck": {
+    "width": 390,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "overflow": false
+   }
+  },
+  {
+   "name": "Adm5 — Podrška",
+   "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/Adm5.dc.html",
+   "device": "desktop",
+   "route": "app/admin/podrska",
+   "light": {
+    "frameElementCount": 47,
+    "protoElementCount": 52,
+    "matchedCount": 44,
+    "missingInProto": [
+     "Mejlovi banke1",
+     "1",
+     "Pretraži korisnike i pretplate"
+    ],
+    "extraInProtoCount": 8,
+    "diffs": [
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "lineHeight",
+      "frame": "12px",
+      "proto": "normal"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgba(0, 0, 0, 0)",
+      "proto": "rgb(200, 241, 105)"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "marginLeft",
+      "frame": "0px",
+      "proto": "34.7812px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "borderRadius",
+      "frame": "0px",
+      "proto": "999px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "width",
+      "frame": 5,
+      "proto": 22
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "height",
+      "frame": 12,
+      "proto": 22
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "500",
+      "proto": "400"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(74, 82, 76)"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgb(238, 248, 210)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(74, 82, 76)"
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "400",
+      "proto": "500"
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(74, 82, 76)"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(74, 82, 76)"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "lineHeight",
+      "frame": "24px",
+      "proto": "normal"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "color",
+      "frame": "rgb(107, 112, 108)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "marginTop",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "marginBottom",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "borderTopColor",
+      "frame": "rgb(107, 112, 108)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "height",
+      "frame": 24,
+      "proto": 20
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "width",
+      "frame": 82,
+      "proto": 84
+     },
+     {
+      "text": "Faktura se ne šalje klijentu",
+      "tag": "span",
+      "prop": "width",
+      "frame": 227,
+      "proto": 229
+     },
+     {
+      "text": "Pre 2 h",
+      "tag": "span",
+      "prop": "width",
+      "frame": 90,
+      "proto": 80
+     },
+     {
+      "text": "Mejl banke nije stigao",
+      "tag": "span",
+      "prop": "width",
+      "frame": 227,
+      "proto": 229
+     },
+     {
+      "text": "Pre 7 h",
+      "tag": "span",
+      "prop": "width",
+      "frame": 90,
+      "proto": 80
+     },
+     {
+      "text": "Pogrešan rok za porez",
+      "tag": "span",
+      "prop": "width",
+      "frame": 227,
+      "proto": 229
+     },
+     {
+      "text": "Juče",
+      "tag": "span",
+      "prop": "width",
+      "frame": 90,
+      "proto": 80
+     },
+     {
+      "text": "Ne mogu da promenim karticu",
+      "tag": "span",
+      "prop": "width",
+      "frame": 227,
+      "proto": 229
+     },
+     {
+      "text": "Pre 2 dana",
+      "tag": "span",
+      "prop": "width",
+      "frame": 90,
+      "proto": 80
+     },
+     {
+      "text": "Izvoz knjige ne radi",
+      "tag": "span",
+      "prop": "width",
+      "frame": 227,
+      "proto": 229
+     },
+     {
+      "text": "Pre 4 dana",
+      "tag": "span",
+      "prop": "width",
+      "frame": 90,
+      "proto": 80
+     },
+     {
+      "text": "Ocene AI odgovora",
+      "tag": "span",
+      "prop": "width",
+      "frame": 385,
+      "proto": 425
+     },
+     {
+      "text": "Poslednjih 30 dana",
+      "tag": "span",
+      "prop": "width",
+      "frame": 385,
+      "proto": 425
+     },
+     {
+      "text": "91%",
+      "tag": "span",
+      "prop": "width",
+      "frame": 62,
+      "proto": 64
+     },
+     {
+      "text": "korisnih",
+      "tag": "span",
+      "prop": "width",
+      "frame": 62,
+      "proto": 64
+     },
+     {
+      "text": "Razlozi",
+      "tag": "span",
+      "prop": "width",
+      "frame": 385,
+      "proto": 425
+     }
+    ]
+   },
+   "dark": {
+    "frameElementCount": 47,
+    "protoElementCount": 52,
+    "matchedCount": 44,
+    "missingInProto": [
+     "Mejlovi banke1",
+     "1",
+     "Pretraži korisnike i pretplate"
+    ],
+    "extraInProtoCount": 8,
+    "diffs": [
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "lineHeight",
+      "frame": "12px",
+      "proto": "normal"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgba(0, 0, 0, 0)",
+      "proto": "rgb(200, 241, 105)"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "6px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "marginLeft",
+      "frame": "0px",
+      "proto": "34.7812px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "borderRadius",
+      "frame": "0px",
+      "proto": "999px"
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "width",
+      "frame": 5,
+      "proto": 22
+     },
+     {
+      "text": "1",
+      "tag": "span",
+      "prop": "height",
+      "frame": 12,
+      "proto": 22
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "500",
+      "proto": "400"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(241, 243, 239)",
+      "proto": "rgb(196, 202, 197)"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "backgroundColor",
+      "frame": "rgba(200, 241, 105, 0.14)",
+      "proto": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(241, 243, 239)",
+      "proto": "rgb(196, 202, 197)"
+     },
+     {
+      "text": "Pretplata aktivna",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "400",
+      "proto": "500"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(241, 243, 239)",
+      "proto": "rgb(196, 202, 197)"
+     },
+     {
+      "text": "Obnavlja se 15. nov 2027",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(241, 243, 239)",
+      "proto": "rgb(196, 202, 197)"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "lineHeight",
+      "frame": "24px",
+      "proto": "normal"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "color",
+      "frame": "rgb(140, 148, 142)",
+      "proto": "rgb(241, 243, 239)"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "marginTop",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "marginBottom",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "borderTopColor",
+      "frame": "rgb(140, 148, 142)",
+      "proto": "rgb(241, 243, 239)"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "height",
+      "frame": 24,
+      "proto": 20
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgba(255, 255, 255, 0.15)"
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "width",
+      "frame": 82,
+      "proto": 84
+     },
+     {
+      "text": "Faktura se ne šalje klijentu",
+      "tag": "span",
+      "prop": "width",
+      "frame": 227,
+      "proto": 229
+     },
+     {
+      "text": "Pre 2 h",
+      "tag": "span",
+      "prop": "width",
+      "frame": 90,
+      "proto": 80
+     },
+     {
+      "text": "Mejl banke nije stigao",
+      "tag": "span",
+      "prop": "width",
+      "frame": 227,
+      "proto": 229
+     },
+     {
+      "text": "Pre 7 h",
+      "tag": "span",
+      "prop": "width",
+      "frame": 90,
+      "proto": 80
+     },
+     {
+      "text": "Pogrešan rok za porez",
+      "tag": "span",
+      "prop": "width",
+      "frame": 227,
+      "proto": 229
+     },
+     {
+      "text": "Juče",
+      "tag": "span",
+      "prop": "width",
+      "frame": 90,
+      "proto": 80
+     },
+     {
+      "text": "Ne mogu da promenim karticu",
+      "tag": "span",
+      "prop": "width",
+      "frame": 227,
+      "proto": 229
+     },
+     {
+      "text": "Pre 2 dana",
+      "tag": "span",
+      "prop": "width",
+      "frame": 90,
+      "proto": 80
+     },
+     {
+      "text": "Izvoz knjige ne radi",
+      "tag": "span",
+      "prop": "width",
+      "frame": 227,
+      "proto": 229
+     },
+     {
+      "text": "Pre 4 dana",
+      "tag": "span",
+      "prop": "width",
+      "frame": 90,
+      "proto": 80
+     },
+     {
+      "text": "Ocene AI odgovora",
+      "tag": "span",
+      "prop": "width",
+      "frame": 385,
+      "proto": 425
+     },
+     {
+      "text": "Poslednjih 30 dana",
+      "tag": "span",
+      "prop": "width",
+      "frame": 385,
+      "proto": 425
+     },
+     {
+      "text": "91%",
+      "tag": "span",
+      "prop": "width",
+      "frame": 62,
+      "proto": 64
+     },
+     {
+      "text": "korisnih",
+      "tag": "span",
+      "prop": "width",
+      "frame": 62,
+      "proto": 64
+     },
+     {
+      "text": "Razlozi",
+      "tag": "span",
+      "prop": "width",
+      "frame": 385,
+      "proto": 425
+     }
+    ]
+   },
+   "rangeCheck": {
+    "width": 1280,
+    "scrollWidth": 1280,
+    "clientWidth": 1280,
+    "overflow": false
+   }
+  },
+  {
+   "name": "PhAdm5 — Podrška (telefon)",
+   "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/PhAdm5.dc.html",
+   "device": "phone",
+   "route": "app/admin/podrska",
+   "light": {
+    "frameElementCount": 38,
+    "protoElementCount": 41,
+    "matchedCount": 37,
+    "missingInProto": [
+     "Nije korisno"
+    ],
+    "extraInProtoCount": 4,
+    "diffs": [
+     {
+      "text": "Podrška",
+      "tag": "h1",
+      "prop": "fontSize",
+      "frame": "24px",
+      "proto": "32px"
+     },
+     {
+      "text": "Podrška",
+      "tag": "h1",
+      "prop": "lineHeight",
+      "frame": "28.8px",
+      "proto": "normal"
+     },
+     {
+      "text": "Podrška",
+      "tag": "h1",
+      "prop": "height",
+      "frame": 29,
+      "proto": 39
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "lineHeight",
+      "frame": "24px",
+      "proto": "normal"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "color",
+      "frame": "rgb(107, 112, 108)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "marginTop",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "marginBottom",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "borderTopColor",
+      "frame": "rgb(107, 112, 108)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "height",
+      "frame": 72,
+      "proto": 60
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "width",
+      "frame": 82,
+      "proto": 84
+     },
+     {
+      "text": "Faktura se ne šalje klijentu",
+      "tag": "span",
+      "prop": "width",
+      "frame": 199,
+      "proto": 299
+     },
+     {
+      "text": "Mejl banke nije stigao",
+      "tag": "span",
+      "prop": "width",
+      "frame": 164,
+      "proto": 299
+     },
+     {
+      "text": "Pogrešan rok za porez",
+      "tag": "span",
+      "prop": "width",
+      "frame": 170,
+      "proto": 299
+     },
+     {
+      "text": "Ne mogu da promenim karticu",
+      "tag": "span",
+      "prop": "width",
+      "frame": 229,
+      "proto": 299
+     },
+     {
+      "text": "Izvoz knjige ne radi",
+      "tag": "span",
+      "prop": "width",
+      "frame": 146,
+      "proto": 299
+     },
+     {
+      "text": "91%",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "24px",
+      "proto": "32px"
+     },
+     {
+      "text": "91%",
+      "tag": "span",
+      "prop": "lineHeight",
+      "frame": "28.8px",
+      "proto": "38.4px"
+     },
+     {
+      "text": "91%",
+      "tag": "span",
+      "prop": "width",
+      "frame": 52,
+      "proto": 64
+     },
+     {
+      "text": "91%",
+      "tag": "span",
+      "prop": "height",
+      "frame": 29,
+      "proto": 38
+     },
+     {
+      "text": "korisnih",
+      "tag": "span",
+      "prop": "width",
+      "frame": 52,
+      "proto": 64
+     },
+     {
+      "text": "31",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "24px",
+      "proto": "32px"
+     },
+     {
+      "text": "31",
+      "tag": "span",
+      "prop": "lineHeight",
+      "frame": "28.8px",
+      "proto": "38.4px"
+     },
+     {
+      "text": "31",
+      "tag": "span",
+      "prop": "width",
+      "frame": 78,
+      "proto": 123
+     },
+     {
+      "text": "31",
+      "tag": "span",
+      "prop": "height",
+      "frame": 29,
+      "proto": 38
+     },
+     {
+      "text": "Netačan podatak",
+      "tag": "span",
+      "prop": "width",
+      "frame": 113,
+      "proto": 170
+     },
+     {
+      "text": "14",
+      "tag": "span",
+      "prop": "width",
+      "frame": 15,
+      "proto": 24
+     },
+     {
+      "text": "Nije odgovorio na pitanje",
+      "tag": "span",
+      "prop": "width",
+      "frame": 165,
+      "proto": 170
+     },
+     {
+      "text": "9",
+      "tag": "span",
+      "prop": "width",
+      "frame": 9,
+      "proto": 24
+     },
+     {
+      "text": "Previše dugo",
+      "tag": "span",
+      "prop": "width",
+      "frame": 86,
+      "proto": 170
+     },
+     {
+      "text": "5",
+      "tag": "span",
+      "prop": "width",
+      "frame": 8,
+      "proto": 24
+     },
+     {
+      "text": "Drugo",
+      "tag": "span",
+      "prop": "width",
+      "frame": 41,
+      "proto": 170
+     },
+     {
+      "text": "3",
+      "tag": "span",
+      "prop": "width",
+      "frame": 9,
+      "proto": 24
+     }
+    ]
+   },
+   "dark": {
+    "frameElementCount": 38,
+    "protoElementCount": 41,
+    "matchedCount": 37,
+    "missingInProto": [
+     "Nije korisno"
+    ],
+    "extraInProtoCount": 4,
+    "diffs": [
+     {
+      "text": "Podrška",
+      "tag": "h1",
+      "prop": "fontSize",
+      "frame": "24px",
+      "proto": "32px"
+     },
+     {
+      "text": "Podrška",
+      "tag": "h1",
+      "prop": "lineHeight",
+      "frame": "28.8px",
+      "proto": "normal"
+     },
+     {
+      "text": "Podrška",
+      "tag": "h1",
+      "prop": "height",
+      "frame": 29,
+      "proto": 39
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "lineHeight",
+      "frame": "24px",
+      "proto": "normal"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "color",
+      "frame": "rgb(140, 148, 142)",
+      "proto": "rgb(241, 243, 239)"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "marginTop",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "marginBottom",
+      "frame": "0px",
+      "proto": "16px"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "borderTopColor",
+      "frame": "rgb(140, 148, 142)",
+      "proto": "rgb(241, 243, 239)"
+     },
+     {
+      "text": "Prijave problema i ocene AI odgovora. Ocene prikazuju razlog i oblast, ne tekst razgovora.",
+      "tag": "p",
+      "prop": "height",
+      "frame": 72,
+      "proto": 60
+     },
+     {
+      "text": "Pregled",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Korisnici i pretplate",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Dnevnik radnji",
+      "tag": "span",
+      "prop": "height",
+      "frame": 42,
+      "proto": 40
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(255, 255, 255)",
+      "proto": "rgba(255, 255, 255, 0.15)"
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "borderTopStyle",
+      "frame": "none",
+      "proto": "solid"
+     },
+     {
+      "text": "Podrška",
+      "tag": "span",
+      "prop": "width",
+      "frame": 82,
+      "proto": 84
+     },
+     {
+      "text": "Faktura se ne šalje klijentu",
+      "tag": "span",
+      "prop": "width",
+      "frame": 199,
+      "proto": 299
+     },
+     {
+      "text": "Mejl banke nije stigao",
+      "tag": "span",
+      "prop": "width",
+      "frame": 164,
+      "proto": 299
+     },
+     {
+      "text": "Pogrešan rok za porez",
+      "tag": "span",
+      "prop": "width",
+      "frame": 170,
+      "proto": 299
+     },
+     {
+      "text": "Ne mogu da promenim karticu",
+      "tag": "span",
+      "prop": "width",
+      "frame": 229,
+      "proto": 299
+     },
+     {
+      "text": "Izvoz knjige ne radi",
+      "tag": "span",
+      "prop": "width",
+      "frame": 146,
+      "proto": 299
+     },
+     {
+      "text": "91%",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "24px",
+      "proto": "32px"
+     },
+     {
+      "text": "91%",
+      "tag": "span",
+      "prop": "lineHeight",
+      "frame": "28.8px",
+      "proto": "38.4px"
+     },
+     {
+      "text": "91%",
+      "tag": "span",
+      "prop": "width",
+      "frame": 52,
+      "proto": 64
+     },
+     {
+      "text": "91%",
+      "tag": "span",
+      "prop": "height",
+      "frame": 29,
+      "proto": 38
+     },
+     {
+      "text": "korisnih",
+      "tag": "span",
+      "prop": "width",
+      "frame": 52,
+      "proto": 64
+     },
+     {
+      "text": "31",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "24px",
+      "proto": "32px"
+     },
+     {
+      "text": "31",
+      "tag": "span",
+      "prop": "lineHeight",
+      "frame": "28.8px",
+      "proto": "38.4px"
+     },
+     {
+      "text": "31",
+      "tag": "span",
+      "prop": "width",
+      "frame": 78,
+      "proto": 123
+     },
+     {
+      "text": "31",
+      "tag": "span",
+      "prop": "height",
+      "frame": 29,
+      "proto": 38
+     },
+     {
+      "text": "Netačan podatak",
+      "tag": "span",
+      "prop": "width",
+      "frame": 113,
+      "proto": 170
+     },
+     {
+      "text": "14",
+      "tag": "span",
+      "prop": "width",
+      "frame": 15,
+      "proto": 24
+     },
+     {
+      "text": "Nije odgovorio na pitanje",
+      "tag": "span",
+      "prop": "width",
+      "frame": 165,
+      "proto": 170
+     },
+     {
+      "text": "9",
+      "tag": "span",
+      "prop": "width",
+      "frame": 9,
+      "proto": 24
+     },
+     {
+      "text": "Previše dugo",
+      "tag": "span",
+      "prop": "width",
+      "frame": 86,
+      "proto": 170
+     },
+     {
+      "text": "5",
+      "tag": "span",
+      "prop": "width",
+      "frame": 8,
+      "proto": 24
+     },
+     {
+      "text": "Drugo",
+      "tag": "span",
+      "prop": "width",
+      "frame": 41,
+      "proto": 170
+     },
+     {
+      "text": "3",
+      "tag": "span",
+      "prop": "width",
+      "frame": 9,
+      "proto": 24
+     }
+    ]
+   },
+   "rangeCheck": {
+    "width": 390,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "overflow": false
+   }
+  },
+  {
+   "name": "PhAdm0 — Meni Više sa stavkom Admin (telefon)",
+   "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/PhAdm0.dc.html",
+   "device": "phone",
+   "route": "app/admin",
+   "light": {
+    "frameElementCount": 7,
+    "protoElementCount": 56,
+    "matchedCount": 3,
+    "missingInProto": [
+     "Zbirne brojke i pretplate. Bez faktura, iznosa i klijenata korisnika.",
+     "1",
+     "Pretplata aktivna",
+     "Obnavlja se 15. nov 2027"
+    ],
+    "extraInProtoCount": 53,
+    "diffs": [
+     {
+      "text": "Admin",
+      "tag": "h1",
+      "prop": "fontSize",
+      "frame": "24px",
+      "proto": "32px"
+     },
+     {
+      "text": "Admin",
+      "tag": "h1",
+      "prop": "lineHeight",
+      "frame": "28.8px",
+      "proto": "normal"
+     },
+     {
+      "text": "Admin",
+      "tag": "h1",
+      "prop": "height",
+      "frame": 29,
+      "proto": 39
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "500",
+      "proto": "400"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "12px"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "12px"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(15, 42, 34)",
+      "proto": "rgb(22, 26, 23)"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "borderRadius",
+      "frame": "0px",
+      "proto": "8px"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "gap",
+      "frame": "normal",
+      "proto": "12px"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "width",
+      "frame": 49,
+      "proto": 325
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "height",
+      "frame": 20,
+      "proto": 44
+     },
+     {
+      "text": "Odjavi se",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "16px"
+     },
+     {
+      "text": "Odjavi se",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(107, 112, 108)",
+      "proto": "rgb(194, 58, 46)"
+     },
+     {
+      "text": "Odjavi se",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "12px"
+     },
+     {
+      "text": "Odjavi se",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "12px"
+     },
+     {
+      "text": "Odjavi se",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(107, 112, 108)",
+      "proto": "rgb(194, 58, 46)"
+     },
+     {
+      "text": "Odjavi se",
+      "tag": "span",
+      "prop": "borderRadius",
+      "frame": "0px",
+      "proto": "8px"
+     },
+     {
+      "text": "Odjavi se",
+      "tag": "span",
+      "prop": "gap",
+      "frame": "normal",
+      "proto": "12px"
+     },
+     {
+      "text": "Odjavi se",
+      "tag": "span",
+      "prop": "width",
+      "frame": 61,
+      "proto": 325
+     },
+     {
+      "text": "Odjavi se",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 44
+     }
+    ]
+   },
+   "dark": {
+    "frameElementCount": 7,
+    "protoElementCount": 56,
+    "matchedCount": 3,
+    "missingInProto": [
+     "Zbirne brojke i pretplate. Bez faktura, iznosa i klijenata korisnika.",
+     "1",
+     "Pretplata aktivna",
+     "Obnavlja se 15. nov 2027"
+    ],
+    "extraInProtoCount": 53,
+    "diffs": [
+     {
+      "text": "Admin",
+      "tag": "h1",
+      "prop": "fontSize",
+      "frame": "24px",
+      "proto": "32px"
+     },
+     {
+      "text": "Admin",
+      "tag": "h1",
+      "prop": "lineHeight",
+      "frame": "28.8px",
+      "proto": "normal"
+     },
+     {
+      "text": "Admin",
+      "tag": "h1",
+      "prop": "height",
+      "frame": 29,
+      "proto": 39
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "fontWeight",
+      "frame": "500",
+      "proto": "400"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "12px"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "12px"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "borderRadius",
+      "frame": "0px",
+      "proto": "8px"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "gap",
+      "frame": "normal",
+      "proto": "12px"
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "width",
+      "frame": 49,
+      "proto": 325
+     },
+     {
+      "text": "Admin",
+      "tag": "span",
+      "prop": "height",
+      "frame": 20,
+      "proto": 44
+     },
+     {
+      "text": "Odjavi se",
+      "tag": "span",
+      "prop": "fontSize",
+      "frame": "14px",
+      "proto": "16px"
+     },
+     {
+      "text": "Odjavi se",
+      "tag": "span",
+      "prop": "color",
+      "frame": "rgb(140, 148, 142)",
+      "proto": "rgb(240, 138, 126)"
+     },
+     {
+      "text": "Odjavi se",
+      "tag": "span",
+      "prop": "paddingRight",
+      "frame": "0px",
+      "proto": "12px"
+     },
+     {
+      "text": "Odjavi se",
+      "tag": "span",
+      "prop": "paddingLeft",
+      "frame": "0px",
+      "proto": "12px"
+     },
+     {
+      "text": "Odjavi se",
+      "tag": "span",
+      "prop": "borderTopColor",
+      "frame": "rgb(140, 148, 142)",
+      "proto": "rgb(240, 138, 126)"
+     },
+     {
+      "text": "Odjavi se",
+      "tag": "span",
+      "prop": "borderRadius",
+      "frame": "0px",
+      "proto": "8px"
+     },
+     {
+      "text": "Odjavi se",
+      "tag": "span",
+      "prop": "gap",
+      "frame": "normal",
+      "proto": "12px"
+     },
+     {
+      "text": "Odjavi se",
+      "tag": "span",
+      "prop": "width",
+      "frame": 61,
+      "proto": 325
+     },
+     {
+      "text": "Odjavi se",
+      "tag": "span",
+      "prop": "height",
+      "frame": 17,
+      "proto": 44
+     }
+    ]
+   },
+   "rangeCheck": {
+    "width": 390,
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "overflow": false
+   }
+  }
+ ]
+}

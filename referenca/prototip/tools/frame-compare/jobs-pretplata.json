@@ -1,0 +1,144 @@
+[
+  {
+    "name": "Sub3 — Izaberi plan",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Sub3.dc.html",
+    "device": "desktop",
+    "route": "app/pretplata/plan",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');"
+  },
+  {
+    "name": "PhSub3 — Izaberi plan (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhSub3.dc.html",
+    "device": "phone",
+    "route": "app/pretplata/plan",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');"
+  },
+  {
+    "name": "Sub4 — Plati, kartica",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Sub4.dc.html",
+    "device": "desktop",
+    "route": "app/pretplata/placanje/12",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');"
+  },
+  {
+    "name": "PhSub4 — Plati, kartica (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhSub4.dc.html",
+    "device": "phone",
+    "route": "app/pretplata/placanje/12",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');"
+  },
+  {
+    "name": "Sub5 — Potvrdi plaćanje (3DS)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Sub5.dc.html",
+    "device": "desktop",
+    "route": "app/pretplata/placanje/12",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "(function(){ var cb=document.querySelector('input[type=checkbox]'); if(cb && !cb.checked) cb.click(); var btns=Array.from(document.querySelectorAll('button')); var b=btns.find(x=>x.textContent.trim().indexOf('Plati')===0); if(b) b.click(); })();",
+    "afterNavWait": 400
+  },
+  {
+    "name": "PhSub5 — Potvrdi plaćanje, 3DS (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhSub5.dc.html",
+    "device": "phone",
+    "route": "app/pretplata/placanje/12",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "(function(){ var cb=document.querySelector('input[type=checkbox]'); if(cb && !cb.checked) cb.click(); var btns=Array.from(document.querySelectorAll('button')); var b=btns.find(x=>x.textContent.trim().indexOf('Plati')===0); if(b) b.click(); })();",
+    "afterNavWait": 400
+  },
+  {
+    "name": "Sub6 — Banka odbila plaćanje",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Sub6.dc.html",
+    "device": "desktop",
+    "route": "app/pretplata/placanje/12",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({dev: Object.assign({}, window.AIK.store.getState().dev, {paymentForceFail:true})});",
+    "afterNav": "(function(){ var cb=document.querySelector('input[type=checkbox]'); if(cb && !cb.checked) cb.click(); var btns=Array.from(document.querySelectorAll('button')); var b=btns.find(x=>x.textContent.trim().indexOf('Plati')===0); if(b) b.click(); })();",
+    "afterNavWait": 1700
+  },
+  {
+    "name": "PhSub6 — Banka odbila plaćanje (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhSub6.dc.html",
+    "device": "phone",
+    "route": "app/pretplata/placanje/12",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState({dev: Object.assign({}, window.AIK.store.getState().dev, {paymentForceFail:true})});",
+    "afterNav": "(function(){ var cb=document.querySelector('input[type=checkbox]'); if(cb && !cb.checked) cb.click(); var btns=Array.from(document.querySelectorAll('button')); var b=btns.find(x=>x.textContent.trim().indexOf('Plati')===0); if(b) b.click(); })();",
+    "afterNavWait": 1700
+  },
+  {
+    "name": "Sub7 — Plati, QR kod",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Sub7.dc.html",
+    "device": "desktop",
+    "route": "app/pretplata/placanje/12",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('[role=tab]')).find(b=>b.textContent.includes('QR kod')).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhSub7 — Plati, QR kod (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhSub7.dc.html",
+    "device": "phone",
+    "route": "app/pretplata/placanje/12",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('[role=tab]')).find(b=>b.textContent.includes('QR kod')).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Sub8 — Pretplata je aktivna",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Sub8.dc.html",
+    "device": "desktop",
+    "route": "app/pretplata/uspeh",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "PhSub8 — Pretplata je aktivna (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhSub8.dc.html",
+    "device": "phone",
+    "route": "app/pretplata/uspeh",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "Sub9 — Upravljanje pretplatom",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Sub9.dc.html",
+    "device": "desktop",
+    "route": "app/pretplata",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "PhSub9 — Upravljanje pretplatom (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhSub9.dc.html",
+    "device": "phone",
+    "route": "app/pretplata",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "Sub10 — Otkaži pretplatu?",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Sub10.dc.html",
+    "device": "desktop",
+    "route": "app/pretplata",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('button, span')).find(b=>b.textContent.trim()==='Otkaži pretplatu').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhSub10 — Otkaži pretplatu? (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhSub10.dc.html",
+    "device": "phone",
+    "route": "app/pretplata",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('button, span')).find(b=>b.textContent.trim()==='Otkaži pretplatu').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Sub11 — Naplata nije uspela",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Sub11.dc.html",
+    "device": "desktop",
+    "route": "app/pretplata",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('payment_failed');"
+  },
+  {
+    "name": "PhSub11 — Naplata nije uspela (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhSub11.dc.html",
+    "device": "phone",
+    "route": "app/pretplata",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('payment_failed');"
+  }
+]

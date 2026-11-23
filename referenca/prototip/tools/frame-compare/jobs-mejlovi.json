@@ -1,0 +1,182 @@
+[
+  {
+    "name": "Mb1 — Lista (Sve)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Mb1.dc.html",
+    "device": "desktop",
+    "route": "app/mejlovi",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true})}));"
+  },
+  {
+    "name": "PhMb1 — Lista (Sve, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhMb1.dc.html",
+    "device": "phone",
+    "route": "app/mejlovi",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true})}));"
+  },
+  {
+    "name": "Mb2 — Prazno stanje i povezivanje",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Mb2.dc.html",
+    "device": "desktop",
+    "route": "app/mejlovi",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({bankMails:[]});"
+  },
+  {
+    "name": "PhMb2 — Prazno stanje (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhMb2.dc.html",
+    "device": "phone",
+    "route": "app/mejlovi",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({bankMails:[]});"
+  },
+  {
+    "name": "Mb3 — Detalj (Čeka odobrenje)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Mb3.dc.html",
+    "device": "desktop",
+    "route": "app/mejlovi/bm1",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true})}));"
+  },
+  {
+    "name": "PhMb3 — Detalj (Čeka odobrenje, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhMb3.dc.html",
+    "device": "phone",
+    "route": "app/mejlovi/bm1",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true})}));"
+  },
+  {
+    "name": "Mb4 — Pregled i odobrenje",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Mb4.dc.html",
+    "device": "desktop",
+    "route": "app/mejlovi/bm1",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true, fxMode:'book_only'})}));",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Pregledaj dokumenta').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhMb4 — Pregled i odobrenje (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhMb4.dc.html",
+    "device": "phone",
+    "route": "app/mejlovi/bm1",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true, fxMode:'book_only'})}));",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Pregledaj dokumenta').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Mb5 — Poslato banci (uspeh)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Mb5.dc.html",
+    "device": "desktop",
+    "route": "app/mejlovi/bm1",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true, fxMode:'book_only'})}));",
+    "afterNav": "(async()=>{ function find(t){return Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()===t);} find('Pregledaj dokumenta').click(); for(let i=0;i<40;i++){ await new Promise(r=>setTimeout(r,50)); const b = find('Odobri i pošalji banci'); if(b){ b.click(); return; } } throw new Error('send button never appeared'); })()",
+    "afterNavWait": 250
+  },
+  {
+    "name": "PhMb5 — Poslato banci (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhMb5.dc.html",
+    "device": "phone",
+    "route": "app/mejlovi/bm1",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true, fxMode:'book_only'})}));",
+    "afterNav": "(async()=>{ function find(t){return Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()===t);} find('Pregledaj dokumenta').click(); for(let i=0;i<40;i++){ await new Promise(r=>setTimeout(r,50)); const b = find('Odobri i pošalji'); if(b){ b.click(); return; } } throw new Error('send button never appeared'); })()",
+    "afterNavWait": 250
+  },
+  {
+    "name": "Mb6 — Priliv bez fakture",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Mb6.dc.html",
+    "device": "desktop",
+    "route": "app/mejlovi/bm3",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true})}));"
+  },
+  {
+    "name": "PhMb6 — Priliv bez fakture (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhMb6.dc.html",
+    "device": "phone",
+    "route": "app/mejlovi/bm3",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true})}));"
+  },
+  {
+    "name": "Mb7 — Nestandardan obrazac",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Mb7.dc.html",
+    "device": "desktop",
+    "route": "app/mejlovi/bm6",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true})}));"
+  },
+  {
+    "name": "PhMb7 — Nestandardan obrazac (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhMb7.dc.html",
+    "device": "phone",
+    "route": "app/mejlovi/bm6",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true})}));"
+  },
+  {
+    "name": "Mb8 — Podešavanja slanja",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Mb8.dc.html",
+    "device": "desktop",
+    "route": "app/mejlovi/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true})}));"
+  },
+  {
+    "name": "PhMb8 — Podešavanja slanja (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhMb8.dc.html",
+    "device": "phone",
+    "route": "app/mejlovi/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true})}));"
+  },
+  {
+    "name": "Mb9 — Prvo podešavanje",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Mb9.dc.html",
+    "device": "desktop",
+    "route": "app/mejlovi",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:false})}));"
+  },
+  {
+    "name": "PhMb9 — Prvo podešavanje (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhMb9.dc.html",
+    "device": "phone",
+    "route": "app/mejlovi",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:false})}));"
+  },
+  {
+    "name": "Mb10 — Dinarski priliv (detalj)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Mb10.dc.html",
+    "device": "desktop",
+    "route": "app/mejlovi/bm5",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true})}));"
+  },
+  {
+    "name": "PhMb10 — Dinarski priliv (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhMb10.dc.html",
+    "device": "phone",
+    "route": "app/mejlovi/bm5",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true})}));"
+  },
+  {
+    "name": "Mb11 — Devize prodate (istorija)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Mb11.dc.html",
+    "device": "desktop",
+    "route": "app/mejlovi/bm2",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true})}));"
+  },
+  {
+    "name": "PhMb11 — Devize prodate (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhMb11.dc.html",
+    "device": "phone",
+    "route": "app/mejlovi/bm2",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true})}));"
+  },
+  {
+    "name": "Mb12 — Prodaja deviza (delimična, u odobrenju)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Mb12.dc.html",
+    "device": "desktop",
+    "route": "app/mejlovi/bm1",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true, fxMode:'sell_part', fxPercent:50}), clients: s.clients.map(c=> c.id==='c1' ? Object.assign({}, c, {fxMode:'sell_part'}) : c)}));",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Pregledaj dokumenta').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhMb12 — Prodaja deviza delimična (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhMb12.dc.html",
+    "device": "phone",
+    "route": "app/mejlovi/bm1",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings: Object.assign({}, s.autonomySettings, {sendingSettingsSeen:true, fxMode:'sell_part', fxPercent:50}), clients: s.clients.map(c=> c.id==='c1' ? Object.assign({}, c, {fxMode:'sell_part'}) : c)}));",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Pregledaj dokumenta').click();",
+    "afterNavWait": 150
+  }
+]

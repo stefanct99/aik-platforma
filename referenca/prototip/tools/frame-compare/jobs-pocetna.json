@@ -1,0 +1,188 @@
+[
+  {
+    "name": "Poc1 — Checklist 2/5",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Poc1.dc.html",
+    "device": "desktop",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState(s=>({taxDecision:null, bankMails:[], invoices:[], incomesFx:[], incomesRsd:[], dev:Object.assign({},s.dev,{welcomeSeen:true})}));"
+  },
+  {
+    "name": "Poc2 — Auto mod, blizu limita (90%)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Poc2.dc.html",
+    "device": "desktop",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({autonomySettings:Object.assign({},s.autonomySettings,{globalMode:'auto'}), taxPaymentMode:'trajni_nalog', taxPayments:Object.assign({},s.taxPayments,{'2026-11':{porez:'Plaćeno',pio:'Plaćeno',zdravstveno:'Plaćeno',nezaposlenost:'Plaćeno'}}), dev:Object.assign({},s.dev,{limitOverridePct:90,welcomeSeen:true})}));"
+  },
+  {
+    "name": "Poc3 — Osnovno stanje (1 rok sutra)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Poc3.dc.html",
+    "device": "desktop",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({invoices: s.invoices.map(i=> (i.dueDate && new Date(i.dueDate) < window.AIK.Seed.TODAY) ? Object.assign({},i,{dueDate: new Date(window.AIK.Seed.TODAY.getTime()+30*86400000).toISOString()}) : i)})); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));",
+    "afterNav": "const b=document.querySelector('.topbar-actions .icon-btn'); if(b) b.click();",
+    "afterNavWait": 200
+  },
+  {
+    "name": "Poc4 — Korisnički meni otvoren",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Poc4.dc.html",
+    "device": "desktop",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({invoices: s.invoices.map(i=> (i.dueDate && new Date(i.dueDate) < window.AIK.Seed.TODAY) ? Object.assign({},i,{dueDate: new Date(window.AIK.Seed.TODAY.getTime()+30*86400000).toISOString()}) : i)})); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));",
+    "afterNav": "document.querySelector('.sidebar-user').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhPoc4 — Korisnički meni (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhPoc4.dc.html",
+    "device": "phone",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({invoices: s.invoices.map(i=> (i.dueDate && new Date(i.dueDate) < window.AIK.Seed.TODAY) ? Object.assign({},i,{dueDate: new Date(window.AIK.Seed.TODAY.getTime()+30*86400000).toISOString()}) : i)})); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));",
+    "afterNav": "document.querySelector('.topbar-avatar-btn').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Poc5 — Pretraga sa rezultatima",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Poc5.dc.html",
+    "device": "desktop",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({invoices: s.invoices.map(i=> (i.dueDate && new Date(i.dueDate) < window.AIK.Seed.TODAY) ? Object.assign({},i,{dueDate: new Date(window.AIK.Seed.TODAY.getTime()+30*86400000).toISOString()}) : i)})); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));",
+    "afterNav": "const setVal=(el,v)=>{if(!el)return;const s=Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,'value').set;s.call(el,v);el.dispatchEvent(new Event('input',{bubbles:true}));}; setVal(document.querySelector('.topbar-search input'),'Acme');",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Poc6 — Pretraga bez rezultata",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Poc6.dc.html",
+    "device": "desktop",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({invoices: s.invoices.map(i=> (i.dueDate && new Date(i.dueDate) < window.AIK.Seed.TODAY) ? Object.assign({},i,{dueDate: new Date(window.AIK.Seed.TODAY.getTime()+30*86400000).toISOString()}) : i)})); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));",
+    "afterNav": "const setVal=(el,v)=>{if(!el)return;const s=Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,'value').set;s.call(el,v);el.dispatchEvent(new Event('input',{bubbles:true}));}; setVal(document.querySelector('.topbar-search input'),'zzzxxx');",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Dash4_auto — Automatski iz banke",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Dash4_auto.dc.html",
+    "device": "desktop",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({taxPaymentMode:'trajni_nalog'}); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));"
+  },
+  {
+    "name": "PhDash4 — Automatski iz banke (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhDash4.dc.html",
+    "device": "phone",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({taxPaymentMode:'trajni_nalog'}); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));"
+  },
+  {
+    "name": "Dash4_ima — Treba platiti (ručno)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Dash4_ima.dc.html",
+    "device": "desktop",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({taxPaymentMode:'manual'}); window.AIK.store.setState(s=>({invoices: s.invoices.map(i=> (i.dueDate && new Date(i.dueDate) < window.AIK.Seed.TODAY) ? Object.assign({},i,{dueDate: new Date(window.AIK.Seed.TODAY.getTime()+30*86400000).toISOString()}) : i)})); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));"
+  },
+  {
+    "name": "PhDash3 — Treba platiti ručno (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhDash3.dc.html",
+    "device": "phone",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({taxPaymentMode:'manual'}); window.AIK.store.setState(s=>({invoices: s.invoices.map(i=> (i.dueDate && new Date(i.dueDate) < window.AIK.Seed.TODAY) ? Object.assign({},i,{dueDate: new Date(window.AIK.Seed.TODAY.getTime()+30*86400000).toISOString()}) : i)})); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));"
+  },
+  {
+    "name": "Dash4_norez — Nema rešenja",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Dash4_norez.dc.html",
+    "device": "desktop",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({taxDecision:null}); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));"
+  },
+  {
+    "name": "PhDash1 — Nema rešenja (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhDash1.dc.html",
+    "device": "phone",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({taxDecision:null}); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));"
+  },
+  {
+    "name": "Tip1 — Tooltip limit kartice",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Tip1.dc.html",
+    "device": "desktop",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({invoices: s.invoices.map(i=> (i.dueDate && new Date(i.dueDate) < window.AIK.Seed.TODAY) ? Object.assign({},i,{dueDate: new Date(window.AIK.Seed.TODAY.getTime()+30*86400000).toISOString()}) : i)})); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));",
+    "afterNav": "const btns=document.querySelectorAll('.poc-help-btn'); btns[0] && btns[0].click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhTip1 — Tooltip limit kartice (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhTip1.dc.html",
+    "device": "phone",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({invoices: s.invoices.map(i=> (i.dueDate && new Date(i.dueDate) < window.AIK.Seed.TODAY) ? Object.assign({},i,{dueDate: new Date(window.AIK.Seed.TODAY.getTime()+30*86400000).toISOString()}) : i)})); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));",
+    "afterNav": "const btns=document.querySelectorAll('.poc-help-btn'); btns[0] && btns[0].click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Tip2 — Tooltip Čeka tebe",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Tip2.dc.html",
+    "device": "desktop",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({invoices: s.invoices.map(i=> (i.dueDate && new Date(i.dueDate) < window.AIK.Seed.TODAY) ? Object.assign({},i,{dueDate: new Date(window.AIK.Seed.TODAY.getTime()+30*86400000).toISOString()}) : i)})); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));",
+    "afterNav": "const btns=document.querySelectorAll('.poc-help-btn'); btns[1] && btns[1].click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhTip2 — Tooltip Čeka tebe (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhTip2.dc.html",
+    "device": "phone",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({invoices: s.invoices.map(i=> (i.dueDate && new Date(i.dueDate) < window.AIK.Seed.TODAY) ? Object.assign({},i,{dueDate: new Date(window.AIK.Seed.TODAY.getTime()+30*86400000).toISOString()}) : i)})); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));",
+    "afterNav": "const btns=document.querySelectorAll('.poc-help-btn'); btns[1] && btns[1].click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Sub1 — Baner, probni ističe uskoro",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Sub1.dc.html",
+    "device": "desktop",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial_ending'); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));"
+  },
+  {
+    "name": "PhSub1 — Baner, probni ističe uskoro (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhSub1.dc.html",
+    "device": "phone",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial_ending'); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));"
+  },
+  {
+    "name": "Sub2 — Baner, probni istekao",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Sub2.dc.html",
+    "device": "desktop",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('expired'); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));"
+  },
+  {
+    "name": "PhSub2 — Baner, probni istekao (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhSub2.dc.html",
+    "device": "phone",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('expired'); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));"
+  },
+  {
+    "name": "Sub12 — Baner, QR obnova uskoro",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Sub12.dc.html",
+    "device": "desktop",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({subscription: Object.assign({}, s.subscription, {paymentMethod:{type:'qr'}, nextChargeAt: new Date(window.AIK.Seed.TODAY.getTime()+2*86400000).toISOString()})})); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));"
+  },
+  {
+    "name": "Dash4_press — Čeklista, samo rešenje Poreske uprave",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Dash4_press.dc.html",
+    "device": "desktop",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial'); window.AIK.store.setState(s=>({taxDecision:null, dev:Object.assign({},s.dev,{welcomeSeen:true})}));"
+  },
+  {
+    "name": "PhSub12 — Baner, QR obnova uskoro (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhSub12.dc.html",
+    "device": "phone",
+    "route": "app/pocetna",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({subscription: Object.assign({}, s.subscription, {paymentMethod:{type:'qr'}, nextChargeAt: new Date(window.AIK.Seed.TODAY.getTime()+2*86400000).toISOString()})})); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{welcomeSeen:true})}));"
+  }
+]

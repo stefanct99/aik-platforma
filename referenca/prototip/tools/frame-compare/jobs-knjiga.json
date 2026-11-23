@@ -1,0 +1,168 @@
+[
+  {
+    "name": "Kp1 — Devizni prihodi (osnovno)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Kp1.dc.html",
+    "device": "desktop",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "PhKp1 — Devizni prihodi (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhKp1.dc.html",
+    "device": "phone",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "Kp2 — Dinarski prihodi",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Kp2.dc.html",
+    "device": "desktop",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.sub-tab')).find(b=>b.textContent.includes('Dinarski')).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhKp2 — Dinarski prihodi (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhKp2.dc.html",
+    "device": "phone",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.sub-tab')).find(b=>b.textContent.includes('Dinarski')).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Kp3 — Prazno stanje (2027)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Kp3.dc.html",
+    "device": "desktop",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "const sel = document.querySelector('select.select'); const ev = new Event('change', {bubbles:true}); sel.value='2027'; sel.dispatchEvent(ev);",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhKp3 — Prazno stanje (2027, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhKp3.dc.html",
+    "device": "phone",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({incomesFx:[], incomesRsd:[]});"
+  },
+  {
+    "name": "Kp4 — Detalj uplate (devizna)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Kp4.dc.html",
+    "device": "desktop",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.inv-card-row, tr.clickable')).find(r=>r.textContent.includes('Acme Inc.')).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhKp4 — Detalj uplate (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhKp4.dc.html",
+    "device": "phone",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.inv-card-row, tr.clickable')).find(r=>r.textContent.includes('Acme Inc.')).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Kp5 — Dodaj prihod (dijalog)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Kp5.dc.html",
+    "device": "desktop",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Dodaj prihod').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhKp5 — Dodaj prihod (dijalog, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhKp5.dc.html",
+    "device": "phone",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Dodaj prihod').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Kp6 — Izvezi knjigu prihoda (dijalog)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Kp6.dc.html",
+    "device": "desktop",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Izvezi').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhKp6 — Izvezi (dijalog, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhKp6.dc.html",
+    "device": "phone",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Izvezi').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Kp7 — Blizu limita (83%)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Kp7.dc.html",
+    "device": "desktop",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{calendarYearOverride:{year:2026, fxTotal:2915451.09, rsdTotal:2104548.91}})}));"
+  },
+  {
+    "name": "PhKp7 — Blizu limita (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhKp7.dc.html",
+    "device": "phone",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{calendarYearOverride:{year:2026, fxTotal:2915451.09, rsdTotal:2104548.91}})}));"
+  },
+  {
+    "name": "Kp8 — Obrisati prihod? (dijalog)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Kp8.dc.html",
+    "device": "desktop",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.inv-card-row, tr.clickable')).find(r=>r.textContent.includes('Acme Inc.')).click(); setTimeout(()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Obriši prihod').click(); }, 60);",
+    "afterNavWait": 250
+  },
+  {
+    "name": "PhKp8 — Obrisati prihod? (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhKp8.dc.html",
+    "device": "phone",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.inv-card-row, tr.clickable')).find(r=>r.textContent.includes('Acme Inc.')).click(); setTimeout(()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Obriši prihod').click(); }, 60);",
+    "afterNavWait": 250
+  },
+  {
+    "name": "Kp9 — Filter klijenta (otvoren)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Kp9.dc.html",
+    "device": "desktop",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.inv-combo')).find(c=>c.textContent.includes('Svi klijenti')).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhKp9 — Filter klijenta (otvoren, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhKp9.dc.html",
+    "device": "phone",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Filteri').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Kp10 — Uplata bez fakture (baner)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Kp10.dc.html",
+    "device": "desktop",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "PhKp10 — Uplata bez fakture (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhKp10.dc.html",
+    "device": "phone",
+    "route": "app/knjiga",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  }
+]

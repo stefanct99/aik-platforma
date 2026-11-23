@@ -1,0 +1,158 @@
+/* Tvoj AI knjigovođa — design tokens, extracted from the Claude Design file "Tvoj AI Knjigovodja" */
+:root{
+  --suma:#0F2A22;
+  --limeta:#C8F169;
+  --kost:#F4F2F0;
+  --bela:#FFFFFF;
+  --ink:#161A17;
+
+  --bg: var(--kost);
+  --surface: var(--bela);
+  --surface-2: #F4F2F0;
+  --text: #161A17;
+  --text-muted:#6B706C;
+  --text-faint:#8A958E;
+  --border: rgba(22,26,23,0.08);
+  --border-strong: rgba(22,26,23,0.18);
+
+  --primary: var(--suma);
+  --primary-contrast:#FFFFFF;
+  --primary-hover:#163C2F;
+  --accent: var(--limeta);
+  --accent-contrast: var(--suma);
+
+  --sidebar-bg: #FFFFFF;
+  --sidebar-text: #4A524C;
+  --sidebar-text-active: var(--suma);
+  --sidebar-item-active: #EEF8D2;
+  --sidebar-border: rgba(22,26,23,0.08);
+  --sidebar-active-tab-bg: #F6FBE6;
+
+  --status-draft-bg:#F4F2F0; --status-draft-text:#4A524C;
+  --status-sent-bg:#FFF1D0; --status-sent-text:#6B4600;
+  --status-late-bg:#FDECEA; --status-late-text:#B4281E;
+  --status-paid-bg:#EEF8D2; --status-paid-text:#2F5D12;
+  --status-void-bg:#F4F2F0; --status-void-text:#6B706C;
+
+  --danger:#C23A2E; --danger-bg:#FBE3E1;
+  --warn:#9A6B12; --warn-bg:#FBEFD9;
+  --success:#2C7A3D; --success-bg:#E1F2DE;
+  --info:#1D5FC2; --info-bg:#E2ECFB;
+
+  /* Admin (Faza 11), Adm1 "Nove registracije po danima" — tinta ispod linije grafika. */
+  --admin-chart-fill: rgba(15,42,34,0.08);
+
+  --radius-sm:6px; --radius-md:8px; --radius-lg:12px; --radius-xl:16px; --radius-pill:999px;
+  --shadow-sm:0 1px 2px rgba(22,26,23,0.06);
+  --shadow-md:0 20px 40px -20px rgba(15,42,34,0.4);
+  --shadow-lg:0 40px 80px -30px rgba(15,42,34,0.4), 0 0 0 1px rgba(22,26,23,0.06);
+
+  --font-display:'Inter',system-ui,sans-serif;
+  --font-body:'Inter',system-ui,sans-serif;
+
+  --fs-12:12px; --fs-14:14px; --fs-16:16px; --fs-18:18px; --fs-20:20px;
+  --fs-24:24px; --fs-32:32px; --fs-40:40px; --fs-48:48px; --fs-64:64px;
+
+  /* Fluidna tipografija (B): clamp() između frejmom-potvrđenih vrednosti na 390px (telefon) i
+     1280px (desktop) — tačno te vrednosti na te dve širine, glatko linearno između. Računato kao
+     clamp(min, intercept + slope*100vw, max), slope=(max-min)/(1280-390)*100. */
+  --fs-24-32: clamp(1.5rem, 1.281rem + 0.899vw, 2rem);   /* naslovi ekrana (page-head h1 i sl.) */
+  --fs-32-48: clamp(2rem, 1.562rem + 1.798vw, 3rem);   /* veliki zbirni iznosi (ManualStep total) — PhRez6b potvrđuje 32px na 390, ne 24px (preimenovan iz fs-24-48) */
+  --fs-20-24: clamp(1.25rem, 1.140rem + 0.449vw, 1.5rem); /* kartice-naslovi (Rez5 upozorenje i sl.) */
+  --fs-12-14: clamp(0.75rem, 0.695rem + 0.225vw, 0.875rem); /* sitan prateći tekst (QrCode podnaslov) */
+
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:20px;
+  --space-6:24px; --space-8:32px; --space-10:40px; --space-12:48px;
+
+  --sidebar-w:260px;
+  --topbar-h:64px;
+  --bottomnav-h:64px;
+
+  --duration-fast:120ms; --duration-base:200ms;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) {
+    --bg:#0D0F0E;
+    --surface:#171B18;
+    --surface-2:#1D221F;
+    --text:#F1F3EF;
+    --text-muted:#8C948E;
+    --text-faint:#6E756F;
+    --border: rgba(255,255,255,0.102);
+    --border-strong: rgba(255,255,255,0.217);
+
+    --primary: var(--limeta);
+    --primary-contrast: var(--suma);
+    --primary-hover:#D7F78C;
+    --accent: var(--limeta);
+    --accent-contrast: var(--suma);
+
+    --sidebar-bg:#171B18;
+    --sidebar-text: #C4CAC5;
+    --sidebar-text-active:#F1F3EF;
+    --sidebar-item-active: rgba(200,241,105,0.14);
+    --sidebar-border: rgba(255,255,255,0.102);
+    --sidebar-active-tab-bg: #1D221F;
+
+    --status-draft-bg:#0D0F0E; --status-draft-text:#C4CAC5;
+    --status-sent-bg:rgba(255,190,70,0.16); --status-sent-text:#F2C46B;
+    --status-late-bg:rgba(240,90,80,0.16); --status-late-text:#FF8A80;
+    --status-paid-bg:rgba(200,241,105,0.14); --status-paid-text:#C8F169;
+    --status-void-bg:#0D0F0E; --status-void-text:#8C948E;
+
+    --danger:#F08A7E; --danger-bg:#3A1F1C;
+    --warn:#E3B24C; --warn-bg:#3A2E10;
+    --success:#7FD08F; --success-bg:#1E3420;
+    --info:#7FAEF0; --info-bg:#1B2C42;
+    --admin-chart-fill: rgba(200,241,105,0.10);
+
+    --shadow-sm:0 1px 2px rgba(0,0,0,0.3);
+    --shadow-md:0 20px 40px -20px rgba(0,0,0,0.5);
+    --shadow-lg:0 40px 80px -30px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.079);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D0F0E; --surface:#171B18; --surface-2:#1D221F; --text:#F1F3EF;
+  --text-muted:#8C948E; --text-faint:#6E756F;
+  --border: rgba(255,255,255,0.102); --border-strong: rgba(255,255,255,0.217);
+  --primary: var(--limeta); --primary-contrast: var(--suma); --primary-hover:#D7F78C;
+  --accent: var(--limeta); --accent-contrast: var(--suma);
+  --sidebar-bg:#171B18; --sidebar-text: #C4CAC5; --sidebar-text-active:#F1F3EF;
+  --sidebar-item-active: rgba(200,241,105,0.14); --sidebar-border: rgba(255,255,255,0.102);
+  --sidebar-active-tab-bg: #1D221F;
+  --status-draft-bg:#0D0F0E; --status-draft-text:#C4CAC5;
+  --status-sent-bg:rgba(255,190,70,0.16); --status-sent-text:#F2C46B;
+  --status-late-bg:rgba(240,90,80,0.16); --status-late-text:#FF8A80;
+  --status-paid-bg:rgba(200,241,105,0.14); --status-paid-text:#C8F169;
+  --status-void-bg:#0D0F0E; --status-void-text:#8C948E;
+  --danger:#F08A7E; --danger-bg:#3A1F1C; --warn:#E3B24C; --warn-bg:#3A2E10;
+  --success:#7FD08F; --success-bg:#1E3420; --info:#7FAEF0; --info-bg:#1B2C42;
+  --admin-chart-fill: rgba(200,241,105,0.10);
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.3); --shadow-md:0 20px 40px -20px rgba(0,0,0,0.5); --shadow-lg:0 40px 80px -30px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.079);
+  color-scheme: dark;
+}
+
+/* Gradient used behind auth + onboarding cards (exact from design file) */
+.aik-gradient{
+  background:
+    linear-gradient(115deg, transparent 0 46%, rgba(255,255,255,0.30) 46% 49%, transparent 49% 55%, rgba(255,255,255,0.22) 55% 57%, transparent 57% 63%, rgba(255,255,255,0.18) 63% 64%, transparent 64%),
+    radial-gradient(90% 70% at 0% 100%, rgba(255,255,255,0.55), transparent 60%),
+    linear-gradient(135deg, #F7FBE6 0%, #DCEEA8 120%);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) .aik-gradient{
+    background:
+      linear-gradient(115deg, transparent 0 46%, rgba(255,255,255,0.05) 46% 49%, transparent 49% 55%, rgba(255,255,255,0.04) 55% 57%, transparent 57% 63%, rgba(255,255,255,0.035) 63% 64%, transparent 64%),
+      radial-gradient(90% 70% at 0% 100%, rgba(200,241,105,0.07), transparent 60%),
+      linear-gradient(135deg, #0F1511 0%, #1B2A14 120%);
+  }
+}
+:root[data-theme="dark"] .aik-gradient{
+  background:
+    linear-gradient(115deg, transparent 0 46%, rgba(255,255,255,0.05) 46% 49%, transparent 49% 55%, rgba(255,255,255,0.04) 55% 57%, transparent 57% 63%, rgba(255,255,255,0.035) 63% 64%, transparent 64%),
+    radial-gradient(90% 70% at 0% 100%, rgba(200,241,105,0.07), transparent 60%),
+    linear-gradient(135deg, #0F1511 0%, #1B2A14 120%);
+}

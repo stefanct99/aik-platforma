@@ -1,0 +1,151 @@
+[
+  {
+    "name": "Kl1 — Mesec",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Kl1.dc.html",
+    "device": "desktop",
+    "route": "app/kalendar",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "Kl2 — Izabran dan",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Kl2.dc.html",
+    "device": "desktop",
+    "route": "app/kalendar",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.kal-cell')).find(c=>{const nn=c.querySelector('.num'); return nn && nn.textContent.trim()==='16' && !c.className.includes('outside');}).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Kl3 — Lista",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Kl3.dc.html",
+    "device": "desktop",
+    "route": "app/kalendar",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.kal-seg span')).find(e=>e.textContent.trim()==='Lista').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Kl4 — Detalj roka za državu",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Kl4.dc.html",
+    "device": "desktop",
+    "route": "app/kalendar",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.kal-cell')).find(c=>{const nn=c.querySelector('.num'); return nn && nn.textContent.trim()==='16' && !c.className.includes('outside');}).click();(async()=>{ for(let i=0;i<20;i++){ const b = Array.from(document.querySelectorAll('button')).find(x=>x.textContent.trim()==='Detalji'); if(b){ b.click(); return; } await new Promise(r=>setTimeout(r,30)); } })()",
+    "afterNavWait": 300
+  },
+  {
+    "name": "Kl5 — Detalj kasne fakture",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Kl5.dc.html",
+    "device": "desktop",
+    "route": "app/kalendar",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelectorAll('.kal-navbtn')[0].click();\nsetTimeout(()=>{\n  const cell = Array.from(document.querySelectorAll('.kal-cell')).find(c=>{const nn=c.querySelector('.num'); return nn && nn.textContent.trim()==='16' && !c.className.includes('outside');});\n  if(cell) cell.click();\n  setTimeout(()=>{\n    const b = Array.from(document.querySelectorAll('button')).find(x=>x.textContent.trim()==='Detalji');\n    if(b) b.click();\n  }, 80);\n}, 120);",
+    "afterNavWait": 450
+  },
+  {
+    "name": "Kl6 — Označi kao plaćeno",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Kl6.dc.html",
+    "device": "desktop",
+    "route": "app/kalendar",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.kal-seg span')).find(e=>e.textContent.trim()==='Lista').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Označi kao plaćeno')?.click(); }, 80);",
+    "afterNavWait": 300
+  },
+  {
+    "name": "Kl7 — Podsetnici",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Kl7.dc.html",
+    "device": "desktop",
+    "route": "app/kalendar",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Podsetnici')?.click();",
+    "afterNavWait": 200
+  },
+  {
+    "name": "Kl8 — Godina",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Kl8.dc.html",
+    "device": "desktop",
+    "route": "app/kalendar",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.kal-seg span')).find(e=>e.textContent.trim()==='Godina').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Kl9 — Mesec bez događaja",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Kl9.dc.html",
+    "device": "desktop",
+    "route": "app/kalendar",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{forceEmptyCalendar:true})}));",
+    "afterNav": "(async()=>{ const btns=document.querySelectorAll('.kal-navbtn'); const b=btns[btns.length-1]; b.click(); await new Promise(r=>setTimeout(r,120)); b.click(); })();",
+    "afterNavWait": 250
+  },
+  {
+    "name": "PhKl1 — Mesec",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhKl1.dc.html",
+    "device": "phone",
+    "route": "app/kalendar",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "PhKl2 — Izabran dan",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhKl2.dc.html",
+    "device": "phone",
+    "route": "app/kalendar",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.kal-cell')).find(c=>{const nn=c.querySelector('.num'); return nn && nn.textContent.trim()==='16' && !c.className.includes('outside');}).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhKl3 — Lista",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhKl3.dc.html",
+    "device": "phone",
+    "route": "app/kalendar",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.kal-seg span')).find(e=>e.textContent.trim()==='Lista').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhKl4 — Detalj roka za državu",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhKl4.dc.html",
+    "device": "phone",
+    "route": "app/kalendar",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.kal-cell')).find(c=>{const nn=c.querySelector('.num'); return nn && nn.textContent.trim()==='16' && !c.className.includes('outside');}).click();(async()=>{ for(let i=0;i<20;i++){ const b = Array.from(document.querySelectorAll('button')).find(x=>x.textContent.trim()==='Detalji'); if(b){ b.click(); return; } await new Promise(r=>setTimeout(r,30)); } })()",
+    "afterNavWait": 300
+  },
+  {
+    "name": "PhKl5 — Detalj kasne fakture",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhKl5.dc.html",
+    "device": "phone",
+    "route": "app/kalendar",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelectorAll('.kal-navbtn')[0].click();\nsetTimeout(()=>{\n  const cell = Array.from(document.querySelectorAll('.kal-cell')).find(c=>{const nn=c.querySelector('.num'); return nn && nn.textContent.trim()==='16' && !c.className.includes('outside');});\n  if(cell) cell.click();\n  setTimeout(()=>{\n    const b = Array.from(document.querySelectorAll('button')).find(x=>x.textContent.trim()==='Detalji');\n    if(b) b.click();\n  }, 80);\n}, 120);",
+    "afterNavWait": 450
+  },
+  {
+    "name": "PhKl6 — Označi kao plaćeno",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhKl6.dc.html",
+    "device": "phone",
+    "route": "app/kalendar",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.kal-seg span')).find(e=>e.textContent.trim()==='Lista').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('.kal-list-row')).find(r=>r.textContent.includes('Porez i doprinosi'))?.click(); }, 80);",
+    "afterNavWait": 300
+  },
+  {
+    "name": "PhKl8 — Godina",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhKl8.dc.html",
+    "device": "phone",
+    "route": "app/kalendar",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.kal-seg span')).find(e=>e.textContent.trim()==='Godina').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhKl9 — Mesec bez događaja",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhKl9.dc.html",
+    "device": "phone",
+    "route": "app/kalendar",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({dev:Object.assign({},s.dev,{forceEmptyCalendar:true})}));",
+    "afterNav": "(async()=>{ const btns=document.querySelectorAll('.kal-navbtn'); const b=btns[btns.length-1]; b.click(); await new Promise(r=>setTimeout(r,120)); b.click(); })();",
+    "afterNavWait": 250
+  }
+]

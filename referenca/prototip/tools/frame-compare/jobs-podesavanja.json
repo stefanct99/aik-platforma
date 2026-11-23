@@ -1,0 +1,196 @@
+[
+  {
+    "name": "Pd0 — Pregled",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Pd0.dc.html",
+    "device": "desktop",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');"
+  },
+  {
+    "name": "PhPd0 — Pregled (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhPd0.dc.html",
+    "device": "phone",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');"
+  },
+  {
+    "name": "Pd1 — Profil i firma",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Pd1.dc.html",
+    "device": "desktop",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.settings-tab')).find(b=>b.textContent.trim()==='Profil i firma').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhPd1 — Profil i firma (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhPd1.dc.html",
+    "device": "phone",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.mobile-settings-row')).find(b=>b.textContent.includes('Profil i firma')).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Pd2 — Računi",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Pd2.dc.html",
+    "device": "desktop",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.settings-tab')).find(b=>b.textContent.trim()==='Računi').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhPd2 — Računi (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhPd2.dc.html",
+    "device": "phone",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.mobile-settings-row')).find(b=>b.textContent.includes('Računi')).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Pd3 — Pretplata",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Pd3.dc.html",
+    "device": "desktop",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.settings-tab')).find(b=>b.textContent.trim()==='Pretplata').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhPd3 — Pretplata (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhPd3.dc.html",
+    "device": "phone",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.mobile-settings-row')).find(b=>b.textContent.includes('Pretplata')).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Pd4 — Obaveštenja",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Pd4.dc.html",
+    "device": "desktop",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.settings-tab')).find(b=>b.textContent.trim()==='Obaveštenja').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhPd4 — Obaveštenja (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhPd4.dc.html",
+    "device": "phone",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.mobile-settings-row')).find(b=>b.textContent.includes('Obaveštenja')).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Pd5 — Povezivanje",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Pd5.dc.html",
+    "device": "desktop",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.settings-tab')).find(b=>b.textContent.trim()==='Povezivanje').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhPd5 — Povezivanje (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhPd5.dc.html",
+    "device": "phone",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.mobile-settings-row')).find(b=>b.textContent.includes('Povezivanje')).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Pd6 — Bezbednost i nalog",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Pd6.dc.html",
+    "device": "desktop",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.settings-tab')).find(b=>b.textContent.trim()==='Bezbednost i nalog').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhPd6 — Bezbednost i nalog (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhPd6.dc.html",
+    "device": "phone",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.mobile-settings-row')).find(b=>b.textContent.includes('Bezbednost i nalog')).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Pd7 — Jezik i izgled",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Pd7.dc.html",
+    "device": "desktop",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.settings-tab')).find(b=>b.textContent.trim()==='Jezik i izgled').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhPd7 — Jezik i izgled (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhPd7.dc.html",
+    "device": "phone",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.mobile-settings-row')).find(b=>b.textContent.includes('Jezik i izgled')).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Pd8 — Promeni lozinku",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Pd8.dc.html",
+    "device": "desktop",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.settings-tab')).find(b=>b.textContent.trim()==='Bezbednost i nalog').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Promeni').click(); }, 100);",
+    "afterNavWait": 300
+  },
+  {
+    "name": "PhPd8 — Promeni lozinku (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhPd8.dc.html",
+    "device": "phone",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.mobile-settings-row')).find(b=>b.textContent.includes('Bezbednost i nalog')).click(); setTimeout(()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Promeni').click(); }, 100);",
+    "afterNavWait": 300
+  },
+  {
+    "name": "Pd9 — Izbrisati nalog?",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Pd9.dc.html",
+    "device": "desktop",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.settings-tab')).find(b=>b.textContent.trim()==='Bezbednost i nalog').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Izbriši nalog').click(); }, 100);",
+    "afterNavWait": 300
+  },
+  {
+    "name": "PhPd9 — Izbrisati nalog? (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhPd9.dc.html",
+    "device": "phone",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.mobile-settings-row')).find(b=>b.textContent.includes('Bezbednost i nalog')).click(); setTimeout(()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Izbriši nalog').click(); }, 100);",
+    "afterNavWait": 300
+  },
+  {
+    "name": "Pd10 — Dodaj račun",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Pd10.dc.html",
+    "device": "desktop",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.settings-tab')).find(b=>b.textContent.trim()==='Računi').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim().indexOf('Dodaj račun')===0 || b.textContent.trim().indexOf('Dodaj račun')===0).click(); }, 100);",
+    "afterNavWait": 300
+  },
+  {
+    "name": "PhPd10 — Dodaj račun (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhPd10.dc.html",
+    "device": "phone",
+    "route": "app/podesavanja",
+    "setup": "window.AIK.Actions.Dev.reset(); window.AIK.Actions.Dev.setPreset('trial');",
+    "afterNav": "Array.from(document.querySelectorAll('.mobile-settings-row')).find(b=>b.textContent.includes('Računi')).click(); setTimeout(()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim().indexOf('Dodaj račun')===0).click(); }, 100);",
+    "afterNavWait": 300
+  }
+]

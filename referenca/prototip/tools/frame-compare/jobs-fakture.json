@@ -1,0 +1,354 @@
+[
+  {
+    "name": "Fak1 — Lista faktura (osnovno stanje)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak1.dc.html",
+    "device": "desktop", "route": "app/fakture",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "PhFak1 — Lista faktura (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak1.dc.html",
+    "device": "phone", "route": "app/fakture",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "Fak2 — Lista faktura (prazno stanje)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak2.dc.html",
+    "device": "desktop", "route": "app/fakture",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({invoices:[]});"
+  },
+  {
+    "name": "PhFak2 — Lista faktura (prazno, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak2.dc.html",
+    "device": "phone", "route": "app/fakture",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState({invoices:[]});"
+  },
+  {
+    "name": "Fak13 — Ponavljajuće (lista)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak13.dc.html",
+    "device": "desktop", "route": "app/fakture/ponavljajuce",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "PhFak13 — Ponavljajuće (lista, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak13.dc.html",
+    "device": "phone", "route": "app/fakture/ponavljajuce",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "Fak4 — Nova faktura (klijent neizabran)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak4.dc.html",
+    "device": "desktop", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "PhFak4 — Nova faktura (klijent neizabran, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak4.dc.html",
+    "device": "phone", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "Fak5 — Nova faktura (birač klijenta otvoren)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak5.dc.html",
+    "device": "desktop", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-combo').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhFak5 — Nova faktura (birač klijenta, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak5.dc.html",
+    "device": "phone", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-combo').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Fak3 — Nova faktura (klijent izabran)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak3.dc.html",
+    "device": "desktop", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-combo').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('.inv-dropdown button')).find(b=>b.textContent.includes('Acme Inc.')).click(); }, 50);",
+    "afterNavWait": 250
+  },
+  {
+    "name": "PhFak3 — Nova faktura (klijent izabran, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak3.dc.html",
+    "device": "phone", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-combo').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('.inv-dropdown button')).find(b=>b.textContent.includes('Acme Inc.')).click(); }, 50);",
+    "afterNavWait": 250
+  },
+  {
+    "name": "Fak8 — Nova faktura (klijent izabran, napomena o profilu)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak8.dc.html",
+    "device": "desktop", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-combo').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('.inv-dropdown button')).find(b=>b.textContent.includes('Acme Inc.')).click(); }, 50);",
+    "afterNavWait": 250
+  },
+  {
+    "name": "PhFak8 — Nova faktura (klijent izabran, napomena, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak8.dc.html",
+    "device": "phone", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-combo').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('.inv-dropdown button')).find(b=>b.textContent.includes('Acme Inc.')).click(); }, 50);",
+    "afterNavWait": 250
+  },
+  {
+    "name": "Fak10 — Nova faktura (klijent izabran, stavke popunjene)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak10.dc.html",
+    "device": "desktop", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-combo').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('.inv-dropdown button')).find(b=>b.textContent.includes('Acme Inc.')).click(); }, 50);",
+    "afterNavWait": 250
+  },
+  {
+    "name": "PhFak10 — Nova faktura (klijent izabran, stavke, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak10.dc.html",
+    "device": "phone", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-combo').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('.inv-dropdown button')).find(b=>b.textContent.includes('Acme Inc.')).click(); }, 50);",
+    "afterNavWait": 250
+  },
+  {
+    "name": "Fak19 — Nova faktura (greške validacije)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak19.dc.html",
+    "device": "desktop", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Pregledaj i pošalji').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhFak19 — Nova faktura (greške, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak19.dc.html",
+    "device": "phone", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Pregledaj i pošalji').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Fak11 — Pregledaj i pošalji",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak11.dc.html",
+    "device": "desktop", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-combo').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('.inv-dropdown button')).find(b=>b.textContent.includes('Acme Inc.')).click(); setTimeout(()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Pregledaj i pošalji').click(); }, 80); }, 80);",
+    "afterNavWait": 400
+  },
+  {
+    "name": "PhFak11 — Pregledaj i pošalji (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak11.dc.html",
+    "device": "phone", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-combo').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('.inv-dropdown button')).find(b=>b.textContent.includes('Acme Inc.')).click(); setTimeout(()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Pregledaj i pošalji').click(); }, 80); }, 80);",
+    "afterNavWait": 400
+  },
+  {
+    "name": "Fak12 — Faktura poslata (uspeh)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak12.dc.html",
+    "device": "desktop", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-combo').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('.inv-dropdown button')).find(b=>b.textContent.includes('Acme Inc.')).click(); setTimeout(()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Pregledaj i pošalji').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Pošalji fakturu').click(); }, 80); }, 80); }, 80);",
+    "afterNavWait": 550
+  },
+  {
+    "name": "PhFak12 — Faktura poslata (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak12.dc.html",
+    "device": "phone", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-combo').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('.inv-dropdown button')).find(b=>b.textContent.includes('Acme Inc.')).click(); setTimeout(()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Pregledaj i pošalji').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Pošalji fakturu').click(); }, 80); }, 80); }, 80);",
+    "afterNavWait": 550
+  },
+  {
+    "name": "Fak15 — Detalj fakture (Poslata)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak15.dc.html",
+    "device": "desktop", "route": "app/fakture/i14",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "PhFak15 — Detalj fakture (Poslata, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak15.dc.html",
+    "device": "phone", "route": "app/fakture/i14",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "Fak16 — Detalj fakture (meni otvoren)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak16.dc.html",
+    "device": "desktop", "route": "app/fakture/i14",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-row-menu-btn').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhFak16 — Detalj fakture (meni otvoren, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak16.dc.html",
+    "device": "phone", "route": "app/fakture/i14",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-row-menu-btn').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Fak17 — Dijalog: Storniraj fakturu",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak17.dc.html",
+    "device": "desktop", "route": "app/fakture/i14",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-row-menu-btn').click(); setTimeout(()=>{ document.querySelector('.inv-dropdown button.danger').click(); }, 50);",
+    "afterNavWait": 250
+  },
+  {
+    "name": "PhFak17 — Dijalog: Storniraj fakturu (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak17.dc.html",
+    "device": "phone", "route": "app/fakture/i14",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-row-menu-btn').click(); setTimeout(()=>{ document.querySelector('.inv-dropdown button.danger').click(); }, 50);",
+    "afterNavWait": 250
+  },
+  {
+    "name": "Fak21 — Detalj fakture (Plaćena)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak21.dc.html",
+    "device": "desktop", "route": "app/fakture/i12",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "PhFak21 — Detalj fakture (Plaćena, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak21.dc.html",
+    "device": "phone", "route": "app/fakture/i12",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "Fak22 — Detalj fakture (Kasni)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak22.dc.html",
+    "device": "desktop", "route": "app/fakture/i13",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "PhFak22 — Detalj fakture (Kasni, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak22.dc.html",
+    "device": "phone", "route": "app/fakture/i13",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "Fak23 — Dijalog: Pošalji podsetnik",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak23.dc.html",
+    "device": "desktop", "route": "app/fakture/i13",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Pošalji podsetnik').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhFak23 — Dijalog: Pošalji podsetnik (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak23.dc.html",
+    "device": "phone", "route": "app/fakture/i13",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Pošalji podsetnik').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Fak9 — Nova faktura (klijent bez podrazumevane cene)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak9.dc.html",
+    "device": "desktop", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-combo').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('.inv-dropdown button')).find(b=>b.textContent.includes('Northwind Ltd.')).click(); }, 50);",
+    "afterNavWait": 250
+  },
+  {
+    "name": "PhFak9 — Nova faktura (klijent bez podrazumevane cene, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak9.dc.html",
+    "device": "phone", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-combo').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('.inv-dropdown button')).find(b=>b.textContent.includes('Northwind Ltd.')).click(); }, 50);",
+    "afterNavWait": 250
+  },
+  {
+    "name": "Fak20 — Nova faktura (RSD/srpski klijent)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak20.dc.html",
+    "device": "desktop", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-combo').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('.inv-dropdown button')).find(b=>b.textContent.includes('Marko Petrović PR')).click(); }, 50);",
+    "afterNavWait": 250
+  },
+  {
+    "name": "PhFak20 — Nova faktura (RSD/srpski klijent, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak20.dc.html",
+    "device": "phone", "route": "app/fakture/nova",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "document.querySelector('.inv-combo').click(); setTimeout(()=>{ Array.from(document.querySelectorAll('.inv-dropdown button')).find(b=>b.textContent.includes('Marko Petrović PR')).click(); }, 50);",
+    "afterNavWait": 250
+  },
+  {
+    "name": "Fak14 — Ponavljajuće (dijalog Nova ponavljajuća)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak14.dc.html",
+    "device": "desktop", "route": "app/fakture/ponavljajuce",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Nova ponavljajuća faktura').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhFak14 — Ponavljajuće (dijalog, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak14.dc.html",
+    "device": "phone", "route": "app/fakture/ponavljajuce",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Nova ponavljajuća faktura').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Fak6 — Klijenti (dijalog Novi klijent)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak6.dc.html",
+    "device": "desktop", "route": "app/fakture/klijenti",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Novi klijent').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhFak6 — Klijenti (dijalog Novi klijent, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak6.dc.html",
+    "device": "phone", "route": "app/fakture/klijenti",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Novi klijent').click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Fak7 — Klijenti (dijalog Uredi klijenta, vrh)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak7.dc.html",
+    "device": "desktop", "route": "app/fakture/klijenti",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('tr.clickable')).find(r=>r.textContent.includes('Acme Inc.')).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhFak7 — Klijenti (dijalog Uredi klijenta, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak7.dc.html",
+    "device": "phone", "route": "app/fakture/klijenti",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.inv-card-row, tr.clickable')).find(r=>r.textContent.includes('Acme Inc.')).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Fak28 — Klijenti (dijalog Uredi klijenta, Mejlovi banke sekcija)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak28.dc.html",
+    "device": "desktop", "route": "app/fakture/klijenti",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('tr.clickable')).find(r=>r.textContent.includes('Acme Inc.')).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhFak28 — Klijenti (dijalog Uredi klijenta, Mejlovi banke, telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak28.dc.html",
+    "device": "phone", "route": "app/fakture/klijenti",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');",
+    "afterNav": "Array.from(document.querySelectorAll('.inv-card-row, tr.clickable')).find(r=>r.textContent.includes('Acme Inc.')).click();",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Fak18 — Editor šablona",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/Fak18.dc.html",
+    "device": "desktop", "route": "app/fakture/sablon",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  },
+  {
+    "name": "PhFak18 — Editor šablona (telefon)",
+    "frame": "/private/tmp/claude-501/-Users-stefan-ct/d8a68ee7-a28b-4b14-ba27-b6feee0a7ede/scratchpad/artifact-files/fbc747c2-bce9-4086-abc0-0451e394f4d8/project/PhFak18.dc.html",
+    "device": "phone", "route": "app/fakture/sablon",
+    "setup": "window.AIK.Actions.Dev.setPreset('active');"
+  }
+]

@@ -1,0 +1,85 @@
+[
+  {
+    "name": "Adm1 — Pregled",
+    "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/Adm1.dc.html",
+    "device": "desktop",
+    "route": "app/admin",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({user:Object.assign({},s.user,{role:'admin'})}));"
+  },
+  {
+    "name": "PhAdm1 — Pregled (telefon)",
+    "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/PhAdm1.dc.html",
+    "device": "phone",
+    "route": "app/admin",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({user:Object.assign({},s.user,{role:'admin'})}));"
+  },
+  {
+    "name": "Adm2 — Korisnici i pretplate",
+    "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/Adm2.dc.html",
+    "device": "desktop",
+    "route": "app/admin/korisnici",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({user:Object.assign({},s.user,{role:'admin'})}));"
+  },
+  {
+    "name": "PhAdm2 — Korisnici i pretplate (telefon)",
+    "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/PhAdm2.dc.html",
+    "device": "phone",
+    "route": "app/admin/korisnici",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({user:Object.assign({},s.user,{role:'admin'})}));"
+  },
+  {
+    "name": "Adm3 — Odobri besplatan pristup (modal)",
+    "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/Adm3.dc.html",
+    "device": "desktop",
+    "route": "app/admin/korisnici",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({user:Object.assign({},s.user,{role:'admin'})}));",
+    "afterNav": "(async()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Odobri besplatan pristup').click(); await new Promise(r=>setTimeout(r,80)); const input=document.querySelector('.modal input, .sheet input'); const setter=Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,'value').set; setter.call(input,'Petar'); input.dispatchEvent(new Event('input',{bubbles:true})); await new Promise(r=>setTimeout(r,80)); Array.from(document.querySelectorAll('.admin-row-menu button')).find(b=>b.textContent.includes('Petar')).click(); })()",
+    "afterNavWait": 150
+  },
+  {
+    "name": "PhAdm3 — Odobri besplatan pristup (sheet, telefon)",
+    "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/PhAdm3.dc.html",
+    "device": "phone",
+    "route": "app/admin/korisnici",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({user:Object.assign({},s.user,{role:'admin'})}));",
+    "afterNav": "(async()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Odobri besplatan pristup').click(); await new Promise(r=>setTimeout(r,80)); const input=document.querySelector('.modal input, .sheet input'); const setter=Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype,'value').set; setter.call(input,'Petar'); input.dispatchEvent(new Event('input',{bubbles:true})); await new Promise(r=>setTimeout(r,80)); Array.from(document.querySelectorAll('.admin-row-menu button')).find(b=>b.textContent.includes('Petar')).click(); })()",
+    "afterNavWait": 150
+  },
+  {
+    "name": "Adm4 — Dnevnik radnji",
+    "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/Adm4.dc.html",
+    "device": "desktop",
+    "route": "app/admin/dnevnik",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({user:Object.assign({},s.user,{role:'admin'})}));"
+  },
+  {
+    "name": "PhAdm4 — Dnevnik radnji (telefon)",
+    "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/PhAdm4.dc.html",
+    "device": "phone",
+    "route": "app/admin/dnevnik",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({user:Object.assign({},s.user,{role:'admin'})}));"
+  },
+  {
+    "name": "Adm5 — Podrška",
+    "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/Adm5.dc.html",
+    "device": "desktop",
+    "route": "app/admin/podrska",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({user:Object.assign({},s.user,{role:'admin'})}));"
+  },
+  {
+    "name": "PhAdm5 — Podrška (telefon)",
+    "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/PhAdm5.dc.html",
+    "device": "phone",
+    "route": "app/admin/podrska",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({user:Object.assign({},s.user,{role:'admin'})}));"
+  },
+  {
+    "name": "PhAdm0 — Meni Više sa stavkom Admin (telefon)",
+    "frame": "/Users/stefan.ct/aik-prototip/ADMIN_PAKET/dizajn/PhAdm0.dc.html",
+    "device": "phone",
+    "route": "app/admin",
+    "setup": "window.AIK.Actions.Dev.setPreset('active'); window.AIK.store.setState(s=>({user:Object.assign({},s.user,{role:'admin'})}));",
+    "afterNav": "(async()=>{ Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()==='Više').click(); })()",
+    "afterNavWait": 100
+  }
+]

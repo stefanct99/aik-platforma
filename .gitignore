@@ -40,3 +40,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# generisan Prisma klijent (pravi se komandom `npx prisma generate`)
+/generated

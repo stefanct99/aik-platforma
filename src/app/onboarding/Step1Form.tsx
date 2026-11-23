@@ -1,10 +1,10 @@
 "use client";
 
 import { useActionState } from "react";
-import { DELATNOSTI } from "@/lib/delatnosti";
 import { saveStep1Action, type Step1Stanje } from "./actions";
 import { OnboardingShell } from "./OnboardingShell";
 import { Polje } from "./Polje";
+import { SifraDelatnostiPolje } from "./SifraDelatnostiPolje";
 
 export function Step1Form({ initial }: { initial: Step1Stanje["values"] }) {
   const [stanje, action, uToku] = useActionState<Step1Stanje, FormData>(saveStep1Action, {
@@ -45,15 +45,12 @@ export function Step1Form({ initial }: { initial: Step1Stanje["values"] }) {
             disabled={uToku}
           />
         </Polje>
-        <Polje label="Šifra delatnosti" error={stanje.errors.delatnostCode}>
-          <select name="delatnostCode" defaultValue={stanje.values.delatnostCode} disabled={uToku}>
-            {DELATNOSTI.map(([code, name]) => (
-              <option key={code} value={code}>
-                {code} {name}
-              </option>
-            ))}
-          </select>
-        </Polje>
+        <SifraDelatnostiPolje
+          initialCode={stanje.values.delatnostCode}
+          initialName={stanje.values.delatnostName}
+          error={stanje.errors.delatnostCode}
+          disabled={uToku}
+        />
         <Polje label="Datum otvaranja" error={stanje.errors.regDate}>
           <input type="date" name="regDate" defaultValue={stanje.values.regDate} disabled={uToku} />
         </Polje>

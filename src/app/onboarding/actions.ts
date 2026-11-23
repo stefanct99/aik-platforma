@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { isValidMb, isValidPib, isValidZip } from "@/lib/identifiers";
-import { findDelatnost, isValidDelatnostCode } from "@/lib/delatnosti";
+import { findKD2025, isValidKD2025Code } from "@/lib/kd-sifre";
 import {
   finishOnboarding,
   saveOnboardingStep1,
@@ -21,6 +21,7 @@ export type Step1Stanje = {
     pib: string;
     mb: string;
     delatnostCode: string;
+    delatnostName: string;
     regDate: string;
   };
 };
@@ -42,12 +43,14 @@ export async function saveStep1Action(
 ): Promise<Step1Stanje> {
   const korisnik = await trenutniKorisnik();
 
+  const delatnostCode = String(formData.get("delatnostCode") || "");
   const values = {
     ownerName: String(formData.get("ownerName") || "").trim(),
     name: String(formData.get("name") || "").trim(),
     pib: String(formData.get("pib") || "").trim(),
     mb: String(formData.get("mb") || "").trim(),
-    delatnostCode: String(formData.get("delatnostCode") || ""),
+    delatnostCode,
+    delatnostName: findKD2025(delatnostCode)?.name ?? "",
     regDate: String(formData.get("regDate") || ""),
   };
 
@@ -56,14 +59,14 @@ export async function saveStep1Action(
   if (!values.name) errors.name = "Unesi poslovno ime";
   if (!isValidPib(values.pib)) errors.pib = "PIB mora imati 9 cifara";
   if (!isValidMb(values.mb)) errors.mb = "Matični broj mora imati 8 cifara";
-  if (!isValidDelatnostCode(values.delatnostCode)) errors.delatnostCode = "Izaberi šifru delatnosti";
+  if (!isValidKD2025Code(values.delatnostCode)) errors.delatnostCode = "Izaberi šifru delatnosti";
   if (!values.regDate) errors.regDate = "Unesi datum otvaranja";
 
   if (Object.keys(errors).length > 0) {
     return { errors, values };
   }
 
-  const delatnost = findDelatnost(values.delatnostCode)!;
+  const delatnost = findKD2025(values.delatnostCode)!;
 
   try {
     await saveOnboardingStep1(korisnik.id, {

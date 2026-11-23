@@ -41,7 +41,8 @@ export default async function OnboardingPage() {
           name: biznis?.name ?? "",
           pib: biznis?.pib ?? "",
           mb: biznis?.mb ?? "",
-          delatnostCode: biznis?.delatnostCode ?? "6201",
+          delatnostCode: biznis?.delatnostCode ?? "",
+          delatnostName: biznis?.delatnostName ?? "",
           regDate: naDatumString(biznis?.regDate),
         }}
       />

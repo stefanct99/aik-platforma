@@ -85,9 +85,14 @@ model Business {
   ownerName     String
   pib           String   @unique
   mb            String
-  delatnostCode String
-  delatnostName String
-  regDate       DateTime
+  // Šifra je iz Klasifikacije delatnosti 2025 (KD 2025, Uredba "Sl. glasnik RS" br. 91/2026), oblik
+  // sa tačkom (npr. "62.10"), ne 4 cifre bez tačke kako spec 3.1 kaže (spec je pisana pre KD 2025,
+  // vidi izveštaj Koraka 2b). delatnostVerzija postoji da promena klasifikacije kasnije ne zahteva
+  // pogađanje kog je oblika stara šifra.
+  delatnostCode    String
+  delatnostName    String
+  delatnostVerzija String   @default("KD2025")
+  regDate          DateTime
 
   street       String?
   city         String?

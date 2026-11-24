@@ -1,0 +1,239 @@
+/* Deljeni delovi za sva 4 koraka onboardinga (Korak 6), tačno po referenca/prototip/css/base.css
+   (.onb-* klase) i frejmovima OnbO i TelOnbO. */
+
+.forma {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.parRed {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.navRed {
+  display: flex;
+  gap: 12px;
+}
+.navNazad {
+  flex: 1;
+  width: 140px;
+}
+.navNastavi {
+  flex: 1;
+}
+
+.spiner {
+  animation: okretanje 0.9s linear infinite;
+}
+@keyframes okretanje {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--color-border-input);
+  background: var(--color-bg);
+  text-align: center;
+}
+.dropzoneIkona {
+  width: 48px;
+  height: 48px;
+  border-radius: 9999px;
+  background: var(--color-icon-chip-bg);
+  color: var(--color-icon-chip-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dropzoneTekst {
+  font-size: 1rem;
+}
+.dropzonePomoc {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.adresaOmot {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.adresaLabela {
+  font-size: 0.875rem;
+}
+.adresaRed {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 8px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-input);
+  background: var(--color-bg);
+}
+.adresaTekst {
+  flex: 1;
+  min-width: 0;
+  font-size: 1rem;
+  word-break: break-all;
+}
+.kopirajDugme {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-input);
+  background: var(--color-surface);
+  font-size: 0.875rem;
+  cursor: pointer;
+  color: var(--color-text);
+}
+.kopirajDugme.kopirano {
+  border: none;
+  background: var(--color-lime-400);
+  color: var(--color-forest-900);
+}
+
+.koraci {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.korakRed {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.korakBroj {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  background: var(--color-icon-chip-bg);
+  color: var(--color-icon-chip-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+}
+.korakTekst {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+}
+.statusTekst {
+  font-size: 1rem;
+  color: var(--color-nav-text);
+}
+.statusOk {
+  background: var(--color-icon-chip-bg);
+  border-color: #c8e58a;
+}
+:global([data-theme="tamni"]) .statusOk {
+  border-color: rgba(200, 241, 105, 0.35);
+}
+@media (prefers-color-scheme: dark) {
+  :global(.appShell:not([data-theme="svetli"]):not([data-theme="tamni"])) .statusOk {
+    border-color: rgba(200, 241, 105, 0.35);
+  }
+}
+.statusOkKrug {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  background: var(--color-lime-400);
+  color: var(--color-forest-900);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preskociOmot {
+  display: flex;
+  justify-content: center;
+}
+.preskociLink {
+  font-size: 0.875rem;
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.rezime {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--color-border);
+}
+.rezimeRed {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.rezimeKrug {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rezimeKrugOk {
+  background: var(--color-lime-400);
+  color: var(--color-forest-900);
+}
+.rezimeKrugNe {
+  background: var(--color-border);
+  color: var(--color-text-muted);
+}
+.rezimeNaslov {
+  font-size: 1rem;
+}
+.rezimePodnaslov {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  word-break: break-word;
+}
+
+@media (max-width: 1023px) {
+  .parRed {
+    flex-direction: column;
+  }
+  .adresaRed {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .navRed {
+    flex-direction: column-reverse;
+  }
+  .navNazad,
+  .navNastavi {
+    flex: none;
+    width: 100%;
+  }
+}

@@ -4,8 +4,10 @@ import { prisma } from "./prisma";
 import {
   finishOnboarding,
   getBusinessForUser,
+  imeVlasnikaIzNaloga,
   saveOnboardingStep1,
   saveOnboardingStep2,
+  setOnboardingStep,
   updateBusinessProfile,
 } from "./business";
 
@@ -250,5 +252,96 @@ describe("updateBusinessProfile (Podešavanja > Profil i firma, Korak 4)", () =>
 
     const firmaB = await getBusinessForUser(korisnikB.id);
     expect(firmaB?.name).toBe("Firma B");
+  });
+});
+
+describe("imeVlasnikaIzNaloga (Korak 6: ime vlasnika dolazi iz naloga, ne sa ekrana)", () => {
+  it("koristi ime iz naloga kad postoji", () => {
+    expect(imeVlasnikaIzNaloga({ name: "Petar Petrović", email: "petar@primer.rs" })).toBe(
+      "Petar Petrović",
+    );
+  });
+
+  it("kad nalog nema ime, koristi deo mejla pre @ kao zamenu", () => {
+    expect(imeVlasnikaIzNaloga({ name: "", email: "petar@primer.rs" })).toBe("petar");
+  });
+
+  it("prazno ime (samo razmaci) se tretira kao da ga nema", () => {
+    expect(imeVlasnikaIzNaloga({ name: "   ", email: "ana@primer.rs" })).toBe("ana");
+  });
+});
+
+describe("onboarding: čuvanje po koraku i nastavak od prvog nezavršenog (Korak 6)", () => {
+  it("svaki korak pomera onboardingStep napred odmah po čuvanju", async () => {
+    const korisnik = await napraviKorisnika();
+
+    const posleKoraka1 = await saveOnboardingStep1(korisnik.id, {
+      ownerName: "Test",
+      name: "Firma Koraci",
+      pib: nasumicniPib(),
+      mb: "12121212",
+      delatnostCode: "6201",
+      delatnostName: "Računarsko programiranje",
+      regDate: new Date("2024-01-01"),
+    });
+    expect(posleKoraka1.onboardingStep).toBe(2);
+
+    const posleKoraka2 = await saveOnboardingStep2(korisnik.id, {
+      street: "Ulica 5",
+      city: "Niš",
+      zip: "18000",
+    });
+    expect(posleKoraka2.onboardingStep).toBe(3);
+
+    // Korak 3 (mejlovi banke) nema svoju "save" funkciju - preskakanje i "Nastavi" samo pomeraju
+    // pokazivač na 4 (setOnboardingStep), pošto stvarno povezivanje mejlova banke još ne postoji.
+    const posleKoraka3 = await setOnboardingStep(korisnik.id, 4);
+    expect(posleKoraka3.onboardingStep).toBe(4);
+
+    const zavrsen = await finishOnboarding(korisnik.id);
+    expect(zavrsen.onboardingCompletedAt).not.toBeNull();
+  });
+
+  it("nastavak posle prekida: onboardingStep ostaje tačno na prvom nezavršenom koraku", async () => {
+    const korisnik = await napraviKorisnika();
+
+    await saveOnboardingStep1(korisnik.id, {
+      ownerName: "Test",
+      name: "Firma Prekid",
+      pib: nasumicniPib(),
+      mb: "13131313",
+      delatnostCode: "6201",
+      delatnostName: "Računarsko programiranje",
+      regDate: new Date("2024-01-01"),
+    });
+
+    // Simulira zatvaranje pregledača posle koraka 1: sledeća poseta /onboarding čita baš ovu vrednost
+    // (vidi src/app/onboarding/page.tsx) da odluči koji korak da prikaže - mora biti 2, ne 1.
+    const biznis = await getBusinessForUser(korisnik.id);
+    expect(biznis?.onboardingStep).toBe(2);
+  });
+
+  it('"Nazad" ne čuva: pomeranje koraka unazad ne menja već sačuvane podatke firme', async () => {
+    const korisnik = await napraviKorisnika();
+
+    await saveOnboardingStep1(korisnik.id, {
+      ownerName: "Test",
+      name: "Firma Nazad",
+      pib: nasumicniPib(),
+      mb: "14141414",
+      delatnostCode: "6201",
+      delatnostName: "Računarsko programiranje",
+      regDate: new Date("2024-01-01"),
+    });
+    await saveOnboardingStep2(korisnik.id, { street: "Prava ulica 1", city: "Kragujevac", zip: "34000" });
+
+    // goBackAction (src/app/onboarding/actions.ts) poziva samo setOnboardingStep, nikad saveOnboardingStep2
+    // - ovo potvrđuje da "Nazad" sa koraka 3 na korak 2 ne dira već sačuvane podatke koraka 2.
+    await setOnboardingStep(korisnik.id, 2);
+
+    const biznis = await getBusinessForUser(korisnik.id);
+    expect(biznis?.onboardingStep).toBe(2);
+    expect(biznis?.street).toBe("Prava ulica 1");
+    expect(biznis?.city).toBe("Kragujevac");
   });
 });

@@ -1,0 +1,180 @@
+/* Isti pristup kao src/components/auth-shell/AuthShell.module.css (Korak 5): tačne vrednosti iz
+   frejmova Koraka 6 (OnbO i TelOnbO), razmaci su pikseli iz frejma, ne platformski --space-N tokeni
+   (prototip ima sopstvenu, drugačiju space skalu). Gradijent je identičan AuthShell-u (isti prototip
+   izvor), samo je kartica šira (560px, ne 440px) jer OnbO koristi širu karticu. */
+
+.omot {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5); /* 24px */
+  box-sizing: border-box;
+  background:
+    linear-gradient(
+      115deg,
+      transparent 0 46%,
+      rgba(255, 255, 255, 0.3) 46% 49%,
+      transparent 49% 55%,
+      rgba(255, 255, 255, 0.22) 55% 57%,
+      transparent 57% 63%,
+      rgba(255, 255, 255, 0.18) 63% 64%,
+      transparent 64%
+    ),
+    radial-gradient(90% 70% at 0% 100%, rgba(255, 255, 255, 0.55), transparent 60%),
+    linear-gradient(135deg, #f7fbe6 0%, #dceea8 120%);
+}
+
+.omot[data-theme="tamni"] {
+  background:
+    linear-gradient(
+      115deg,
+      transparent 0 46%,
+      rgba(255, 255, 255, 0.05) 46% 49%,
+      transparent 49% 55%,
+      rgba(255, 255, 255, 0.04) 55% 57%,
+      transparent 57% 63%,
+      rgba(255, 255, 255, 0.035) 63% 64%,
+      transparent 64%
+    ),
+    radial-gradient(90% 70% at 0% 100%, rgba(200, 241, 105, 0.07), transparent 60%),
+    linear-gradient(135deg, #0f1511 0%, #1b2a14 120%);
+}
+
+@media (prefers-color-scheme: dark) {
+  .omot:not([data-theme="svetli"]):not([data-theme="tamni"]) {
+    background:
+      linear-gradient(
+        115deg,
+        transparent 0 46%,
+        rgba(255, 255, 255, 0.05) 46% 49%,
+        transparent 49% 55%,
+        rgba(255, 255, 255, 0.04) 55% 57%,
+        transparent 57% 63%,
+        rgba(255, 255, 255, 0.035) 63% 64%,
+        transparent 64%
+      ),
+      radial-gradient(90% 70% at 0% 100%, rgba(200, 241, 105, 0.07), transparent 60%),
+      linear-gradient(135deg, #0f1511 0%, #1b2a14 120%);
+  }
+}
+
+.zaglavlje {
+  position: absolute;
+  left: 48px;
+  right: 48px;
+  top: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  color: var(--color-text);
+}
+.zaglavlje a {
+  text-decoration: underline;
+  color: inherit;
+}
+
+.kartica {
+  width: 100%;
+  max-width: 560px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: var(--radius-card);
+  padding: 40px;
+  box-shadow: var(--shadow-card-lg);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5); /* 24px */
+}
+
+.progresOmot {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.progresKorak {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+.progresTraka {
+  display: flex;
+  gap: 6px;
+}
+.progresTraka span {
+  flex: 1;
+  height: 4px;
+  border-radius: 9999px;
+  background: var(--color-border);
+}
+.progresTraka span.gotovo {
+  background: var(--btn-primary-bg);
+}
+
+.naslovOmot {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.naslov {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+.podnaslov {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.podnozje {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--space-6); /* 32px */
+  display: flex;
+  justify-content: center;
+  gap: var(--space-5); /* 24px */
+  font-size: 0.875rem;
+  color: var(--color-text);
+  text-align: center;
+}
+.podnozje a {
+  color: inherit;
+}
+
+@media (max-width: 1023px) {
+  .omot {
+    justify-content: flex-start;
+    padding: 20px var(--space-4) var(--space-5); /* 20px, 16px, 24px */
+  }
+  .zaglavlje {
+    position: static;
+    left: auto;
+    right: auto;
+    top: auto;
+    justify-content: center;
+    padding-bottom: var(--space-5); /* 24px */
+  }
+  .zaglavljeDesno {
+    display: none;
+  }
+  .kartica {
+    padding: var(--space-5); /* 24px */
+  }
+  .naslov {
+    font-size: 1.5rem;
+  }
+  .podnozje {
+    position: static;
+    margin-top: var(--space-5); /* 24px */
+    padding-bottom: var(--space-5); /* 24px */
+    flex-wrap: wrap;
+  }
+}

@@ -1,4 +1,6 @@
-// Ikonice za prijavu/registraciju/reset (Korak 5), prepisane iz referenca/prototip/js/icons.js.
+// Ikonice za prijavu/registraciju/reset (Korak 5) i onboarding (Korak 6), prepisane iz
+// referenca/prototip/js/icons.js. Obe grupe ekrana su van okvira aplikacije (Korak 4), zato dele ovaj
+// fajl umesto src/components/ui/icons.tsx.
 // Debljina linije 1.8 (ne 1.5 kao u src/components/ui/icons.tsx) jer je to stvarna vrednost koju
 // prototip koristi (Icon() u js/icons.js), ne 1.5 iz dizajn-sistem/README.md - frejm/prototip pobeđuje.
 // Nije menjan src/components/ui/icons.tsx (Korak 4 okvir aplikacije), to je van opsega ovog koraka.
@@ -128,6 +130,69 @@ export function IkonaMesec(props: IkonicaProps) {
   return (
     <Ikonica {...props}>
       <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z" />
+    </Ikonica>
+  );
+}
+
+// Krug sa uzvičnikom (ne trougao kao IkonaUpozorenje) - tačno po frejmovima Koraka 6 (OnbO2 i dr.), koji
+// za grešku polja koriste drugu ikonicu nego frejmovi Koraka 5. Nameran je ovo razlika između koraka, ne
+// greška - videti izveštaj Koraka 6.
+export function IkonaUpozorenjeKrug(props: IkonicaProps) {
+  return (
+    <Ikonica strokeWidth={1.5} {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7.5v5M12 16h.01" />
+    </Ikonica>
+  );
+}
+
+export function IkonaStrelicaDole(props: IkonicaProps) {
+  return (
+    <Ikonica strokeWidth={1.5} {...props}>
+      <path d="M6 9l6 6 6-6" />
+    </Ikonica>
+  );
+}
+
+export function IkonaKalendar(props: IkonicaProps) {
+  return (
+    <Ikonica strokeWidth={1.5} {...props}>
+      <rect x="4" y="5" width="16" height="15" rx="2" />
+      <path d="M4 10h16M9 3v4M15 3v4" />
+    </Ikonica>
+  );
+}
+
+export function IkonaKopiraj(props: IkonicaProps) {
+  return (
+    <Ikonica strokeWidth={1.5} {...props}>
+      <rect x="8" y="8" width="12" height="12" rx="2" />
+      <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" />
+    </Ikonica>
+  );
+}
+
+export function IkonaUcitavanje(props: IkonicaProps) {
+  return (
+    <Ikonica strokeWidth={2} {...props}>
+      <circle cx="12" cy="12" r="9" opacity={0.25} />
+      <path d="M12 3a9 9 0 0 1 9 9" />
+    </Ikonica>
+  );
+}
+
+export function IkonaMinus(props: IkonicaProps) {
+  return (
+    <Ikonica strokeWidth={2} {...props}>
+      <path d="M6 12h12" />
+    </Ikonica>
+  );
+}
+
+export function IkonaUpload(props: IkonicaProps) {
+  return (
+    <Ikonica strokeWidth={1.5} {...props}>
+      <path d="M12 16V5M7.5 9.5L12 5l4.5 4.5M5 19h14" />
     </Ikonica>
   );
 }

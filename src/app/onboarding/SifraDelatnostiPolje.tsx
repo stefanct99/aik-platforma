@@ -1,5 +1,8 @@
 import { useId, useState, type KeyboardEvent } from "react";
 import { pretraziKD2025, type RezultatPretrageKD } from "@/lib/kd-sifre";
+import { IkonaStrelicaDole, IkonaUpozorenjeKrug } from "@/components/auth-shell/auth-icons";
+import styles from "@/components/auth-shell/PoljeAuth.module.css";
+import listaStyles from "./SifraDelatnostiPolje.module.css";
 
 export function SifraDelatnostiPolje({
   initialCode,
@@ -43,16 +46,19 @@ export function SifraDelatnostiPolje({
   }
 
   return (
-    <div>
-      <label>
-        <span>Šifra delatnosti</span>
+    <div className={styles.polje}>
+      <label htmlFor={listaId}>Šifra delatnosti</label>
+      <span className={styles.unosOmot}>
         <input
+          id={listaId}
           role="combobox"
           aria-expanded={otvoreno}
-          aria-controls={listaId}
+          aria-controls={`${listaId}-lista`}
+          className={[styles.unos, error ? styles.greska : ""].filter(Boolean).join(" ")}
+          style={{ paddingRight: 48 }}
           value={upit}
           disabled={disabled}
-          placeholder="Upiši šifru (62.10 ili 6201) ili deo naziva, npr. programiranje"
+          placeholder="Izaberi šifru delatnosti"
           autoComplete="off"
           onChange={(dogadjaj) => {
             setUpit(dogadjaj.target.value);
@@ -64,27 +70,36 @@ export function SifraDelatnostiPolje({
           onBlur={() => setOtvoreno(false)}
           onKeyDown={onKeyDown}
         />
-      </label>
+        <span className={listaStyles.strelica}>
+          <IkonaStrelicaDole size={20} />
+        </span>
+        {otvoreno && rezultati.length > 0 && (
+          <ul id={`${listaId}-lista`} role="listbox" className={listaStyles.lista}>
+            {rezultati.map((rezultat, i) => (
+              <li key={rezultat.code} role="option" aria-selected={i === istaknuto}>
+                <button
+                  type="button"
+                  className={listaStyles.stavka}
+                  onMouseDown={(dogadjaj) => {
+                    dogadjaj.preventDefault();
+                    izaberi(rezultat);
+                  }}
+                >
+                  {rezultat.code} {rezultat.name}
+                  {rezultat.staraSifra && <span> (ranije šifra {rezultat.staraSifra})</span>}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </span>
       <input type="hidden" name="delatnostCode" value={izabranaSifra} />
-      {otvoreno && rezultati.length > 0 && (
-        <ul id={listaId} role="listbox">
-          {rezultati.map((rezultat, i) => (
-            <li key={rezultat.code} role="option" aria-selected={i === istaknuto}>
-              <button
-                type="button"
-                onMouseDown={(dogadjaj) => {
-                  dogadjaj.preventDefault();
-                  izaberi(rezultat);
-                }}
-              >
-                {rezultat.code} {rezultat.name}
-                {rezultat.staraSifra && <span> (ranije šifra {rezultat.staraSifra})</span>}
-              </button>
-            </li>
-          ))}
-        </ul>
+      {error && (
+        <div className={styles.greskaPoruka}>
+          <IkonaUpozorenjeKrug size={18} />
+          <span>{error}</span>
+        </div>
       )}
-      {error && <p>{error}</p>}
     </div>
   );
 }

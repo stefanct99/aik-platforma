@@ -7,6 +7,7 @@ import { isValidMb, isValidPib, isValidZip, jePibFormatIspravan } from "@/lib/id
 import { findKD2025, isValidKD2025Code } from "@/lib/kd-sifre";
 import {
   finishOnboarding,
+  imeVlasnikaIzNaloga,
   saveOnboardingStep1,
   saveOnboardingStep2,
   setOnboardingStep,
@@ -14,9 +15,8 @@ import {
 import { Prisma } from "../../../generated/prisma/client";
 
 export type Step1Stanje = {
-  errors: Partial<Record<"ownerName" | "name" | "pib" | "mb" | "delatnostCode" | "regDate", string>>;
+  errors: Partial<Record<"name" | "pib" | "mb" | "delatnostCode" | "regDate", string>>;
   values: {
-    ownerName: string;
     name: string;
     pib: string;
     mb: string;
@@ -45,7 +45,6 @@ export async function saveStep1Action(
 
   const delatnostCode = String(formData.get("delatnostCode") || "");
   const values = {
-    ownerName: String(formData.get("ownerName") || "").trim(),
     name: String(formData.get("name") || "").trim(),
     pib: String(formData.get("pib") || "").trim(),
     mb: String(formData.get("mb") || "").trim(),
@@ -55,7 +54,6 @@ export async function saveStep1Action(
   };
 
   const errors: Step1Stanje["errors"] = {};
-  if (!values.ownerName) errors.ownerName = "Unesi ime i prezime";
   if (!values.name) errors.name = "Unesi poslovno ime";
   if (!jePibFormatIspravan(values.pib)) errors.pib = "PIB mora imati 9 cifara";
   else if (!isValidPib(values.pib)) errors.pib = "PIB nije ispravan, proveri cifre";
@@ -71,7 +69,7 @@ export async function saveStep1Action(
 
   try {
     await saveOnboardingStep1(korisnik.id, {
-      ownerName: values.ownerName,
+      ownerName: imeVlasnikaIzNaloga(korisnik),
       name: values.name,
       pib: values.pib,
       mb: values.mb,
@@ -114,6 +112,9 @@ export async function saveStep2Action(
   redirect("/onboarding");
 }
 
+// Spec 6.1: i klik na "Nastavi" i na "Podesiću ovo kasnije" u koraku 3 vode dalje bez povezivanja
+// (stvarno povezivanje mejlova banke još ne postoji, vidi izveštaj Koraka 6) - zato obe akcije rade
+// isto, samo je druga dostupna i kao obična veza (ne samo dugme), tačno po frejmovima OnbO7/OnbO8.
 export async function continueFromStep3Action() {
   const korisnik = await trenutniKorisnik();
   await setOnboardingStep(korisnik.id, 4);
@@ -126,9 +127,10 @@ export async function finishOnboardingAction() {
   redirect("/pocetna");
 }
 
-export async function goBackAction(formData: FormData) {
+// Poziva se direktno iz onClick (ne kroz <form action>), zato prima običan broj, ne FormData. "Nazad"
+// NIKAD ne čuva trenutnu formu (spec 6.1), samo pomera pokazivač koraka unazad.
+export async function goBackAction(trenutniKorak: number) {
   const korisnik = await trenutniKorisnik();
-  const trenutniKorak = Number(formData.get("trenutniKorak")) || 1;
   await setOnboardingStep(korisnik.id, Math.max(1, trenutniKorak - 1));
   redirect("/onboarding");
 }

@@ -5,6 +5,8 @@ import { trebaPreusmeravanjeNaPrijavu } from "@/lib/auth-guard";
 import { jeDozvoljenaAdminPrijava } from "@/lib/admin-dev-gate";
 import { trebaPreusmeravanjeNaPocetnu } from "@/lib/onboarding-guard";
 import { getBusinessForUser } from "@/lib/business";
+import { isValidTema } from "@/lib/theme";
+import { composeInboundAddress } from "@/lib/inbound-mail";
 import { Step1Form } from "./Step1Form";
 import { Step2Form } from "./Step2Form";
 import { Step3Mail } from "./Step3Mail";
@@ -31,13 +33,14 @@ export default async function OnboardingPage() {
     redirect("/pocetna");
   }
 
+  const tema = isValidTema(session!.user.theme) ? session!.user.theme : "sistem";
   const korak = biznis?.onboardingStep ?? 1;
 
   if (korak <= 1) {
     return (
       <Step1Form
+        tema={tema}
         initial={{
-          ownerName: session!.user.name || "",
           name: biznis?.name ?? "",
           pib: biznis?.pib ?? "",
           mb: biznis?.mb ?? "",
@@ -52,6 +55,7 @@ export default async function OnboardingPage() {
   if (korak === 2) {
     return (
       <Step2Form
+        tema={tema}
         initial={{
           street: biznis?.street ?? "",
           city: biznis?.city ?? "",
@@ -62,11 +66,14 @@ export default async function OnboardingPage() {
   }
 
   if (korak === 3) {
-    return <Step3Mail />;
+    return (
+      <Step3Mail tema={tema} adresa={composeInboundAddress(biznis!.inboundSlug, biznis!.inboundCode)} />
+    );
   }
 
   return (
     <Step4Summary
+      tema={tema}
       businessName={biznis!.name}
       pib={biznis!.pib}
       street={biznis!.street ?? ""}

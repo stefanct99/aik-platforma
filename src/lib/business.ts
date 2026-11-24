@@ -1,6 +1,17 @@
 import { prisma } from "./prisma";
 import { generateInboundCode, slugifyBusinessName } from "./inbound-mail";
 
+// Korak 6: polje "Ime i prezime" je uklonjeno sa ekrana onboardinga O tvojoj firmi (frejm OnbO1/spec
+// 6.1 ga nemaju). Ime vlasnika dolazi ISKLJUČIVO iz naloga (ime uneto pri registraciji, Korak 5), nikad
+// iz te forme. Ako nalog izuzetno nema ime (npr. admin nalog napravljen ručno, pre Koraka 5, kad
+// registracija još nije tražila ime), koristi se deo mejl adrese pre "@" kao razumna privremena zamena -
+// korisnik je posle može ispraviti u Podešavanja > Profil i firma (to polje tamo ostaje izmenjivo).
+export function imeVlasnikaIzNaloga(korisnik: { name: string; email: string }): string {
+  const ime = korisnik.name.trim();
+  if (ime) return ime;
+  return korisnik.email.split("@")[0];
+}
+
 export type Step1Podaci = {
   ownerName: string;
   name: string;
@@ -54,8 +65,10 @@ async function generateUniqueInbound(name: string) {
 export async function saveOnboardingStep1(userId: string, podaci: Step1Podaci) {
   const postojeca = await getBusinessForUser(userId);
 
-  // Nema registracionog ekrana (prijava je samo magic linkom), zato se ime i prezime vlasnika
-  // upisuje i u ime korisnika (zahtev iz Koraka 2).
+  // Korak 6: ownerName sada dolazi IZ naloga (ime iz registracije, Korak 5), ne sa ovog ekrana - vidi
+  // src/app/onboarding/actions.ts (imeVlasnikaIzNaloga). Ovaj upis je zato obično ista vrednost nazad u
+  // User.name (bez efekta), OSIM kad nalog nije imao ime pa je iskorišćena zamena iz mejla - tada ovo
+  // trajno popunjava i User.name, da ime vlasnika ne ostane prazno ni van onboardinga.
   await prisma.user.update({ where: { id: userId }, data: { name: podaci.ownerName } });
 
   if (postojeca) {

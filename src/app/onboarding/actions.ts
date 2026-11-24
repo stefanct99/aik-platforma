@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { isValidMb, isValidPib, isValidZip, jePibFormatIspravan } from "@/lib/identifiers";
 import { findKD2025, isValidKD2025Code } from "@/lib/kd-sifre";
+import { parseDatumSrpski } from "@/lib/datum";
 import {
   finishOnboarding,
   imeVlasnikaIzNaloga,
@@ -59,7 +60,10 @@ export async function saveStep1Action(
   else if (!isValidPib(values.pib)) errors.pib = "PIB nije ispravan, proveri cifre";
   if (!isValidMb(values.mb)) errors.mb = "Matični broj mora imati 8 cifara";
   if (!isValidKD2025Code(values.delatnostCode)) errors.delatnostCode = "Izaberi šifru delatnosti";
+
+  const regDate = parseDatumSrpski(values.regDate);
   if (!values.regDate) errors.regDate = "Unesi datum otvaranja";
+  else if (!regDate) errors.regDate = "Unesi ispravan datum u formatu dd.mm.gggg.";
 
   if (Object.keys(errors).length > 0) {
     return { errors, values };
@@ -75,7 +79,7 @@ export async function saveStep1Action(
       mb: values.mb,
       delatnostCode: delatnost.code,
       delatnostName: delatnost.name,
-      regDate: new Date(values.regDate),
+      regDate: regDate!,
     });
   } catch (greska) {
     if (greska instanceof Prisma.PrismaClientKnownRequestError && greska.code === "P2002") {

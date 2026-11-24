@@ -6,6 +6,7 @@ import { IkonaUcitavanje } from "@/components/auth-shell/auth-icons";
 import type { Tema } from "@/lib/theme";
 import { saveStep1Action, type Step1Stanje } from "./actions";
 import { OnboardingShell } from "./OnboardingShell";
+import { PoljeDatumOnb } from "./PoljeDatumOnb";
 import { PoljeOnb } from "./PoljeOnb";
 import { SifraDelatnostiPolje } from "./SifraDelatnostiPolje";
 import styles from "./OnboardingBits.module.css";
@@ -60,10 +61,8 @@ export function Step1Form({ initial, tema }: { initial: Step1Stanje["values"]; t
           error={stanje.errors.delatnostCode}
           disabled={uToku}
         />
-        <PoljeOnb
-          label="Datum otvaranja"
+        <PoljeDatumOnb
           name="regDate"
-          type="date"
           defaultValue={stanje.values.regDate}
           error={stanje.errors.regDate}
           disabled={uToku}

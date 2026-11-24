@@ -22,7 +22,10 @@ const inter = Inter({
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="sr" className={`${manrope.variable} ${inter.variable}`}>
-      <body>{children}</body>
+      {/* Ekstenzije pregledača (npr. Grammarly) ubacuju svoje atribute u <body> pre nego što React
+          hidrira stranicu, što inače ispisuje lažno upozorenje o neslaganju - to upozorenje se odnosi
+          samo na njih, ne na stvarnu grešku u ovoj aplikaciji. */}
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }

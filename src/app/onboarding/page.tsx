@@ -7,6 +7,7 @@ import { trebaPreusmeravanjeNaPocetnu } from "@/lib/onboarding-guard";
 import { getBusinessForUser } from "@/lib/business";
 import { isValidTema } from "@/lib/theme";
 import { composeInboundAddress } from "@/lib/inbound-mail";
+import { formatDatumSrpski } from "@/lib/datum";
 import { Step1Form } from "./Step1Form";
 import { Step2Form } from "./Step2Form";
 import { Step3Mail } from "./Step3Mail";
@@ -14,11 +15,6 @@ import { Step4Summary } from "./Step4Summary";
 
 // Zavisi od sesije (headers()), ne može da se unapred generiše statički (isto kao /pocetna).
 export const instant = false;
-
-function naDatumString(datum: Date | null | undefined): string {
-  if (!datum) return "";
-  return datum.toISOString().slice(0, 10);
-}
 
 export default async function OnboardingPage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -46,7 +42,7 @@ export default async function OnboardingPage() {
           mb: biznis?.mb ?? "",
           delatnostCode: biznis?.delatnostCode ?? "",
           delatnostName: biznis?.delatnostName ?? "",
-          regDate: naDatumString(biznis?.regDate),
+          regDate: biznis?.regDate ? formatDatumSrpski(biznis.regDate) : "",
         }}
       />
     );

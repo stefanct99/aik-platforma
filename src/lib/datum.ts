@@ -7,3 +7,22 @@ export function formatDatumSrpski(datum: Date): string {
   const godina = datum.getUTCFullYear();
   return `${dan}.${mesec}.${godina}.`;
 }
+
+// Korak 6 (ispravka): onboarding Korak 1 unosi datum otvaranja kao tekst u ovom istom formatu
+// (dd.mm.gggg.), ne preko <input type="date"> - frejmovi to tako pokazuju. Parsira i PROVERAVA da je
+// stvaran kalendarski dan (31.02. se odbija, ne tiho prebacuje na 03.03. kako bi obično Date uradio),
+// tačka na kraju je opciona pri unosu (korisnik je ne mora otkucati).
+export function parseDatumSrpski(tekst: string): Date | null {
+  const poklapanje = tekst.trim().match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})\.?$/);
+  if (!poklapanje) return null;
+
+  const dan = Number(poklapanje[1]);
+  const mesec = Number(poklapanje[2]);
+  const godina = Number(poklapanje[3]);
+
+  const datum = new Date(Date.UTC(godina, mesec - 1, dan));
+  const jeIspravan =
+    datum.getUTCFullYear() === godina && datum.getUTCMonth() === mesec - 1 && datum.getUTCDate() === dan;
+
+  return jeIspravan ? datum : null;
+}

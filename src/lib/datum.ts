@@ -1,11 +1,22 @@
 // Srpski format datuma (spec 7.13: "paušalac od 14.03.2024."): DD.MM.GGGG. sa tačkom na kraju.
 export function formatDatumSrpski(datum: Date): string {
+  return formatDatum(datum, "dmy");
+}
+
+export type FormatDatuma = "dmy" | "iso";
+
+// Deljena funkcija za SVAKI prikaz datuma u aplikaciji koji prati korisnikovo podešavanje iz Jezik i
+// izgled (Korak 7, Pd7). "dmy" = 15.11.2026. (isto što formatDatumSrpski vraća), "iso" = 2026-11-15,
+// potvrđeno protiv referenca/prototip/js/utils.js fmtDate(). Polja za UNOS datuma (onboarding, Profil i
+// firma regDate) OSTAJU fiksno u dmy formatu nezavisno od ovog podešavanja, jer njihov parser
+// (parseDatumSrpski) prihvata samo dmy - to je svesna odluka, navedena u izveštaju Koraka 7.
+export function formatDatum(datum: Date, format: FormatDatuma): string {
   // UTC, ne lokalno vreme: datum se čuva kao kalendarski dan (iz <input type="date">), ne kao trenutak,
   // pa lokalna vremenska zona servera ne sme da ga pomeri za jedan dan.
   const dan = String(datum.getUTCDate()).padStart(2, "0");
   const mesec = String(datum.getUTCMonth() + 1).padStart(2, "0");
   const godina = datum.getUTCFullYear();
-  return `${dan}.${mesec}.${godina}.`;
+  return format === "iso" ? `${godina}-${mesec}-${dan}` : `${dan}.${mesec}.${godina}.`;
 }
 
 // Korak 6 (ispravka): onboarding Korak 1 unosi datum otvaranja kao tekst u ovom istom formatu

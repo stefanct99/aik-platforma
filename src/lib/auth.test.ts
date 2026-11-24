@@ -326,3 +326,86 @@ describe("reset lozinke", () => {
     expect(sesijePosle).toBe(0);
   });
 });
+
+describe("promena lozinke (Korak 7, Bezbednost i nalog)", () => {
+  // Isti obrazac kao auth.api.signInEmail iznad, samo preko stvarnog Set-Cookie kolačića (kao što bi
+  // pregledač uradio) da bi se pozvao changePassword "kao" prijavljeni korisnik, bez pogađanja kako je
+  // Better Auth kolačić potpisan.
+  async function prijaviSeIUzmiKolacic(email: string, lozinka: string) {
+    const odgovor = await auth.api.signInEmail({
+      body: { email, password: lozinka },
+      headers: praznaZaglavlja(),
+      asResponse: true,
+    });
+    const setCookie = odgovor.headers.get("set-cookie");
+    if (!setCookie) throw new Error("Prijava nije vratila kolačić sesije");
+    const kolacic = setCookie.split(";")[0];
+    return new Headers({ Cookie: kolacic });
+  }
+
+  it("menja lozinku sa ispravnom trenutnom lozinkom", async () => {
+    const email = nasumicniEmail();
+    await registrujKorisnika(email);
+    await potvrdiEmail(email);
+    const zaglavlja = await prijaviSeIUzmiKolacic(email, "DobraLozinka1");
+
+    await auth.api.changePassword({
+      body: { currentPassword: "DobraLozinka1", newPassword: "NovaLozinka2", revokeOtherSessions: false },
+      headers: zaglavlja,
+      asResponse: false,
+    });
+
+    const rezultat = await auth.api.signInEmail({
+      body: { email, password: "NovaLozinka2" },
+      headers: praznaZaglavlja(),
+      asResponse: false,
+    });
+    expect(rezultat.user.email).toBe(email);
+  });
+
+  it("odbija pogrešnu trenutnu lozinku (INVALID_PASSWORD)", async () => {
+    const email = nasumicniEmail();
+    await registrujKorisnika(email);
+    await potvrdiEmail(email);
+    const zaglavlja = await prijaviSeIUzmiKolacic(email, "DobraLozinka1");
+
+    await expect(
+      auth.api.changePassword({
+        body: { currentPassword: "PogresnaLozinka1", newPassword: "NovaLozinka2", revokeOtherSessions: false },
+        headers: zaglavlja,
+        asResponse: false,
+      }),
+    ).rejects.toMatchObject({ body: { code: "INVALID_PASSWORD" } });
+  });
+
+  it("sa revokeOtherSessions gasi sve OSTALE sesije, ali ne i trenutnu", async () => {
+    const email = nasumicniEmail();
+    await registrujKorisnika(email);
+    await potvrdiEmail(email);
+    const korisnik = await prisma.user.findUnique({ where: { email } });
+
+    // Dve "prijave" = dva uređaja (dve sesije istog korisnika).
+    const zaglavljaUredjaj1 = await prijaviSeIUzmiKolacic(email, "DobraLozinka1");
+    await prijaviSeIUzmiKolacic(email, "DobraLozinka1"); // uređaj 2, kolačić nam ovde ne treba
+
+    const sesijePre = await prisma.session.count({ where: { userId: korisnik!.id } });
+    expect(sesijePre).toBeGreaterThanOrEqual(2);
+
+    const odgovor = await auth.api.changePassword({
+      body: { currentPassword: "DobraLozinka1", newPassword: "NovaLozinka2", revokeOtherSessions: true },
+      headers: zaglavljaUredjaj1,
+      asResponse: true,
+    });
+
+    const sesijePosle = await prisma.session.findMany({ where: { userId: korisnik!.id } });
+    expect(sesijePosle.length).toBe(1);
+
+    // changePassword sa revokeOtherSessions pravi NOVU sesiju (i nov kolačić) za uređaj sa kog je
+    // lozinka promenjena - stari kolačić uređaja 1 više ne radi, ali nalog ostaje prijavljen na njemu
+    // preko ovog novog kolačića (to i jeste svrha "ostajemo prijavljeni samo na ovom uređaju").
+    const novKolacic = odgovor.headers.get("set-cookie")?.split(";")[0];
+    expect(novKolacic).toBeTruthy();
+    const provera = await auth.api.getSession({ headers: new Headers({ Cookie: novKolacic! }) });
+    expect(provera?.user.email).toBe(email);
+  });
+});

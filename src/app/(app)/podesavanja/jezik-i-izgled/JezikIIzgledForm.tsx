@@ -2,10 +2,10 @@
 
 import { useActionState, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
 import { PillGroup } from "@/components/settings/PillGroup";
-import type { Tema } from "@/lib/theme";
-import { sacuvajTemuAction, type TemaStanje } from "./actions";
+import type { Tema, Jezik } from "@/lib/theme";
+import type { FormatDatuma } from "@/lib/datum";
+import { sacuvajIzgledAction, type JezikIIzgledStanje } from "./actions";
 import styles from "./JezikIIzgledForm.module.css";
 
 // Primenjuje izabranu temu odmah na ekranu (spec 7.13: "Prikaz se menja odmah"), pre nego što se
@@ -18,12 +18,25 @@ function primeniTemuNaStranici(tema: Tema) {
   else omot.setAttribute("data-theme", tema);
 }
 
-export function JezikIIzgledForm({ initialTema }: { initialTema: Tema }) {
-  const [stanje, action, uToku] = useActionState<TemaStanje, FormData>(sacuvajTemuAction, {
+export function JezikIIzgledForm({
+  initialTema,
+  initialJezik,
+  initialFormatDatuma,
+}: {
+  initialTema: Tema;
+  initialJezik: Jezik;
+  initialFormatDatuma: FormatDatuma;
+}) {
+  const pocetnoStanje: JezikIIzgledStanje = {
     tema: initialTema,
+    jezik: initialJezik,
+    formatDatuma: initialFormatDatuma,
     sacuvano: false,
-  });
+  };
+  const [stanje, action, uToku] = useActionState(sacuvajIzgledAction, pocetnoStanje);
   const [tema, setTema] = useState<Tema>(initialTema);
+  const [jezik, setJezik] = useState<Jezik>(initialJezik);
+  const [formatDatuma, setFormatDatuma] = useState<FormatDatuma>(initialFormatDatuma);
 
   return (
     <form action={action} className={styles.sadrzaj}>
@@ -33,32 +46,32 @@ export function JezikIIzgledForm({ initialTema }: { initialTema: Tema }) {
         </p>
       )}
 
-      <div className={styles.naslovRed}>
-        <span>Jezik</span>
-        <Badge varijanta="info">Dolazi uskoro</Badge>
-      </div>
+      <span>Jezik</span>
       <PillGroup
+        name="jezik"
         options={[
-          { value: "sr-lat", label: "Srpski (latinica)" },
-          { value: "sr-cir", label: "Srpski (ćirilica)" },
-          { value: "en", label: "English" },
+          { value: "sr-lat" as Jezik, label: "Srpski (latinica)" },
+          { value: "sr-cir" as Jezik, label: "Srpski (ćirilica)" },
+          { value: "en" as Jezik, label: "English" },
         ]}
-        value="sr-lat"
-        disabled
+        value={jezik}
+        disabled={uToku}
+        onChange={setJezik}
       />
+      <input type="hidden" name="jezik" value={jezik} />
 
-      <div className={styles.naslovRed}>
-        <span>Format datuma</span>
-        <Badge varijanta="info">Dolazi uskoro</Badge>
-      </div>
+      <span>Format datuma</span>
       <PillGroup
+        name="formatDatuma"
         options={[
-          { value: "dmy", label: "15.11.2026." },
-          { value: "iso", label: "2026-11-15" },
+          { value: "dmy" as FormatDatuma, label: "15.11.2026." },
+          { value: "iso" as FormatDatuma, label: "2026-11-15" },
         ]}
-        value="dmy"
-        disabled
+        value={formatDatuma}
+        disabled={uToku}
+        onChange={setFormatDatuma}
       />
+      <input type="hidden" name="formatDatuma" value={formatDatuma} />
 
       <span>Izgled</span>
       <PillGroup

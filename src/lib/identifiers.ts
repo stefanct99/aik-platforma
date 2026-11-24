@@ -52,3 +52,58 @@ export function isValidMb(str: string | null | undefined): boolean {
 export function isValidZip(str: string | null | undefined): boolean {
   return /^\d{5}$/.test(String(str == null ? "" : str));
 }
+
+// DINARSKI BROJ RAČUNA (Korak 7, spec 7.13): format 3-13-2 (18 cifara), potvrđeno iz zvaničnog izvora -
+// Odluka o jedinstvenoj strukturi tekućih računa, "Sl. glasnik RS" br. 55/2015, tačke 3-6: prve tri
+// cifre su fiksni broj pružaoca platnih usluga (banke), sledećih 13 je broj računa, poslednje dve su
+// kontrolni broj. Kontrolni broj se računa za niz od 16 cifara (banka + broj računa) po ISO 7064 MODUL
+// 97: taj niz se pomnoži sa 100, podeli sa 97, ostatak se oduzme od 98, rezultat se piše kao dve cifre
+// (dozvoljena vodeća nula). U pisanom obliku se piše sa crtama (npr. "160-0000123456-78"), vodeće nule
+// u srednjem delu mogu da se izostave - zato se unos normalizuje (dopuni nulama do 13 cifara) pre
+// provere kontrolnog broja.
+export function normalizujDinarskiRacun(str: string | null | undefined): string {
+  const delovi = String(str == null ? "" : str)
+    .trim()
+    .split("-");
+  if (delovi.length !== 3) return sanitizeDigits(str);
+  const [banka, broj, kontrola] = delovi.map((deo) => sanitizeDigits(deo));
+  return `${banka.padStart(3, "0")}${broj.padStart(13, "0")}${kontrola.padStart(2, "0")}`;
+}
+
+export function isValidDinarskiRacun(str: string | null | undefined): boolean {
+  const cifre = normalizujDinarskiRacun(str);
+  if (!/^\d{18}$/.test(cifre)) return false;
+  const osnova = cifre.slice(0, 16);
+  const kontrola = cifre.slice(16);
+  const ostatak = Number((BigInt(osnova) * BigInt(100)) % BigInt(97));
+  const izracunata = String(98 - ostatak).padStart(2, "0");
+  return izracunata === kontrola;
+}
+
+// IBAN (Korak 7): standardna provera ISO 13616, MOD 97-10 (ista porodica algoritama kao dinarski račun
+// iznad, samo primenjena na ceo IBAN sa pomerenim prefiksom). Srpski IBAN ima 22 karaktera (RS + 2
+// kontrolne cifre + 3 banka + 13 račun + 2 nacionalna kontrola), ali provera ispod radi za IBAN bilo koje
+// zemlje (dužina i format se razlikuju po zemlji, ovde se ne ograničava samo na RS).
+export function isValidIban(str: string | null | undefined): boolean {
+  const ociscen = String(str == null ? "" : str)
+    .replace(/\s+/g, "")
+    .toUpperCase();
+  if (!/^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/.test(ociscen)) return false;
+
+  const premesten = ociscen.slice(4) + ociscen.slice(0, 4);
+  const brojcano = premesten.replace(/[A-Z]/g, (slovo) => String(slovo.charCodeAt(0) - 55));
+  let ostatak = 0;
+  for (const cifra of brojcano) {
+    ostatak = (ostatak * 10 + Number(cifra)) % 97;
+  }
+  return ostatak === 1;
+}
+
+// SWIFT/BIC (Korak 7): 8 ili 11 znakova - 4 slova (banka), 2 slova (zemlja), 2 slova/cifre (lokacija),
+// opciono 3 slova/cifre (filijala). Standardan format (ISO 9362), bez posebne kontrolne cifre.
+export function isValidSwift(str: string | null | undefined): boolean {
+  const ociscen = String(str == null ? "" : str)
+    .replace(/\s+/g, "")
+    .toUpperCase();
+  return /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/.test(ociscen);
+}

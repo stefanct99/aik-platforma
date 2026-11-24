@@ -1,0 +1,91 @@
+.senka {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(15, 42, 34, 0.62);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.panel {
+  width: 100%;
+  max-width: 560px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: -30px 0 80px -30px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+.zaglavlje {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding: 0 28px;
+  border-bottom: 1px solid var(--color-border);
+  flex: none;
+}
+.naslov {
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+}
+.zatvoriDugme {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 0;
+  cursor: pointer;
+}
+
+.telo {
+  flex: 1;
+  box-sizing: border-box;
+  padding: 24px 28px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.podnozje {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  height: 72px;
+  padding: 0 28px;
+  border-top: 1px solid var(--color-border);
+  flex: none;
+}
+
+@media (max-width: 767px) {
+  .senka {
+    align-items: flex-end;
+  }
+  .panel {
+    max-width: none;
+    max-height: 90vh;
+    border-radius: 16px 16px 0 0;
+  }
+  .podnozje {
+    flex-direction: column-reverse;
+    height: auto;
+    padding: var(--space-4) 20px;
+    gap: var(--space-2);
+  }
+  .podnozje > * {
+    width: 100%;
+  }
+  .telo {
+    padding: var(--space-4) 20px;
+  }
+  .zaglavlje {
+    padding: 0 20px;
+  }
+}

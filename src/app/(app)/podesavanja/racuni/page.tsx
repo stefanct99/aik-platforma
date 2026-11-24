@@ -1,14 +1,22 @@
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
+import { getAccountsForUser } from "@/lib/bank-accounts";
 import { SettingsPageHeader } from "@/components/settings/SettingsPageHeader";
-import { DolaziUskoro } from "@/components/app-shell/DolaziUskoro";
+import { RacuniTab } from "./RacuniTab";
 
-export default function RacuniPage() {
+export const instant = false;
+
+export default async function RacuniPage() {
+  const session = await auth.api.getSession({ headers: await headers() });
+  const racuni = await getAccountsForUser(session!.user.id);
+
   return (
     <>
       <SettingsPageHeader
         naslov="Računi"
         opis="Na fakturama se prikazuje račun koji odgovara valuti fakture."
       />
-      <DolaziUskoro />
+      <RacuniTab racuni={racuni} />
     </>
   );
 }

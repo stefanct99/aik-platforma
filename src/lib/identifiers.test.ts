@@ -1,5 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { isValidMb, isValidPib, isValidZip, jePibFormatIspravan, sanitizeDigits } from "./identifiers";
+import {
+  isValidDinarskiRacun,
+  isValidIban,
+  isValidMb,
+  isValidPib,
+  isValidSwift,
+  isValidZip,
+  jePibFormatIspravan,
+  normalizujDinarskiRacun,
+  sanitizeDigits,
+} from "./identifiers";
 
 // Isti testovi kao referenca/prototip/js/rules/identifiers.test.js, prilagođeni za Vitest, plus
 // isValidZip (poštanski broj), koji u prototipu nije bio izdvojen u js/rules/.
@@ -81,5 +91,69 @@ describe("isValidZip", () => {
     expect(isValidZip("110000")).toBe(false);
     expect(isValidZip("")).toBe(false);
     expect(isValidZip(null)).toBe(false);
+  });
+});
+
+// Kontrolni broj potvrđen iz zvaničnog izvora ("Sl. glasnik RS" br. 55/2015, tačka 6: ISO 7064 MODUL
+// 97 nad 16 cifara banka+račun, x100, mod 97, oduzeto od 98). Test broj "160-0000123456-54" je sam
+// izračunat tom formulom (nije iz spoljašnjeg izvora), ne iz frejma - frejmov primer "160-0000123456-78"
+// NIJE kontrolno ispravan (frejm je ilustracija, ne stvaran broj računa), videti izveštaj Koraka 7.
+describe("isValidDinarskiRacun", () => {
+  it("prihvata ispravan broj računa (3-13-2, sopstveno izračunat kontrolni broj)", () => {
+    expect(isValidDinarskiRacun("160-0000123456-54")).toBe(true);
+  });
+
+  it("odbija pogrešan kontrolni broj", () => {
+    expect(isValidDinarskiRacun("160-0000123456-55")).toBe(false);
+  });
+
+  it("prihvata i bez vodećih nula u srednjem delu (spec: mogu da se izostave)", () => {
+    expect(isValidDinarskiRacun("160-123456-54")).toBe(true);
+  });
+
+  it("odbija pogrešan format", () => {
+    expect(isValidDinarskiRacun("160-123456")).toBe(false);
+    expect(isValidDinarskiRacun("")).toBe(false);
+    expect(isValidDinarskiRacun(null)).toBe(false);
+  });
+
+  it("normalizujDinarskiRacun dopunjava srednji deo nulama do 18 cifara", () => {
+    expect(normalizujDinarskiRacun("160-123456-54")).toBe("160" + "0000000123456" + "54");
+  });
+});
+
+// Testne IBAN vrednosti su opšte poznati, javno objavljeni primeri (nemačka i britanska banka), ne
+// stvarni računi korisnika - standardna praksa za proveru ISO 13616 MOD 97 implementacije.
+describe("isValidIban", () => {
+  it("prihvata poznate ispravne IBAN primere", () => {
+    expect(isValidIban("DE89370400440532013000")).toBe(true);
+    expect(isValidIban("GB82WEST12345698765432")).toBe(true);
+  });
+
+  it("prihvata i sa razmacima, nezavisno od velikih/malih slova", () => {
+    expect(isValidIban("de89 3704 0044 0532 0130 00")).toBe(true);
+  });
+
+  it("odbija izmenjenu cifru (kontrolni zbir se ne poklapa)", () => {
+    expect(isValidIban("DE89370400440532013001")).toBe(false);
+  });
+
+  it("odbija pogrešan format", () => {
+    expect(isValidIban("123")).toBe(false);
+    expect(isValidIban("")).toBe(false);
+    expect(isValidIban(null)).toBe(false);
+  });
+});
+
+describe("isValidSwift", () => {
+  it("prihvata 8 i 11 znakova (ISO 9362)", () => {
+    expect(isValidSwift("BANKRSBG")).toBe(true);
+    expect(isValidSwift("DEUTDEFF500")).toBe(true);
+  });
+
+  it("odbija pogrešnu dužinu ili format", () => {
+    expect(isValidSwift("BANK1")).toBe(false);
+    expect(isValidSwift("")).toBe(false);
+    expect(isValidSwift(null)).toBe(false);
   });
 });

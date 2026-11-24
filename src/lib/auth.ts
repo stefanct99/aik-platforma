@@ -32,6 +32,18 @@ export const auth = betterAuth({
         // Menja se samo preko src/lib/theme.ts (Podešavanja > Jezik i izgled), ne preko Better Auth-a.
         input: false,
       },
+      jezik: {
+        type: ["sr-lat", "sr-cir", "en"],
+        required: false,
+        defaultValue: "sr-lat",
+        input: false,
+      },
+      formatDatuma: {
+        type: ["dmy", "iso"],
+        required: false,
+        defaultValue: "dmy",
+        input: false,
+      },
     },
   },
   // Korak 5, spec 7.1: lozinka min 8 karaktera (veliko slovo i broj se proveravaju odvojeno, u

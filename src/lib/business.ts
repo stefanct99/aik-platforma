@@ -1,5 +1,12 @@
+import { randomBytes } from "node:crypto";
 import { prisma } from "./prisma";
 import { generateInboundCode, slugifyBusinessName } from "./inbound-mail";
+
+// Korak 7, spec 7.13 (Povezivanje): privatan token za pretplatu na kalendar. Nasumičan heksadecimalni
+// string, nezavisan od inboundCode (taj se ne menja, ovaj menja korisnik klikom na "Generiši novi").
+export function generateCalendarToken(): string {
+  return randomBytes(12).toString("hex");
+}
 
 // Korak 6: polje "Ime i prezime" je uklonjeno sa ekrana onboardinga O tvojoj firmi (frejm OnbO1/spec
 // 6.1 ga nemaju). Ime vlasnika dolazi ISKLJUČIVO iz naloga (ime uneto pri registraciji, Korak 5), nikad
@@ -85,6 +92,7 @@ export async function saveOnboardingStep1(userId: string, podaci: Step1Podaci) {
       ...podaci,
       inboundSlug,
       inboundCode,
+      calendarToken: generateCalendarToken(),
       onboardingStep: 2,
     },
   });
@@ -142,5 +150,25 @@ export async function finishOnboarding(userId: string) {
   return prisma.business.update({
     where: { id: biznis.id },
     data: { onboardingStep: 4, onboardingCompletedAt: new Date() },
+  });
+}
+
+// Korak 7, spec 7.13 (Povezivanje): "Generiši novi" odmah poništava stari token - stari link prestaje da
+// važi čim se ovo sačuva (nema prelaznog perioda, nema čuvanja istorije starih tokena).
+export async function regenerateCalendarToken(userId: string) {
+  const biznis = await getBusinessForUser(userId);
+  if (!biznis) throw new Error("Firma ne postoji.");
+  return prisma.business.update({
+    where: { id: biznis.id },
+    data: { calendarToken: generateCalendarToken() },
+  });
+}
+
+export async function setCalendarSyncEnabled(userId: string, enabled: boolean) {
+  const biznis = await getBusinessForUser(userId);
+  if (!biznis) throw new Error("Firma ne postoji.");
+  return prisma.business.update({
+    where: { id: biznis.id },
+    data: { calendarSyncEnabled: enabled },
   });
 }

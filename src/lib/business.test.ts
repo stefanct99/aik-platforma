@@ -5,8 +5,10 @@ import {
   finishOnboarding,
   getBusinessForUser,
   imeVlasnikaIzNaloga,
+  regenerateCalendarToken,
   saveOnboardingStep1,
   saveOnboardingStep2,
+  setCalendarSyncEnabled,
   setOnboardingStep,
   updateBusinessProfile,
 } from "./business";
@@ -343,5 +345,59 @@ describe("onboarding: čuvanje po koraku i nastavak od prvog nezavršenog (Korak
     expect(biznis?.onboardingStep).toBe(2);
     expect(biznis?.street).toBe("Prava ulica 1");
     expect(biznis?.city).toBe("Kragujevac");
+  });
+});
+
+describe("kalendar token (Korak 7, Povezivanje)", () => {
+  it("svaka firma dobija svoj token pri kreiranju", async () => {
+    const korisnik = await napraviKorisnika();
+    const biznis = await saveOnboardingStep1(korisnik.id, {
+      ownerName: "Test",
+      name: "Firma Kalendar",
+      pib: nasumicniPib(),
+      mb: "15151515",
+      delatnostCode: "6201",
+      delatnostName: "Računarsko programiranje",
+      regDate: new Date("2024-01-01"),
+    });
+    expect(biznis.calendarToken).toMatch(/^[0-9a-f]{24}$/);
+  });
+
+  it('"Generiši novi" menja token, stari odmah prestaje da važi', async () => {
+    const korisnik = await napraviKorisnika();
+    const biznis = await saveOnboardingStep1(korisnik.id, {
+      ownerName: "Test",
+      name: "Firma Kalendar 2",
+      pib: nasumicniPib(),
+      mb: "16161616",
+      delatnostCode: "6201",
+      delatnostName: "Računarsko programiranje",
+      regDate: new Date("2024-01-01"),
+    });
+    const stariToken = biznis.calendarToken;
+
+    const azurirana = await regenerateCalendarToken(korisnik.id);
+    expect(azurirana.calendarToken).not.toBe(stariToken);
+
+    const pronadjenPoStarom = await prisma.business.findUnique({
+      where: { calendarToken: stariToken },
+    });
+    expect(pronadjenPoStarom).toBeNull();
+  });
+
+  it("setCalendarSyncEnabled menja samo taj prekidač", async () => {
+    const korisnik = await napraviKorisnika();
+    await saveOnboardingStep1(korisnik.id, {
+      ownerName: "Test",
+      name: "Firma Kalendar 3",
+      pib: nasumicniPib(),
+      mb: "17171717",
+      delatnostCode: "6201",
+      delatnostName: "Računarsko programiranje",
+      regDate: new Date("2024-01-01"),
+    });
+
+    const azurirana = await setCalendarSyncEnabled(korisnik.id, false);
+    expect(azurirana.calendarSyncEnabled).toBe(false);
   });
 });

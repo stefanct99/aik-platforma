@@ -1,0 +1,70 @@
+/* Hero kartica (Pd3/Dk_Pd3): pozadina i glavni tekst prate --btn-primary-bg/text (isti obrazac kao
+   dugmad), ali labela i opis ispod trake ostaju ISTA prigušena boja u obe teme (#C9D6CF) - frejm ih
+   nije prilagodio tamnoj temi (potvrđeno čitanjem oba frejma), prepisano tačno tako. */
+.hero {
+  padding: 20px;
+  border-radius: var(--radius-card);
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.heroLabela {
+  font-size: 0.875rem;
+  color: #c9d6cf;
+}
+.heroPlan {
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+.heroTraka {
+  height: 10px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.16);
+  overflow: hidden;
+}
+.heroTrakaPopunjena {
+  height: 100%;
+  border-radius: 9999px;
+  background: var(--color-lime-400);
+}
+.heroTekst {
+  font-size: 1rem;
+  color: #c9d6cf;
+}
+
+.redovi {
+  display: flex;
+  flex-direction: column;
+}
+.red {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--color-border);
+  font-size: 1rem;
+}
+.kljuc {
+  color: var(--color-text-muted);
+}
+
+.napomena {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  border-radius: var(--radius-card);
+  background: var(--color-subnav-bg-active);
+  color: var(--color-icon-chip-ink);
+}
+
+@media (max-width: 767px) {
+  .napomena {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

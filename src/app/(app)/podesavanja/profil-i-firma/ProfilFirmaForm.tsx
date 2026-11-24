@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState, useRef, useState } from "react";
+import { useActionState, useRef, useState, type ChangeEvent } from "react";
 import { Polje } from "@/components/ui/Polje";
 import { Button } from "@/components/ui/Button";
 import { DelatnostCombobox } from "@/components/ui/DelatnostCombobox";
+import { IkonaKalendar, IkonaUpload } from "@/components/ui/icons";
 import { suNazivIliPibPromenjeni } from "@/lib/profil-promene";
 import { sacuvajProfilFirmeAction, type ProfilFirmeStanje } from "./actions";
 import styles from "./ProfilFirmaForm.module.css";
@@ -23,12 +24,14 @@ export function ProfilFirmaForm({ initial }: { initial: ProfilFirmeStanje["value
     { naziv: initial.name, pib: initial.pib },
   );
 
+  const [regDate, setRegDate] = useState(initial.regDate);
   const [resetToken, setResetToken] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
 
   function onReset() {
     setTrenutniNaziv(initial.name);
     setTrenutniPib(initial.pib);
+    setRegDate(initial.regDate);
     setResetToken((t) => t + 1);
   }
 
@@ -88,8 +91,14 @@ export function ProfilFirmaForm({ initial }: { initial: ProfilFirmeStanje["value
         <Polje
           label="Datum registracije"
           name="regDate"
-          type="date"
-          defaultValue={stanje.values.regDate}
+          type="text"
+          inputMode="numeric"
+          placeholder="dd.mm.gggg."
+          value={regDate}
+          onChange={(dogadjaj: ChangeEvent<HTMLInputElement>) =>
+            setRegDate(dogadjaj.target.value.replace(/[^0-9.]/g, ""))
+          }
+          desno={<IkonaKalendar size={18} />}
           error={stanje.errors.regDate}
           disabled={uToku}
         />
@@ -146,6 +155,19 @@ export function ProfilFirmaForm({ initial }: { initial: ProfilFirmeStanje["value
           hint="Nije obavezno."
           disabled={uToku}
         />
+      </div>
+
+      <div className={styles.logoPolje}>
+        <span className={styles.logoLabela}>Logo (nije obavezno)</span>
+        <div className={styles.dropzone}>
+          <span className={styles.dropzoneIkona}>
+            <IkonaUpload size={24} />
+          </span>
+          <span className={styles.dropzoneTekst}>
+            Prevuci logo ovde ili <u>izaberi fajl</u>
+          </span>
+          <span className={styles.dropzonePomoc}>PNG ili SVG, do 2 MB. Možeš ga dodati i kasnije.</span>
+        </div>
       </div>
 
       <div className={styles.dugmad}>

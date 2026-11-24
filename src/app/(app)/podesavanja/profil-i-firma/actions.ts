@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { isValidMb, isValidPib, isValidZip, jePibFormatIspravan } from "@/lib/identifiers";
 import { findKD2025, isValidKD2025Code } from "@/lib/kd-sifre";
+import { parseDatumSrpski } from "@/lib/datum";
 import { updateBusinessProfile } from "@/lib/business";
 
 export type ProfilFirmeStanje = {
@@ -74,7 +75,9 @@ export async function sacuvajProfilFirmeAction(
   else if (!isValidPib(values.pib)) errors.pib = "PIB nije ispravan, proveri cifre";
   if (!isValidMb(values.mb)) errors.mb = "Matični broj mora imati 8 cifara";
   if (!isValidKD2025Code(values.delatnostCode)) errors.delatnostCode = "Izaberi šifru delatnosti";
+  const regDate = parseDatumSrpski(values.regDate);
   if (!values.regDate) errors.regDate = "Unesi datum registracije";
+  else if (!regDate) errors.regDate = "Unesi ispravan datum u formatu dd.mm.gggg.";
   if (!values.street) errors.street = "Unesi ulicu i broj";
   if (!values.city) errors.city = "Unesi mesto";
   if (!isValidZip(values.zip)) errors.zip = "Poštanski broj mora imati 5 cifara";
@@ -90,7 +93,7 @@ export async function sacuvajProfilFirmeAction(
     mb: values.mb,
     delatnostCode: values.delatnostCode,
     delatnostName: values.delatnostName,
-    regDate: new Date(values.regDate),
+    regDate: regDate!,
     street: values.street,
     city: values.city,
     zip: values.zip,

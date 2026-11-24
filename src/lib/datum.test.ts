@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatDatumSrpski, parseDatumSrpski } from "./datum";
+import { formatDatum, formatDatumSrpski, parseDatumSrpski } from "./datum";
 
 describe("formatDatumSrpski", () => {
   it("formatira kao DD.MM.GGGG. (primer iz spec 7.13: 14.03.2024.)", () => {
@@ -50,5 +50,22 @@ describe("parseDatumSrpski", () => {
     const original = new Date("2024-03-14T00:00:00.000Z");
     const nazad = parseDatumSrpski(formatDatumSrpski(original));
     expect(nazad?.toISOString()).toBe(original.toISOString());
+  });
+});
+
+describe("formatDatum (Korak 7, Jezik i izgled - podešavanje formata datuma)", () => {
+  const datum = new Date("2026-11-15T00:00:00.000Z");
+
+  it('"dmy" je isto što i formatDatumSrpski (primer iz frejma Pd7: 15.11.2026.)', () => {
+    expect(formatDatum(datum, "dmy")).toBe("15.11.2026.");
+    expect(formatDatum(datum, "dmy")).toBe(formatDatumSrpski(datum));
+  });
+
+  it('"iso" vraća GGGG-MM-DD (primer iz frejma Pd7: 2026-11-15)', () => {
+    expect(formatDatum(datum, "iso")).toBe("2026-11-15");
+  });
+
+  it('"iso" dodaje nule ispred jednocifrenih dana i meseci', () => {
+    expect(formatDatum(new Date("2026-01-05T00:00:00.000Z"), "iso")).toBe("2026-01-05");
   });
 });

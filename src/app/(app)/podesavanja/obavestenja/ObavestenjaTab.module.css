@@ -1,0 +1,47 @@
+.tabela {
+  display: flex;
+  flex-direction: column;
+}
+
+.red {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.zaglavlje {
+  padding-bottom: 8px;
+  border-top: none;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.kolona {
+  width: 72px;
+  display: flex;
+  justify-content: center;
+}
+
+.kanalNaziv {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .zaglavlje {
+    display: none;
+  }
+  .red {
+    flex-wrap: wrap;
+  }
+  .kolona {
+    width: auto;
+    gap: 8px;
+    align-items: center;
+  }
+  .kanalNaziv {
+    display: inline;
+    font-size: 0.875rem;
+  }
+}

@@ -20,9 +20,15 @@ model User {
   // Izgled (Korak 4b, spec 7.13): "svetli", "tamni" ili "sistem" (prati podešavanje uređaja). Lično
   // podešavanje korisnika, ne firme, zato je ovde, ne na Business.
   theme         String    @default("sistem")
+  // Jezik i format datuma (Korak 7, Pd7): "sr-lat"/"sr-cir"/"en" i "dmy"/"iso". Jezik se čuva ali NE
+  // prevodi interfejs u ovom koraku (nema prevoda teksta - vidi izveštaj). Format datuma se STVARNO
+  // primenjuje svuda preko formatDatum() u src/lib/datum.ts.
+  jezik         String    @default("sr-lat")
+  formatDatuma  String    @default("dmy")
   sessions      Session[]
   accounts      Account[]
   businesses    Business[]
+  notificationSettings NotificationSettings?
 
   @@unique([email])
   @@map("user")
@@ -129,10 +135,89 @@ model Business {
   // Rešenje Poreske uprave ne postoji još (budući korak), ovo je samo podrazumevana vrednost.
   taxDecisionStatus String @default("nije_dodato")
 
+  // Korak 7, spec 7.13 (Povezivanje): privatan token za pretplatu na kalendar (tvojaiknjigovodja.rs/cal/
+  // <token>). Nasumičan, menja se na zahtev korisnika ("Generiši novi") - stari odmah prestaje da važi,
+  // zato NIJE isti kao inboundCode (taj se ne menja). calendarSyncEnabled je prekidač iz frejma Pd5 -
+  // za sada bez stvarnog efekta na ICS fajl (nema događaja koje bi uključivao/isključivao), samo se čuva.
+  calendarToken        String  @unique
+  calendarSyncEnabled  Boolean @default(true)
+
+  bankAccounts BankAccount[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([inboundSlug, inboundCode])
   @@index([ownerId])
   @@map("business")
+}
+
+// Korak 7, spec 7.13 (Računi): dinarski ili devizni račun firme. "Samo jedan podrazumevani po valuti" je
+// pravilo APLIKACIJE (src/lib/bank-accounts.ts), ne šeme - isti pristup kao "jedna firma po korisniku"
+// na Business (vidi komentar tamo), da kasnija izmena pravila ne traži migraciju.
+model BankAccount {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  type     String // "RSD" ili "devizni"
+  currency String // "RSD", "EUR", "USD", "GBP", "CHF"...
+  bank     String
+
+  // Dinarski (type="RSD") koristi number, devizni (type="devizni") koristi iban i swift - nikad oba.
+  number String?
+  iban   String?
+  swift  String?
+
+  isDefault Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  invoiceDraftStubs InvoiceDraftStub[]
+
+  @@index([businessId])
+  @@map("bank_account")
+}
+
+// Korak 7, spec 7.13 (Računi): "Uklanjanje računa koji se koristi na nacrtima faktura traži zamenu" -
+// Fakture kao stvarna funkcija još ne postoje (budući korak), pa ovo NIJE prava tabela nacrta faktura,
+// nego namerno minimalan zamenik SAMO za ovu proveru, da se logika u removeAccount (src/lib/bank-
+// accounts.ts) stvarno testira sa pripremljenim podacima (zadatak Koraka 7 to izričito traži). Kad
+// Fakture dobiju svoj pravi model, ovo se zamenjuje njime (ista provera, prava tabela).
+model InvoiceDraftStub {
+  id            String      @id @default(cuid())
+  bankAccountId String
+  bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
+  broj          String
+
+  createdAt DateTime @default(now())
+
+  @@index([bankAccountId])
+  @@map("invoice_draft_stub")
+}
+
+// Korak 7, spec 7.13 (Obaveštenja): po jedan red po korisniku, Mejl/Push prekidač za svaku od šest vrsta
+// iz frejma Pd4. Podrazumevane vrednosti su tačno one iz frejma (sve uključeno osim AI/propisi push i
+// nedeljni pregled oba kanala).
+model NotificationSettings {
+  userId String @id
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  rokoviMail   Boolean @default(true)
+  rokoviPush   Boolean @default(true)
+  kasneMail    Boolean @default(true)
+  kasnePush    Boolean @default(true)
+  mejlMail     Boolean @default(true)
+  mejlPush     Boolean @default(true)
+  primetioMail Boolean @default(true)
+  primetioPush Boolean @default(false)
+  propisiMail  Boolean @default(true)
+  propisiPush  Boolean @default(false)
+  nedeljniMail Boolean @default(false)
+  nedeljniPush Boolean @default(false)
+
+  updatedAt DateTime @updatedAt
+
+  @@map("notification_settings")
 }

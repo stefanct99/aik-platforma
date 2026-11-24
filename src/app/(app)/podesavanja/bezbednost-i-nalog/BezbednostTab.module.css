@@ -1,0 +1,68 @@
+.sadrzaj {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.red {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.redTekst {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.trenutniZnak {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 9999px;
+  background: var(--color-icon-chip-bg);
+  color: var(--color-icon-chip-ink);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.odjaviLink {
+  flex: none;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.odjaviLink:disabled {
+  cursor: default;
+  color: var(--color-text-muted);
+}
+
+.opasnaZona {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-danger-zone-border);
+  background: var(--color-danger-zone-bg);
+}
+
+@media (max-width: 767px) {
+  .red,
+  .opasnaZona {
+    flex-wrap: wrap;
+  }
+}

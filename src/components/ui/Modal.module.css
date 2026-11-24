@@ -1,0 +1,31 @@
+.senka {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(15, 42, 34, 0.62);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.kartica {
+  width: 100%;
+  max-width: 440px;
+  box-sizing: border-box;
+  padding: 28px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: 16px;
+  box-shadow: var(--shadow-overlay);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+}
+
+.naslov {
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}

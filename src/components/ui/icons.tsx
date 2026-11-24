@@ -191,3 +191,55 @@ export function IkonaBezbednost(props: IkonicaProps) {
 export function IkonaJezik(props: IkonicaProps) {
   return <IkonaPodesavanja {...props} />;
 }
+
+export function IkonaUpload(props: IkonicaProps) {
+  return (
+    <Ikonica {...props}>
+      <path d="M12 16V5M7.5 9.5L12 5l4.5 4.5M5 19h14" />
+    </Ikonica>
+  );
+}
+
+export function IkonaKopiraj(props: IkonicaProps) {
+  return (
+    <Ikonica {...props}>
+      <rect x="8" y="8" width="12" height="12" rx="2" />
+      <path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" />
+    </Ikonica>
+  );
+}
+
+export function IkonaKvacica(props: IkonicaProps) {
+  return (
+    <Ikonica {...props}>
+      <path d="M20 6 9 17l-5-5" />
+    </Ikonica>
+  );
+}
+
+export function IkonaOko(props: IkonicaProps) {
+  return (
+    <Ikonica {...props}>
+      <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" />
+      <circle cx="12" cy="12" r="3" />
+    </Ikonica>
+  );
+}
+
+export function IkonaOkoPreko(props: IkonicaProps) {
+  return (
+    <Ikonica {...props}>
+      <path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-6.4 0-10-7-10-7a18.5 18.5 0 0 1 4.22-5.19M9.9 4.24A10.94 10.94 0 0 1 12 5c6.4 0 10 7 10 7a18.5 18.5 0 0 1-2.16 3.19M14.12 14.12a3 3 0 1 1-4.24-4.24" />
+      <path d="M2 2l20 20" />
+    </Ikonica>
+  );
+}
+
+export function IkonaKatanac(props: IkonicaProps) {
+  return (
+    <Ikonica {...props} size={props.size ?? 16}>
+      <rect x="5" y="11" width="14" height="9" rx="2" />
+      <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+    </Ikonica>
+  );
+}

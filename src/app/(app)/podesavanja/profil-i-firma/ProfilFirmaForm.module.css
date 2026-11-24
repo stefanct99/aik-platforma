@@ -31,6 +31,44 @@
   font-size: 0.875rem;
 }
 
+.logoPolje {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.logoLabela {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-4);
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--color-border-input);
+  background: var(--color-bg);
+  text-align: center;
+}
+.dropzoneIkona {
+  width: 48px;
+  height: 48px;
+  border-radius: 9999px;
+  background: var(--color-icon-chip-bg);
+  color: var(--color-icon-chip-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dropzoneTekst {
+  font-size: 1rem;
+}
+.dropzonePomoc {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
 .uspeh {
   display: flex;
   align-items: center;

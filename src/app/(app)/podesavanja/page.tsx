@@ -2,7 +2,8 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { getBusinessForUser } from "@/lib/business";
-import { formatDatumSrpski } from "@/lib/datum";
+import { formatDatum } from "@/lib/datum";
+import { isValidFormatDatuma } from "@/lib/theme";
 import { IkonaStrelicaDesno } from "@/components/ui/icons";
 import { PODESAVANJA_STAVKE } from "@/components/settings/podesavanjaStavke";
 import styles from "./pregled.module.css";
@@ -15,6 +16,7 @@ export default async function PodesavanjaPregledPage() {
   const biznis = await getBusinessForUser(session!.user.id);
   const ime = session!.user.name || "Korisnik";
   const inicijal = (ime.trim().charAt(0) || "?").toUpperCase();
+  const formatDatuma = isValidFormatDatuma(session!.user.formatDatuma) ? session!.user.formatDatuma : "dmy";
 
   return (
     <>
@@ -25,7 +27,7 @@ export default async function PodesavanjaPregledPage() {
         <div>
           <div className={styles.profilIme}>{ime}</div>
           <div className={styles.profilPodnaslov}>
-            {biznis!.name}, paušalac od {formatDatumSrpski(biznis!.regDate)}
+            {biznis!.name}, paušalac od {formatDatum(biznis!.regDate, formatDatuma)}
           </div>
         </div>
       </div>

@@ -58,6 +58,16 @@
   --color-alert-danger-bg: #fdecea;
   --color-alert-danger-text: #b3261e;
   --color-alert-danger-border: #f3b8b2;
+
+  /* Prekidač isključen (Korak 7, frejmovi Pd4/Pd5/Pd6): solidna siva, ne ista kao --color-border-input
+     (ta je providna, suviše tanka za popunjenu pozadinu prekidača). */
+  --color-toggle-off-bg: #d9d6d0;
+
+  /* Zona brisanja naloga (Korak 7, frejm Pd6): sopstvena nijansa narandžaste, različita od
+     badge-danger/alert-danger (obe crvenkaste), potvrđena direktno iz frejma. */
+  --color-danger-zone-bg: #fff5f0;
+  --color-danger-zone-border: #f0c9b8;
+  --color-danger-zone-title: #8a2d0b;
 }
 
 .appShell[data-theme="tamni"] {
@@ -104,6 +114,12 @@
   --color-alert-danger-bg: rgba(240, 90, 80, 0.16);
   --color-alert-danger-text: #ff8a80;
   --color-alert-danger-border: rgba(240, 90, 80, 0.4);
+
+  --color-toggle-off-bg: #343a36;
+
+  --color-danger-zone-bg: rgba(240, 120, 80, 0.08);
+  --color-danger-zone-border: rgba(240, 120, 80, 0.34);
+  --color-danger-zone-title: #ffab91;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -151,6 +167,12 @@
     --color-alert-danger-bg: rgba(240, 90, 80, 0.16);
     --color-alert-danger-text: #ff8a80;
     --color-alert-danger-border: rgba(240, 90, 80, 0.4);
+
+    --color-toggle-off-bg: #343a36;
+
+    --color-danger-zone-bg: rgba(240, 120, 80, 0.08);
+    --color-danger-zone-border: rgba(240, 120, 80, 0.34);
+    --color-danger-zone-title: #ffab91;
   }
 }
 

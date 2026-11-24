@@ -1,0 +1,151 @@
+/* Tačne vrednosti iz referenca/prototip/css/base.css (.auth-*) i tokens.css (.aik-gradient), potvrđeno
+   frejmom PrijavaD8.dc.html. Razmaci su PIKSELI iz frejma/prototipa, ne mapirani naslepo na postojeće
+   --space-N (prototip ima SOPSTVENU, drugačiju space skalu od ove platforme - npr. prototipov
+   --space-6 je 24px, a ovde je --space-6 32px - zato su ispod upisane prave vrednosti iz frejma, uz
+   postojeći token kad se slučajno poklopi). */
+
+.omot {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5); /* 24px */
+  box-sizing: border-box;
+  background:
+    linear-gradient(
+      115deg,
+      transparent 0 46%,
+      rgba(255, 255, 255, 0.3) 46% 49%,
+      transparent 49% 55%,
+      rgba(255, 255, 255, 0.22) 55% 57%,
+      transparent 57% 63%,
+      rgba(255, 255, 255, 0.18) 63% 64%,
+      transparent 64%
+    ),
+    radial-gradient(90% 70% at 0% 100%, rgba(255, 255, 255, 0.55), transparent 60%),
+    linear-gradient(135deg, #f7fbe6 0%, #dceea8 120%);
+}
+
+.omot[data-theme="tamni"] {
+  background:
+    linear-gradient(
+      115deg,
+      transparent 0 46%,
+      rgba(255, 255, 255, 0.05) 46% 49%,
+      transparent 49% 55%,
+      rgba(255, 255, 255, 0.04) 55% 57%,
+      transparent 57% 63%,
+      rgba(255, 255, 255, 0.035) 63% 64%,
+      transparent 64%
+    ),
+    radial-gradient(90% 70% at 0% 100%, rgba(200, 241, 105, 0.07), transparent 60%),
+    linear-gradient(135deg, #0f1511 0%, #1b2a14 120%);
+}
+
+@media (prefers-color-scheme: dark) {
+  .omot:not([data-theme="svetli"]):not([data-theme="tamni"]) {
+    background:
+      linear-gradient(
+        115deg,
+        transparent 0 46%,
+        rgba(255, 255, 255, 0.05) 46% 49%,
+        transparent 49% 55%,
+        rgba(255, 255, 255, 0.04) 55% 57%,
+        transparent 57% 63%,
+        rgba(255, 255, 255, 0.035) 63% 64%,
+        transparent 64%
+      ),
+      radial-gradient(90% 70% at 0% 100%, rgba(200, 241, 105, 0.07), transparent 60%),
+      linear-gradient(135deg, #0f1511 0%, #1b2a14 120%);
+  }
+}
+
+.zaglavlje {
+  position: absolute;
+  left: 48px;
+  right: 48px;
+  top: 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  color: var(--color-text);
+}
+.zaglavlje a {
+  text-decoration: underline;
+  color: inherit;
+}
+
+.zaglavljeDesnoMobilno {
+  display: none;
+}
+
+.kartica {
+  width: 100%;
+  max-width: 440px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: var(--radius-card);
+  padding: 40px;
+  box-shadow: var(--shadow-card-lg);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5); /* 24px */
+}
+
+.podnozje {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--space-6); /* 32px */
+  display: flex;
+  justify-content: center;
+  gap: var(--space-5); /* 24px */
+  font-size: 0.875rem;
+  color: var(--color-text);
+  text-align: center;
+}
+.podnozje a {
+  color: inherit;
+}
+
+@media (max-width: 1023px) {
+  .omot {
+    justify-content: flex-start;
+    padding: 20px var(--space-4) var(--space-5); /* 20px, 16px, 24px */
+  }
+  .zaglavlje {
+    position: static;
+    left: auto;
+    right: auto;
+    top: auto;
+    justify-content: center;
+    padding-bottom: var(--space-5); /* 24px */
+  }
+  .zaglavljeDesnoDesktop {
+    display: none;
+  }
+  .zaglavljeDesnoMobilno {
+    display: block;
+    text-align: center;
+    margin-top: 16px;
+    color: var(--color-text);
+    font-size: 0.875rem;
+  }
+  .zaglavljeDesnoMobilno a {
+    text-decoration: underline;
+    color: inherit;
+  }
+  .kartica {
+    padding: var(--space-5); /* 24px */
+  }
+  .podnozje {
+    position: static;
+    margin-top: var(--space-5); /* 24px */
+    padding-bottom: var(--space-5); /* 24px */
+    flex-wrap: wrap;
+  }
+}

@@ -1,14 +1,15 @@
 /*
- * Dve teme za okvir aplikacije (Korak 4b). Vrednosti su pročitane direktno iz frejmova:
- * svetla iz referenca/korak4/KORAK4_PAKET/dizajn/{Poc1,Pd0,Pd1,Pd7}.dc.html,
- * tamna iz referenca/korak4b/KORAK4B_PAKET/dizajn-tamni/{Dk_Poc1,Dk_Pd0,Dk_Pd1,Dk_Pd7}.dc.html.
- * Ništa ovde nije izmišljeno. Ne primenjuje se na prijavu/onboarding (ostaju goli, bez teme), zato su
- * promenljive skolirane na .appShell, ne na :root.
+ * Dve teme za ceo okvir aplikacije I za prijavu/registraciju/reset lozinke (Korak 4, 4b, 5). Vrednosti
+ * su pročitane direktno iz frejmova i iz referenca/prototip/css/tokens.css (potvrđeno da se poklapaju).
+ * Ništa ovde nije izmišljeno. Onboarding JE i dalje izuzet (ostaje go, bez teme, Korak 6), zato su
+ * promenljive skolirane na klasi .appShell (koju koriste i okvir aplikacije i stranice prijave), ne na
+ * :root.
  *
- * Napomena: boje success/danger/info značke nisu nacrtane ni u jednom tamnom frejmu (u aplikaciji se
- * koristi samo za "Dolazi uskoro"). Tamne vrednosti za njih su izvedene po ISTOM obrascu koji frejmovi
- * dosledno koriste za druge providne pozadine (providna pozadina iste nijanse + svetliji tekst iste
- * nijanse), ne iz direktnog očitavanja. To je navedeno i u izveštaju.
+ * Napomena: boje success/info značke (van alert-danger, koji JESTE iz prototipa) nisu nacrtane ni u
+ * jednom tamnom frejmu (u aplikaciji se koriste samo za "Dolazi uskoro"). Tamne vrednosti za njih su
+ * izvedene po ISTOM obrascu koji frejmovi dosledno koriste za druge providne pozadine (providna
+ * pozadina iste nijanse + svetliji tekst iste nijanse), ne iz direktnog očitavanja. To je navedeno i u
+ * izveštaju.
  */
 
 .appShell {
@@ -18,6 +19,8 @@
   --color-border-input: rgba(22, 26, 23, 0.18);
   --color-text: #161a17;
   --color-text-muted: #6b706c;
+  --color-text-faint: #8a958e;
+  --color-mark-bg: #0f2a22;
 
   --color-nav-text: #4a524c;
   --color-nav-bg-active: #eef8d2;
@@ -37,6 +40,8 @@
   --color-pill-bg-active: #0f2a22;
   --color-pill-text-active: #ffffff;
 
+  --shadow-card-lg: 0 40px 80px -30px rgba(15, 42, 34, 0.4), 0 0 0 1px rgba(22, 26, 23, 0.06);
+
   --color-badge-neutral-bg: var(--color-border);
   --color-badge-neutral-text: var(--color-text-muted);
   --color-badge-warning-bg: #fff1d0;
@@ -47,6 +52,12 @@
   --color-badge-success-text: #1f7a4d;
   --color-badge-danger-bg: #fde7e5;
   --color-badge-danger-text: #b42318;
+
+  /* Prijava/Registracija (Korak 5, auth.js Alert{kind:'danger'}): nijansa drugačija od badge-danger,
+     potvrđena iz referenca/prototip/css/base.css .alert-danger. */
+  --color-alert-danger-bg: #fdecea;
+  --color-alert-danger-text: #b3261e;
+  --color-alert-danger-border: #f3b8b2;
 }
 
 .appShell[data-theme="tamni"] {
@@ -56,6 +67,8 @@
   --color-border-input: rgba(255, 255, 255, 0.217);
   --color-text: #f1f3ef;
   --color-text-muted: #8c948e;
+  --color-text-faint: #6e756f;
+  --color-mark-bg: #1d4c3c;
 
   --color-nav-text: #c4cac5;
   --color-nav-bg-active: rgba(200, 241, 105, 0.14);
@@ -75,6 +88,8 @@
   --color-pill-bg-active: #c8f169;
   --color-pill-text-active: #0f2a22;
 
+  --shadow-card-lg: 0 40px 80px -30px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.079);
+
   --color-badge-neutral-bg: var(--color-border);
   --color-badge-neutral-text: var(--color-text-muted);
   --color-badge-warning-bg: rgba(255, 190, 70, 0.16);
@@ -85,6 +100,10 @@
   --color-badge-success-text: #6fcf9e;
   --color-badge-danger-bg: rgba(180, 35, 24, 0.18);
   --color-badge-danger-text: #ef8a80;
+
+  --color-alert-danger-bg: rgba(240, 90, 80, 0.16);
+  --color-alert-danger-text: #ff8a80;
+  --color-alert-danger-border: rgba(240, 90, 80, 0.4);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -95,6 +114,8 @@
     --color-border-input: rgba(255, 255, 255, 0.217);
     --color-text: #f1f3ef;
     --color-text-muted: #8c948e;
+    --color-text-faint: #6e756f;
+    --color-mark-bg: #1d4c3c;
 
     --color-nav-text: #c4cac5;
     --color-nav-bg-active: rgba(200, 241, 105, 0.14);
@@ -114,6 +135,8 @@
     --color-pill-bg-active: #c8f169;
     --color-pill-text-active: #0f2a22;
 
+    --shadow-card-lg: 0 40px 80px -30px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.079);
+
     --color-badge-neutral-bg: var(--color-border);
     --color-badge-neutral-text: var(--color-text-muted);
     --color-badge-warning-bg: rgba(255, 190, 70, 0.16);
@@ -124,6 +147,10 @@
     --color-badge-success-text: #6fcf9e;
     --color-badge-danger-bg: rgba(180, 35, 24, 0.18);
     --color-badge-danger-text: #ef8a80;
+
+    --color-alert-danger-bg: rgba(240, 90, 80, 0.16);
+    --color-alert-danger-text: #ff8a80;
+    --color-alert-danger-border: rgba(240, 90, 80, 0.4);
   }
 }
 

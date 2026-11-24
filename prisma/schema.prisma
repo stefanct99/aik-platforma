@@ -64,6 +64,19 @@ model Account {
   @@map("account")
 }
 
+// Korak 5, spec 7.1: zaključavanje naloga posle 5 uzastopnih neuspešnih pokušaja prijave, na 15 minuta.
+// Čuva se po e-mailu (ne po IP adresi, ne po postojećem korisniku), zato je ovo poseban model, nezavisan
+// od User: pokušaj prijave na e-mail koji i ne postoji mora isto da se broji, da se ne otkrije (kroz
+// razliku u ponašanju) da li nalog postoji.
+model LoginAttempt {
+  email       String    @id
+  failedCount Int       @default(0)
+  lockedUntil DateTime?
+  updatedAt   DateTime  @updatedAt
+
+  @@map("login_attempt")
+}
+
 model Verification {
   id         String   @id
   identifier String

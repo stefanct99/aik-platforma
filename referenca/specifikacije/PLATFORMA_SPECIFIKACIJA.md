@@ -739,10 +739,14 @@ Kasni nije posebno pamćen status, nego izvedena vrednost (Poslata + rok prošao
 
 ### 8.2 Numeracija faktura
 
-Format iz dizajna: `25/26-15`. Deo pre crtice je oznaka perioda ("25/26"), a posle crtice redni broj. [PROVERITI sa Stefanom značenje "25/26" i pravilo resetovanja rednog broja; do odluke: prefiks je podešavanje firme sa podrazumevanom vrednošću `GG/GG` po poslovnoj godini, a brojač se resetuje na 1 pri promeni prefiksa.]
-- Brojevi su jedinstveni po firmi, bez rupa u nizu. Nacrt rezerviše broj tek kad se sačuva ili pošalje. Brisanje nacrta ne sme da napravi rupu: ako je nacrt imao broj, broj se vraća samo ako je poslednji u nizu.
-- Stornirana faktura zadržava broj. Storno ne proizvodi novi broj (storno dokument nosi oznaku sa referencom).
-- Korisnik može da promeni broj ručno (uz upozorenje da zakon traži redosled).
+[ODLUČENO sa Stefanom, Korak 8a - PREGAZI raniji oblik `25/26-15` iz dizajna i prototipa (invoiceNumbering.js), koji su ranije opisivali ovaj odeljak.]
+
+Format: `N/GG-M`. **N** je redni broj fakture u KALENDARSKOJ GODINI IZDAVANJA za tu firmu (ne "poslovna godina"). **GG** su poslednje dve cifre godine datuma izdavanja. **M** je mesec datuma izdavanja, BEZ vodeće nule (1 do 12). Primeri: `1/27-1`, `25/26-11`, `41/26-12`.
+
+- Brojač N se vraća na 1 svakog 1. januara (po godini datuma izdavanja, ne po danu kad se faktura pravi). Poslednja faktura 2026. u decembru je npr. `41/26-12`, prva sledeće godine je `1/27-1`.
+- Brojevi su jedinstveni po firmi. Stornirana faktura zadržava svoj broj i broj ostaje zauzet (nema rupa u nizu zbog storna). Obrisan nacrt koji je imao broj vraća broj SAMO ako je bio poslednji dodeljen u toj godini (inače ostaje rupa).
+- Korisnik može da promeni broj ručno uz proveru jedinstvenosti (pravilo i provera postoje od Koraka 8a; sama forma za ručnu izmenu gradi se u Koraku 8b).
+- Sledeći broj se dodeljuje ATOMSKI (jedinstveno ograničenje u bazi po firmi i godini, uz atomski SQL upsert), da dve istovremene fakture ne dobiju isti broj - videti `src/lib/invoices.ts` i `src/lib/invoice-numbering.ts`.
 
 ### 8.3 Kursevi
 

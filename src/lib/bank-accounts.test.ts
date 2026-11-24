@@ -37,9 +37,10 @@ async function napraviKorisnikaSaFirmom() {
 }
 
 afterAll(async () => {
-  await prisma.invoiceDraftStub.deleteMany({
-    where: { bankAccount: { business: { ownerId: { in: napravljeniKorisnici } } } },
+  await prisma.invoice.deleteMany({
+    where: { business: { ownerId: { in: napravljeniKorisnici } } },
   });
+  await prisma.client.deleteMany({ where: { business: { ownerId: { in: napravljeniKorisnici } } } });
   await prisma.bankAccount.deleteMany({ where: { business: { ownerId: { in: napravljeniKorisnici } } } });
   await prisma.business.deleteMany({ where: { ownerId: { in: napravljeniKorisnici } } });
   await prisma.user.deleteMany({ where: { id: { in: napravljeniKorisnici } } });
@@ -213,7 +214,7 @@ describe("izolacija: korisnik A ne vidi ni ne može da izmeni/ukloni račun kori
 });
 
 describe("removeAccount: račun u upotrebi na nacrtu fakture traži zamenu", () => {
-  it("odbija uklanjanje kad postoji nacrt fakture koji koristi taj račun (pripremljeni test podaci)", async () => {
+  it("odbija uklanjanje kad postoji nacrt fakture koji koristi taj račun", async () => {
     const korisnik = await napraviKorisnikaSaFirmom();
     const racun = await addAccount(korisnik.id, {
       type: "RSD",
@@ -222,17 +223,27 @@ describe("removeAccount: račun u upotrebi na nacrtu fakture traži zamenu", () 
       number: "160-0000123456-54",
       isDefault: true,
     });
-
-    // Fakture kao funkcija ne postoje (budući korak) - ovo su ručno pripremljeni test podaci u
-    // InvoiceDraftStub (videti komentar na modelu u schema.prisma), tačno kako zadatak Koraka 7 traži.
-    await prisma.invoiceDraftStub.create({
-      data: { bankAccountId: racun.id, broj: "25/26-1" },
+    const biznis = await prisma.business.findFirstOrThrow({ where: { ownerId: korisnik.id } });
+    const klijent = await prisma.client.create({
+      data: { businessId: biznis.id, name: "Test klijent", billingEmail: "k@primer.rs" },
+    });
+    await prisma.invoice.create({
+      data: {
+        businessId: biznis.id,
+        clientId: klijent.id,
+        number: "1/26-1",
+        currency: "RSD",
+        issueDate: new Date(),
+        dueDays: 7,
+        accountId: racun.id,
+        status: "nacrt",
+      },
     });
 
     const rezultat = await removeAccount(korisnik.id, racun.id);
     expect(rezultat.ok).toBe(false);
     if (!rezultat.ok && rezultat.razlog === "u_upotrebi") {
-      expect(rezultat.fakture).toContain("25/26-1");
+      expect(rezultat.fakture).toContain("1/26-1");
     }
 
     const racunPostoji = await prisma.bankAccount.findUnique({ where: { id: racun.id } });

@@ -1,0 +1,370 @@
+.sadrzaj {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  margin-top: var(--space-5);
+}
+
+/* Prazno stanje (Fak2) */
+.prazno {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+  text-align: center;
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border);
+  padding: var(--space-8) var(--space-5);
+}
+
+.praznaIkonica {
+  width: 72px;
+  height: 72px;
+  border-radius: 9999px;
+  background: var(--color-icon-chip-bg);
+  color: var(--color-mark-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.praznoTekst {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.praznoNaslov {
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.praznoOpis {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.praznoKoraci {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: var(--space-5);
+  border-radius: var(--radius-card);
+  background: var(--color-bg);
+  width: 100%;
+  max-width: 480px;
+  box-sizing: border-box;
+}
+
+.praznoKorak {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: left;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text);
+}
+
+.praznoBroj {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  background: var(--color-icon-chip-bg);
+  color: var(--color-mark-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+}
+
+/* Tri pregledne kartice */
+.kartice {
+  display: flex;
+  gap: var(--space-4);
+  align-items: stretch;
+}
+
+.kartica {
+  flex: 1;
+  box-sizing: border-box;
+  padding: var(--space-5);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.karticaKasni {
+  background: var(--color-invoice-late-bg);
+  border-color: var(--color-invoice-late-border);
+}
+
+.karticaLabela {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.karticaVrednost {
+  font-size: 2rem;
+  letter-spacing: -0.03em;
+  display: flex;
+  flex-direction: column;
+}
+
+.vrednostKasni {
+  color: var(--color-alert-danger-text);
+}
+
+.vrednostRed {
+  display: block;
+}
+
+@media (max-width: 767px) {
+  .kartice {
+    overflow-x: auto;
+    margin: 0 calc(var(--space-4) * -1);
+    padding: 0 var(--space-4);
+  }
+  .kartica {
+    flex: none;
+    width: 200px;
+  }
+  .karticaTreca {
+    display: none;
+  }
+  .karticaVrednost {
+    font-size: 1.5rem;
+  }
+}
+
+/* Alatna traka: čipovi + padajući (desktop) / pretraga (mobilno) */
+.alatnaTraka {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.cipovi {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+}
+
+.cip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  background: var(--color-surface);
+  color: var(--color-nav-text);
+  border: 1px solid var(--color-border-input);
+  cursor: pointer;
+}
+
+.cipBroj {
+  color: var(--color-text-muted);
+}
+
+.cipAktivan {
+  background: var(--color-text);
+  color: var(--color-bg);
+  border-color: transparent;
+}
+
+.cipAktivan .cipBroj {
+  color: var(--color-text-muted);
+}
+
+.padajuciDesktop {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.selectOmot {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.selectOmot svg {
+  position: absolute;
+  right: 14px;
+  pointer-events: none;
+  color: var(--color-text-muted);
+}
+
+.select {
+  height: 40px;
+  padding: 0 36px 0 14px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-input);
+  font-size: 0.875rem;
+  color: var(--color-text);
+  appearance: none;
+  cursor: pointer;
+}
+
+.pretragaMobilna {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  height: 48px;
+  padding: 0 14px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-input);
+  color: var(--color-text-muted);
+  width: 100%;
+}
+
+.pretragaMobilna input {
+  border: none;
+  background: none;
+  outline: none;
+  font-size: 1rem;
+  color: var(--color-text);
+  width: 100%;
+}
+
+@media (max-width: 767px) {
+  .padajuciDesktop {
+    display: none;
+  }
+  .pretragaMobilna {
+    display: flex;
+  }
+}
+
+.nemaRezultata {
+  padding: var(--space-5) 0;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+/* Tabela (desktop) */
+.tabelaWrap {
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela th {
+  text-align: left;
+  padding: 12px 24px;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tabela td {
+  padding: 0 24px;
+  height: 56px;
+  border-top: 1px solid var(--color-border);
+  font-size: 1rem;
+  max-width: 0;
+}
+
+.red {
+  cursor: pointer;
+}
+
+.red:hover {
+  background: var(--color-bg);
+}
+
+.desno {
+  text-align: right;
+}
+
+.ellip {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.prigusen {
+  color: var(--color-text-muted);
+}
+
+.precrtano {
+  text-decoration: line-through;
+}
+
+@media (max-width: 1023px) {
+  .tabelaWrap {
+    display: none;
+  }
+}
+
+/* Kartice reda (mobilno) */
+.karticeListaMobilna {
+  display: none;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+@media (max-width: 1023px) {
+  .karticeListaMobilna {
+    display: flex;
+  }
+}
+
+.kartaReda {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.kartaRedGore {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.kartaRedPod {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.kartaRedIznos {
+  font-size: 1.125rem;
+}
+
+.paginacija {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}

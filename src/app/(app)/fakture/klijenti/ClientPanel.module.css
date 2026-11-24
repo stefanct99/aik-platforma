@@ -1,0 +1,168 @@
+.sekcija {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.linija {
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  margin: var(--space-1) 0;
+}
+
+.naslovSekcije {
+  font-size: 1rem;
+}
+
+.pomocniTekst {
+  margin: 2px 0 0;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.red {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.red > * {
+  flex: 1;
+  min-width: 0;
+}
+
+.polje {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.labelaPolja {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.select {
+  height: 44px;
+  padding: 0 14px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-input);
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.unosProst {
+  height: 44px;
+  padding: 0 14px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-input);
+  font-size: 1rem;
+  color: var(--color-text);
+  box-sizing: border-box;
+  width: 100%;
+  font-family: inherit;
+}
+
+.segmentiran {
+  display: flex;
+  gap: 6px;
+  background: var(--color-bg);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  width: fit-content;
+}
+
+.segmentiran button {
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 6px;
+  border: none;
+  background: none;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.aktivno {
+  background: var(--color-surface) !important;
+  color: var(--color-text) !important;
+  box-shadow: var(--shadow-card-lg);
+}
+
+.radioKartica {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--color-text);
+}
+
+.radioAktivna {
+  border-color: var(--btn-primary-bg);
+  background: var(--color-subnav-bg-active);
+}
+
+.radioTacka {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  border-radius: 9999px;
+  border: 2px solid var(--color-border-input);
+  background: var(--color-surface);
+}
+
+.radioAktivna .radioTacka {
+  border: 6px solid var(--btn-primary-bg);
+}
+
+.radioTekst {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 1rem;
+}
+
+.podnozjeRed {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: var(--space-3);
+}
+
+.obrisiLink {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 1rem;
+  color: var(--color-alert-danger-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.podnozjeDugmad {
+  display: flex;
+  gap: var(--space-3);
+}
+
+@media (max-width: 767px) {
+  .podnozjeRed {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  .podnozjeDugmad {
+    flex-direction: column-reverse;
+  }
+}

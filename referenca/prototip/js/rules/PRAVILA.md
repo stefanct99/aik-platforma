@@ -100,10 +100,19 @@ nikad ne "kasne", bez obzira na datume. `lateDays` nikad nije negativan (pre rok
 
 ## 3. Numeracija faktura
 
-**Spec**: 8.2 (Numeracija faktura).
+**[PREGAŽENO u pravoj platformi, Korak 8a — Stefan je odlučio drugačije pravilo od onoga što je ovaj
+odeljak i `invoiceNumbering.js` opisivalo.]** Novi format je `N/GG-M` (N = redni broj u KALENDARSKOJ
+GODINI IZDAVANJA, GG = poslednje dve cifre te godine, M = mesec izdavanja bez vodeće nule — primeri:
+`1/27-1`, `25/26-11`, `41/26-12`), brojač se vraća na 1 svakog 1. januara. Videti
+`referenca/specifikacije/PLATFORMA_SPECIFIKACIJA.md` odeljak 8.2 (ažuriran) i `src/lib/invoice-
+numbering.ts`/`src/lib/invoices.ts` u pravoj platformi za puno pravilo i implementaciju. `js/rules/
+invoiceNumbering.js` ispod i njegovi testovi NISU menjani (ovo je prototip, van obima platforme) — opis
+ispod ostaje tačan ZA PROTOTIP, samo više nije pravilo koje prava platforma sledi.
+
+**Spec**: 8.2 (Numeracija faktura) - stari opis, pre odluke sa Stefanom.
 **Fajl**: `js/rules/invoiceNumbering.js` — `nextInvoiceNumber(numbers, prefix='25/26')`.
 
-**Pravilo**: format `"<prefiks>-<broj>"` (npr. `"25/26-6"`), **bez vodeće nule**. Sledeći broj nastavlja
+**Pravilo (prototip, staro)**: format `"<prefiks>-<broj>"` (npr. `"25/26-6"`), **bez vodeće nule**. Sledeći broj nastavlja
 posle **najvećeg** postojećeg broja u nizu (ne posle broja stavki — storno zadržava svoj broj, pa niz
 može imati rupe, i to je u redu). Nevažeći/nebrojčani nastavci (korisnik ručno upiše stari broj iz
 prethodnog sistema knjigovođe pri uvozu) se **ignorišu**, ne ruše `Math.max`. Prazna lista počinje od 1.

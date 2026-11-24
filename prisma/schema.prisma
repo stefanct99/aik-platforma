@@ -1,4 +1,3 @@
-
 datasource db {
   provider = "postgresql"
 }
@@ -9,25 +8,25 @@ generator client {
 }
 
 model User {
-  id            String    @id
-  name          String
-  email         String
-  emailVerified Boolean   @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  role          String?   @default("user")
+  id                   String                @id
+  name                 String
+  email                String
+  emailVerified        Boolean               @default(false)
+  image                String?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  role                 String?               @default("user")
   // Izgled (Korak 4b, spec 7.13): "svetli", "tamni" ili "sistem" (prati podešavanje uređaja). Lično
   // podešavanje korisnika, ne firme, zato je ovde, ne na Business.
-  theme         String    @default("sistem")
+  theme                String                @default("sistem")
   // Jezik i format datuma (Korak 7, Pd7): "sr-lat"/"sr-cir"/"en" i "dmy"/"iso". Jezik se čuva ali NE
   // prevodi interfejs u ovom koraku (nema prevoda teksta - vidi izveštaj). Format datuma se STVARNO
   // primenjuje svuda preko formatDatum() u src/lib/datum.ts.
-  jezik         String    @default("sr-lat")
-  formatDatuma  String    @default("dmy")
-  sessions      Session[]
-  accounts      Account[]
-  businesses    Business[]
+  jezik                String                @default("sr-lat")
+  formatDatuma         String                @default("dmy")
+  sessions             Session[]
+  accounts             Account[]
+  businesses           Business[]
   notificationSettings NotificationSettings?
 
   @@unique([email])
@@ -99,14 +98,14 @@ model Verification {
 // korisniku, ali to je pravilo APLIKACIJE (vidi src/lib/business.ts), ne šeme, da višestruke firme
 // kasnije ne traže migraciju. PIB je jedinstven u celoj bazi (spec 3.1).
 model Business {
-  id        String @id @default(cuid())
-  ownerId   String
-  owner     User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  id      String @id @default(cuid())
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
-  name          String
-  ownerName     String
-  pib           String   @unique
-  mb            String
+  name             String
+  ownerName        String
+  pib              String   @unique
+  mb               String
   // Šifra je iz Klasifikacije delatnosti 2025 (KD 2025, Uredba "Sl. glasnik RS" br. 91/2026), oblik
   // sa tačkom (npr. "62.10"), ne 4 cifre bez tačke kako spec 3.1 kaže (spec je pisana pre KD 2025,
   // vidi izveštaj Koraka 2b). delatnostVerzija postoji da promena klasifikacije kasnije ne zahteva
@@ -139,10 +138,13 @@ model Business {
   // <token>). Nasumičan, menja se na zahtev korisnika ("Generiši novi") - stari odmah prestaje da važi,
   // zato NIJE isti kao inboundCode (taj se ne menja). calendarSyncEnabled je prekidač iz frejma Pd5 -
   // za sada bez stvarnog efekta na ICS fajl (nema događaja koje bi uključivao/isključivao), samo se čuva.
-  calendarToken        String  @unique
-  calendarSyncEnabled  Boolean @default(true)
+  calendarToken       String  @unique
+  calendarSyncEnabled Boolean @default(true)
 
   bankAccounts BankAccount[]
+  clients      Client[]
+  invoices     Invoice[]
+  incomes      Income[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -174,27 +176,14 @@ model BankAccount {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  invoiceDraftStubs InvoiceDraftStub[]
+  // Korak 8a: InvoiceDraftStub (privremeni zamenik iz Koraka 7, samo za proveru "račun u upotrebi") je
+  // zamenjen pravim Invoice/Client modelima ispod - ista provera (removeAccount u src/lib/bank-
+  // accounts.ts), sad nad stvarnim podacima.
+  invoices          Invoice[]
+  defaultForClients Client[]
 
   @@index([businessId])
   @@map("bank_account")
-}
-
-// Korak 7, spec 7.13 (Računi): "Uklanjanje računa koji se koristi na nacrtima faktura traži zamenu" -
-// Fakture kao stvarna funkcija još ne postoje (budući korak), pa ovo NIJE prava tabela nacrta faktura,
-// nego namerno minimalan zamenik SAMO za ovu proveru, da se logika u removeAccount (src/lib/bank-
-// accounts.ts) stvarno testira sa pripremljenim podacima (zadatak Koraka 7 to izričito traži). Kad
-// Fakture dobiju svoj pravi model, ovo se zamenjuje njime (ista provera, prava tabela).
-model InvoiceDraftStub {
-  id            String      @id @default(cuid())
-  bankAccountId String
-  bankAccount   BankAccount @relation(fields: [bankAccountId], references: [id], onDelete: Cascade)
-  broj          String
-
-  createdAt DateTime @default(now())
-
-  @@index([bankAccountId])
-  @@map("invoice_draft_stub")
 }
 
 // Korak 7, spec 7.13 (Obaveštenja): po jedan red po korisniku, Mejl/Push prekidač za svaku od šest vrsta
@@ -220,4 +209,161 @@ model NotificationSettings {
   updatedAt DateTime @updatedAt
 
   @@map("notification_settings")
+}
+
+// Klijent (Korak 8a, spec 3.3, 7.6). "Tip (domaći dinarski ili inostrani)" iz specifikacije je IZVEDENO
+// iz defaultCurrency==="RSD" (src/lib/clients.ts), ne posebno polje - isto načelo kao Kasni kod fakture.
+model Client {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  name         String
+  country      String?
+  billingEmail String
+  pib          String?
+  address      String?
+
+  defaultCurrency  String       @default("EUR")
+  defaultLang      String       @default("sr") // "sr" ili "en"
+  defaultDueDays   Int          @default(7)
+  defaultAccountId String?
+  defaultAccount   BankAccount? @relation(fields: [defaultAccountId], references: [id], onDelete: SetNull)
+
+  // Podrazumevana stavka (nije obavezno, spec 3.3): null = "Iznos se upisuje na fakturi".
+  defaultItemDesc   String?
+  defaultItemAmount Int?
+
+  // Mejlovi banke za ovog klijenta (Korak 8a, tačka 5): SAMO polja koja se čuvaju, bez ikakvog dejstva
+  // dok ne gradimo tab Mejlovi banke. "nasledi" = "Kao u opštim podešavanjima" (frejm Fak28).
+  autoSendMode String @default("nasledi") // "nasledi" | "ask" | "auto"
+  fxMode       String @default("proknjizi") // "proknjizi" | "prodaj_deo" | "prodaj_sve"
+
+  // "Klijent bez faktura može da se obriše" (spec 3.3) - inače se arhivira (src/lib/clients.ts).
+  archived Boolean @default(false)
+
+  invoices Invoice[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([businessId])
+  @@map("client")
+}
+
+// Brojač faktura po firmi i po godini IZDAVANJA (ne po "poslovnoj godini") - Korak 8a, pravilo numeracije
+// odlučeno sa Stefanom (PREGAZI spec 8.2 i prototip): N/GG-M, brojač N se vraća na 1 svakog 1. januara.
+// Composite primarni ključ JESTE jedinstveno ograničenje iz zadatka - atomski UPSERT (src/lib/invoices.ts)
+// nad njim sprečava da dve istovremene fakture dobiju isti broj, bez potrebe za ručnim zaključavanjem.
+model InvoiceCounter {
+  businessId String
+  year       Int
+  lastNumber Int    @default(0)
+
+  @@id([businessId, year])
+  @@map("invoice_counter")
+}
+
+// Faktura (Korak 8a, spec 3.4). Status: "nacrt" | "poslata" | "placena" | "stornirana" - "kasni" je
+// IZVEDENO (spec 8.1), nikad upisano (src/lib/invoice-status.ts, isti princip kao prototip).
+model Invoice {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  clientId String
+  // Restrict (ne Cascade): klijent sa fakturama ne sme da se obriše, samo arhivira (src/lib/clients.ts).
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Restrict)
+
+  number String // format "N/GG-M", npr. "25/26-11" (videti src/lib/invoice-numbering.ts)
+
+  currency String
+  lang     String @default("sr") // "sr" ili "en" - menja fiksne nazive u dokumentu (spec 7.4)
+
+  issueDate DateTime
+  dueDays   Int
+  note      String?
+
+  accountId String?
+  account   BankAccount? @relation(fields: [accountId], references: [id])
+
+  status String @default("nacrt")
+
+  sentAt           DateTime?
+  paidDate         DateTime?
+  voidedAt         DateTime?
+  // Da li je kvačica "Obavesti klijenta mejlom" bila čekirana pri storniranju (Fak17) - istorijski zapis.
+  voidNotifyClient Boolean?
+
+  items   InvoiceItem[]
+  events  InvoiceEvent[]
+  incomes Income[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([businessId, number])
+  @@index([businessId])
+  @@index([clientId])
+  @@map("invoice")
+}
+
+model InvoiceItem {
+  id        String  @id @default(cuid())
+  invoiceId String
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  desc  String
+  qty   Int    @default(1)
+  price Int // u najmanjoj jedinici valute fakture (para/cent), nikad float
+
+  redosled Int @default(0)
+
+  @@index([invoiceId])
+  @@map("invoice_item")
+}
+
+// Istorija događaja fakture (spec 3.4): samo STVARNI, diskretni događaji. "Rok je istekao"/"Čeka uplatu"
+// u pregledu fakture (7.5) se NE čita odavde - računa se uživo iz efektivnog statusa, isto kao "Kasni".
+model InvoiceEvent {
+  id        String  @id @default(cuid())
+  invoiceId String
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  tip      String // "napravljena" | "poslata" | "placena" | "stornirana" | "podsetnik_poslat"
+  datum    DateTime @default(now())
+  napomena String?
+
+  @@index([invoiceId])
+  @@map("invoice_event")
+}
+
+// Uplata/Prihod (Korak 8a, spec 3.6) - OGRANIČENO na ono što "Označi kao plaćenu" pravi: izvor uvek
+// "rucno". Kurs i iznos u dinarima za devizne uplate OSTAJU prazni (ne izmišljaj kurs) - popunjava ih
+// budući korak Knjiga prihoda.
+model Income {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  invoiceId String?
+  invoice   Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+
+  date     DateTime
+  currency String
+  amount   Int // u najmanjoj jedinici valute uplate
+
+  // Samo za devizne (kind="devizni") - NIŠTA se ne izmišlja, ostaje prazno dok Knjiga prihoda ne postoji.
+  rate      Float?
+  amountRsd Int?
+
+  source      String  @default("rucno") // "mejl_banke" | "rucno" (u 8a je uvek "rucno")
+  kind        String // "devizni" | "dinarski"
+  description String?
+
+  createdAt DateTime @default(now())
+
+  @@index([businessId])
+  @@index([invoiceId])
+  @@map("income")
 }

@@ -243,3 +243,72 @@ export function IkonaKatanac(props: IkonicaProps) {
     </Ikonica>
   );
 }
+
+// Korak 8a (Fakture): red menija (⋯), filteri, dijalozi.
+export function IkonaChevronDole(props: IkonicaProps) {
+  return (
+    <Ikonica {...props}>
+      <path d="M6 9l6 6 6-6" />
+    </Ikonica>
+  );
+}
+
+export function IkonaPreuzmi(props: IkonicaProps) {
+  return (
+    <Ikonica {...props}>
+      <path d="M12 3v12M7 10l5 5 5-5M5 19h14" />
+    </Ikonica>
+  );
+}
+
+export function IkonaKvacicaKrug(props: IkonicaProps) {
+  return (
+    <Ikonica {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M8 12.5l2.5 2.5L16 9.5" />
+    </Ikonica>
+  );
+}
+
+export function IkonaZastavica(props: IkonicaProps) {
+  return (
+    <Ikonica {...props}>
+      <path d="M5 3v18" />
+      <path d="M5 4h11l-2.5 4L16 12H5" />
+    </Ikonica>
+  );
+}
+
+export function IkonaOlovka(props: IkonicaProps) {
+  return (
+    <Ikonica {...props}>
+      <path d="M12 20h9" />
+      <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" />
+    </Ikonica>
+  );
+}
+
+export function IkonaKanta(props: IkonicaProps) {
+  return (
+    <Ikonica {...props}>
+      <path d="M4 7h16M9 7V4h6v3M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13" />
+    </Ikonica>
+  );
+}
+
+export function IkonaSpajalica(props: IkonicaProps) {
+  return (
+    <Ikonica {...props}>
+      <path d="M21 12.5l-8.4 8.4a4.5 4.5 0 0 1-6.4-6.4l9-9a3 3 0 0 1 4.2 4.2l-9 9a1.5 1.5 0 0 1-2.1-2.1l8-8" />
+    </Ikonica>
+  );
+}
+
+export function IkonaSat(props: IkonicaProps) {
+  return (
+    <Ikonica {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3.5 2" />
+    </Ikonica>
+  );
+}

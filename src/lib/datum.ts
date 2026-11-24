@@ -37,3 +37,12 @@ export function parseDatumSrpski(tekst: string): Date | null {
 
   return jeIspravan ? datum : null;
 }
+
+// Korak 8a (Fakture): "danas" za računanje statusa/kašnjenja (Kasni N dana) MORA biti ponoć po UTC,
+// isto kao issueDate/rok (oba su kalendarski dani, bez komponente vremena) - inače Math.round u
+// brojDanaKasnjenja zaokružuje na gore/dole zavisno od doba dana kad se stranica otvori.
+export function pocetakDanaUtc(datum: Date = new Date()): Date {
+  const d = new Date(datum);
+  d.setUTCHours(0, 0, 0, 0);
+  return d;
+}

@@ -1,0 +1,79 @@
+/* Papir je uvek 480x680, uvek svetao, nezavisno od teme aplikacije (frejmovi Fak3/Fak20/Dk_Fak15). */
+.papir {
+  width: 480px;
+  height: 680px;
+  box-sizing: border-box;
+  padding: 32px;
+  background: #fff;
+  font-family: Arial, Inter, sans-serif;
+  color: #111;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.zaglavljeRed {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: #0f2a22;
+  color: #c8f169;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.dvaStupca {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.levo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.brojFakture {
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.desno {
+  width: 210px;
+  flex: none;
+}
+
+.tabela {
+  border: 1px solid #161a17;
+  margin-top: 16px;
+}
+
+.tabelaRedZaglavlje,
+.tabelaRed {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 10px;
+}
+
+.tabelaRedZaglavlje {
+  font-weight: 700;
+}
+
+.tabelaRed {
+  border-top: 1px solid #161a17;
+}
+
+.ukupnoRed {
+  font-weight: 700;
+}

@@ -68,6 +68,11 @@
   --color-danger-zone-bg: #fff5f0;
   --color-danger-zone-border: #f0c9b8;
   --color-danger-zone-title: #8a2d0b;
+
+  /* "Kasni" statistička kartica (Korak 8a, frejm Fak1): sopstvena nijansa, blizu ali NE ista kao
+     danger-zone iznad (crveni kanal 90 ne 120) - potvrđeno direktno iz frejma. */
+  --color-invoice-late-bg: #fff7f6;
+  --color-invoice-late-border: #f3c9c4;
 }
 
 .appShell[data-theme="tamni"] {
@@ -120,6 +125,9 @@
   --color-danger-zone-bg: rgba(240, 120, 80, 0.08);
   --color-danger-zone-border: rgba(240, 120, 80, 0.34);
   --color-danger-zone-title: #ffab91;
+
+  --color-invoice-late-bg: rgba(240, 90, 80, 0.08);
+  --color-invoice-late-border: rgba(240, 90, 80, 0.34);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -173,6 +181,9 @@
     --color-danger-zone-bg: rgba(240, 120, 80, 0.08);
     --color-danger-zone-border: rgba(240, 120, 80, 0.34);
     --color-danger-zone-title: #ffab91;
+
+    --color-invoice-late-bg: rgba(240, 90, 80, 0.08);
+    --color-invoice-late-border: rgba(240, 90, 80, 0.34);
   }
 }
 

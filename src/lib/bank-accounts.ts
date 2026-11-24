@@ -95,16 +95,19 @@ export type UklanjanjeRacunaRezultat =
   | { ok: false; razlog: "ne_postoji" }
   | { ok: false; razlog: "u_upotrebi"; fakture: string[] };
 
-// Uklanjanje računa koji se koristi na nacrtu fakture traži zamenu (spec 7.13). Fakture još ne postoje
-// u aplikaciji (budući korak), zato je provera pripremljena preko InvoiceDraftStub tabele - vidi
-// bank-accounts.test.ts, koji je jedini koji tu tabelu stvarno koristi (test podaci, spec 7.13 to traži).
+// Uklanjanje računa koji se koristi na nacrtu fakture traži zamenu (spec 7.13). Korak 8a: sad proverava
+// STVARNE Invoice zapise (zamenjuje privremeni InvoiceDraftStub iz Koraka 7, pre nego što su Fakture
+// postojale - vidi bank-accounts.test.ts).
 export async function removeAccount(userId: string, racunId: string): Promise<UklanjanjeRacunaRezultat> {
   const racun = await nadjiRacunKorisnika(userId, racunId);
   if (!racun) return { ok: false, razlog: "ne_postoji" };
 
-  const nacrti = await prisma.invoiceDraftStub.findMany({ where: { bankAccountId: racun.id } });
+  const nacrti = await prisma.invoice.findMany({
+    where: { accountId: racun.id, status: "nacrt" },
+    select: { number: true },
+  });
   if (nacrti.length > 0) {
-    return { ok: false, razlog: "u_upotrebi", fakture: nacrti.map((n) => n.broj) };
+    return { ok: false, razlog: "u_upotrebi", fakture: nacrti.map((n) => n.number) };
   }
 
   await prisma.bankAccount.delete({ where: { id: racun.id } });

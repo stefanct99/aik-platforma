@@ -14,8 +14,9 @@
     width: var(--sidebar-width);
     box-sizing: border-box;
     padding: var(--space-5) var(--space-4);
-    background: var(--color-forest-900);
-    color: var(--color-ink-inverse);
+    background: var(--color-surface);
+    border-right: 1px solid var(--color-border);
+    color: var(--color-text);
     overflow-y: auto;
   }
 }
@@ -35,18 +36,18 @@
   border-radius: var(--radius-sm);
   font-size: 1rem;
   font-weight: 400;
-  color: var(--color-ink-inverse-muted);
+  color: var(--color-nav-text);
 }
 
 .stavka:hover {
-  background: var(--color-forest-800);
-  color: var(--color-ink-inverse);
+  background: var(--color-nav-bg-active);
+  color: var(--color-nav-text-active);
 }
 
 .stavkaAktivna {
-  background: var(--color-forest-800);
-  color: var(--color-ink-inverse);
-  font-weight: 600;
+  background: var(--color-nav-bg-active);
+  color: var(--color-nav-text-active);
+  font-weight: 500;
 }
 
 .donjiDeo {
@@ -85,7 +86,7 @@
 
 .korisnikIme {
   font-size: 1rem;
-  color: var(--color-ink-inverse);
+  color: var(--color-text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -93,7 +94,7 @@
 
 .korisnikFirma {
   font-size: 0.875rem;
-  color: var(--color-ink-inverse-muted);
+  color: var(--color-text-muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -102,7 +103,7 @@
 .odjava {
   background: transparent;
   border: 0;
-  color: var(--color-ink-inverse-muted);
+  color: var(--color-text-muted);
   font-size: 0.875rem;
   font-family: var(--font-body);
   text-align: left;
@@ -111,6 +112,6 @@
   cursor: pointer;
 }
 .odjava:hover {
-  background: var(--color-forest-800);
-  color: var(--color-ink-inverse);
+  background: var(--color-nav-bg-active);
+  color: var(--color-nav-text-active);
 }

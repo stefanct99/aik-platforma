@@ -49,11 +49,18 @@
   --radius-xl: 32px;
   --radius-full: 999px;
 
+  /* Zaobljenja iz frejmova Koraka 4/4b, koja se razlikuju od dizajn-sistem/README.md: dugmad i kartice u
+     frejmovima (Poc1, Pd0, Pd1...) dosledno koriste 6px i 12px, ne 14px (radius-md) ni 24px (radius-lg)
+     kako README kaže. Pošto frejm pobeđuje README u izgledu (Korak 4b, spec 3 tačka 6), ovo se koristi
+     umesto radius-md/radius-lg svuda u okviru aplikacije i Podešavanjima. */
+  --radius-button: 6px;
+  --radius-card: 12px;
+
   /* Senke */
   --shadow-card: 0 1px 2px rgba(15, 42, 34, 0.06), 0 8px 24px rgba(15, 42, 34, 0.06);
   --shadow-overlay: 0 24px 64px rgba(15, 42, 34, 0.22);
 
-  /* Raspored */
-  --sidebar-width: 264px;
+  /* Raspored (Korak 4b: 260px po frejmovima Poc1/Pd0/Pd1, ne 264px kao u Koraku 4) */
+  --sidebar-width: 260px;
   --content-max-width: 1120px;
 }

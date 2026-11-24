@@ -17,6 +17,9 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   role          String?   @default("user")
+  // Izgled (Korak 4b, spec 7.13): "svetli", "tamni" ili "sistem" (prati podešavanje uređaja). Lično
+  // podešavanje korisnika, ne firme, zato je ovde, ne na Business.
+  theme         String    @default("sistem")
   sessions      Session[]
   accounts      Account[]
   businesses    Business[]

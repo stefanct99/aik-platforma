@@ -17,6 +17,13 @@ export const auth = betterAuth({
         // Uloga se nikad ne postavlja preko aplikacije, samo ručno (scripts/make-admin.ts).
         input: false,
       },
+      theme: {
+        type: ["svetli", "tamni", "sistem"],
+        required: false,
+        defaultValue: "sistem",
+        // Menja se samo preko src/lib/theme.ts (Podešavanja > Jezik i izgled), ne preko Better Auth-a.
+        input: false,
+      },
     },
   },
   plugins: [

@@ -1,10 +1,11 @@
-// Gornja traka (spec 5.2, 5.3): na desktopu pretraga + zvonce, na telefonu znak + zvonce + avatar.
-// Pretraga i zvonce su u frejmu, ali bez prave logike (nema pretrage ni obaveštenja), zato su
-// onemogućeni i bez izmišljenog sadržaja (npr. bez lažne tačkice "ima novo"), videti izveštaj Koraka 4.
+// Gornja traka (spec 5.2, 5.3): na desktopu pretraga + zvonce + "Nova faktura", na telefonu znak +
+// zvonce + avatar. Pretraga i zvonce su u frejmu, ali bez prave logike (nema pretrage ni obaveštenja),
+// zato su onemogućeni i bez izmišljenog sadržaja (npr. bez lažne tačkice "ima novo").
 
 import Link from "next/link";
 import { Wordmark } from "@/components/ui/Wordmark";
-import { IkonaPretraga, IkonaZvonce } from "@/components/ui/icons";
+import { IkonaPlus, IkonaPretraga, IkonaZvonce } from "@/components/ui/icons";
+import dugmeStyles from "@/components/ui/Button.module.css";
 import styles from "./TopBar.module.css";
 
 export function TopBar({ inicijal }: { inicijal: string }) {
@@ -33,6 +34,12 @@ export function TopBar({ inicijal }: { inicijal: string }) {
         </button>
         <Link href="/podesavanja" className={styles.avatarMobilni} aria-label="Podešavanja i profil">
           {inicijal}
+        </Link>
+        <Link
+          href="/fakture"
+          className={`${dugmeStyles.dugme} ${dugmeStyles.primarno} ${styles.novaFakturaDesktop}`}
+        >
+          <IkonaPlus size={18} /> Nova faktura
         </Link>
       </div>
     </div>

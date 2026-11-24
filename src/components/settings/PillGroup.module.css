@@ -1,0 +1,42 @@
+.grupa {
+  display: inline-flex;
+  flex-wrap: wrap;
+  padding: 4px;
+  border-radius: var(--radius-full);
+  background: var(--color-pill-track);
+  gap: 4px;
+}
+
+.pilula {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-full);
+  border: 0;
+  background: transparent;
+  color: var(--color-pill-text);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.pilula:disabled {
+  cursor: not-allowed;
+}
+
+.pilulaAktivna {
+  background: var(--color-pill-bg-active);
+  color: var(--color-pill-text-active);
+}
+
+.red {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.naslovGrupe {
+  font-size: 1rem;
+  padding-top: 4px;
+}

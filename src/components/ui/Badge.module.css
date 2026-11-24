@@ -17,22 +17,22 @@
 }
 
 .neutralno {
-  background: var(--color-border);
-  color: var(--color-ink-muted);
+  background: var(--color-badge-neutral-bg);
+  color: var(--color-badge-neutral-text);
 }
 .upozorenje {
-  background: var(--color-warning-bg);
-  color: var(--color-warning);
+  background: var(--color-badge-warning-bg);
+  color: var(--color-badge-warning-text);
 }
 .info {
-  background: var(--color-info-bg);
-  color: var(--color-info);
+  background: var(--color-badge-info-bg);
+  color: var(--color-badge-info-text);
 }
 .uspeh {
-  background: var(--color-success-bg);
-  color: var(--color-success);
+  background: var(--color-badge-success-bg);
+  color: var(--color-badge-success-text);
 }
 .greska {
-  background: var(--color-danger-bg);
-  color: var(--color-danger);
+  background: var(--color-badge-danger-bg);
+  color: var(--color-badge-danger-text);
 }

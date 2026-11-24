@@ -14,7 +14,7 @@ export function DolaziUskoro() {
       }}
     >
       <Badge varijanta="info">Dolazi uskoro</Badge>
-      <p style={{ margin: 0, color: "var(--color-ink-muted)" }}>
+      <p style={{ margin: 0, color: "var(--color-text-muted)" }}>
         Ovaj deo aplikacije još nije napravljen. Javiće se u jednom od sledećih koraka.
       </p>
     </Card>

@@ -1,11 +1,20 @@
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
+import { isValidTema } from "@/lib/theme";
 import { SettingsPageHeader } from "@/components/settings/SettingsPageHeader";
-import { DolaziUskoro } from "@/components/app-shell/DolaziUskoro";
+import { JezikIIzgledForm } from "./JezikIIzgledForm";
 
-export default function JezikIIzgledPage() {
+// Zavisi od sesije (headers()). Prijava i onboarding su zaštićeni u src/app/(app)/layout.tsx.
+export const instant = false;
+
+export default async function JezikIIzgledPage() {
+  const session = await auth.api.getSession({ headers: await headers() });
+  const tema = session!.user.theme;
+
   return (
     <>
-      <SettingsPageHeader naslov="Jezik i izgled" opis="Jezik, formati, tema." />
-      <DolaziUskoro />
+      <SettingsPageHeader naslov="Jezik i izgled" opis="Kako se prikazuju tekst, datumi i boje." />
+      <JezikIIzgledForm initialTema={isValidTema(tema) ? tema : "sistem"} />
     </>
   );
 }

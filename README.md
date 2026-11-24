@@ -96,9 +96,12 @@ npm run build              # produkcioni build
 - `src/components/ui`: zajedničke komponente dizajn sistema (dugme, polje, kartica, značka, ikonice).
 - `src/components/app-shell`: okvir aplikacije (levi meni, gornja i donja traka, "Više" na telefonu).
 - `src/components/settings`: deljeni delovi Podešavanja (sedam tabova, bočna navigacija).
-- `src/styles/tokens.css`: CSS promenljive dizajn sistema (boje, tipografija, razmaci), preuzete iz
-  `referenca/korak4/KORAK4_PAKET/dizajn-sistem/tokens.json`. Tamni izgled još nije napravljen, ali sve
-  boje su već promenljive zbog toga.
+- `src/styles/tokens.css`: osnovni CSS tokeni dizajn sistema (boje, tipografija, razmaci, zaobljenja),
+  preuzeti iz `referenca/korak4/KORAK4_PAKET/dizajn-sistem/tokens.json`.
+- `src/styles/theme.css`: svetla i tamna tema okvira aplikacije (Korak 4b), kao semantičke CSS
+  promenljive na klasi `.appShell` (ne na `:root`, da prijava i onboarding ostanu bez teme). Tema se
+  bira u Podešavanja > Jezik i izgled, čuva se po korisniku (`User.theme`) i primenjuje na serveru pre
+  prvog iscrtavanja, bez treperenja.
 - `src/lib`: pomoćne funkcije i podešavanja (Prisma klijent, Better Auth, pravila), testirane Vitest-om.
 - `src/proxy.ts`: štiti ceo okvir aplikacije (`/pocetna`, `/podesavanja/*` itd.) i `/onboarding`, i
   preusmerava između njih prema stanju onboardinga.

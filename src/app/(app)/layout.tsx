@@ -6,6 +6,7 @@ import { trebaPreusmeravanjeNaPrijavu } from "@/lib/auth-guard";
 import { jeDozvoljenaAdminPrijava } from "@/lib/admin-dev-gate";
 import { trebaPreusmeravanjeNaOnboarding } from "@/lib/onboarding-guard";
 import { getBusinessForUser } from "@/lib/business";
+import { isValidTema } from "@/lib/theme";
 import { AppShell } from "@/components/app-shell/AppShell";
 
 // Zavisi od sesije (headers()), ne može da se unapred generiše statički.
@@ -26,8 +27,14 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
     redirect("/onboarding");
   }
 
+  const tema = session!.user.theme;
+
   return (
-    <AppShell ime={session!.user.name || "Korisnik"} firma={biznis!.name}>
+    <AppShell
+      ime={session!.user.name || "Korisnik"}
+      firma={biznis!.name}
+      tema={isValidTema(tema) ? tema : "sistem"}
+    >
       {children}
     </AppShell>
   );

@@ -90,7 +90,7 @@ export function BottomNav({ ime, firma, inicijal }: { ime: string; firma: string
               <span className={styles.avatar}>{inicijal}</span>
               <div>
                 <div>{ime}</div>
-                <div style={{ color: "var(--color-ink-muted)", fontSize: "0.875rem" }}>{firma}</div>
+                <div style={{ color: "var(--color-text-muted)", fontSize: "0.875rem" }}>{firma}</div>
               </div>
             </div>
 

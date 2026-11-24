@@ -1,0 +1,134 @@
+/*
+ * Dve teme za okvir aplikacije (Korak 4b). Vrednosti su pročitane direktno iz frejmova:
+ * svetla iz referenca/korak4/KORAK4_PAKET/dizajn/{Poc1,Pd0,Pd1,Pd7}.dc.html,
+ * tamna iz referenca/korak4b/KORAK4B_PAKET/dizajn-tamni/{Dk_Poc1,Dk_Pd0,Dk_Pd1,Dk_Pd7}.dc.html.
+ * Ništa ovde nije izmišljeno. Ne primenjuje se na prijavu/onboarding (ostaju goli, bez teme), zato su
+ * promenljive skolirane na .appShell, ne na :root.
+ *
+ * Napomena: boje success/danger/info značke nisu nacrtane ni u jednom tamnom frejmu (u aplikaciji se
+ * koristi samo za "Dolazi uskoro"). Tamne vrednosti za njih su izvedene po ISTOM obrascu koji frejmovi
+ * dosledno koriste za druge providne pozadine (providna pozadina iste nijanse + svetliji tekst iste
+ * nijanse), ne iz direktnog očitavanja. To je navedeno i u izveštaju.
+ */
+
+.appShell {
+  --color-bg: #f4f2f0;
+  --color-surface: #ffffff;
+  --color-border: rgba(22, 26, 23, 0.08);
+  --color-border-input: rgba(22, 26, 23, 0.18);
+  --color-text: #161a17;
+  --color-text-muted: #6b706c;
+
+  --color-nav-text: #4a524c;
+  --color-nav-bg-active: #eef8d2;
+  --color-nav-text-active: #0f2a22;
+
+  --color-subnav-bg-active: #f6fbe6;
+  --color-subnav-icon-active: #0f2a22;
+
+  --color-icon-chip-bg: #eef8d2;
+  --color-icon-chip-ink: #2f5d12;
+
+  --btn-primary-bg: #0f2a22;
+  --btn-primary-text: #ffffff;
+
+  --color-pill-track: #f4f2f0;
+  --color-pill-text: #4a524c;
+  --color-pill-bg-active: #0f2a22;
+  --color-pill-text-active: #ffffff;
+
+  --color-badge-neutral-bg: var(--color-border);
+  --color-badge-neutral-text: var(--color-text-muted);
+  --color-badge-warning-bg: #fff1d0;
+  --color-badge-warning-text: #6b4600;
+  --color-badge-info-bg: #e4eefa;
+  --color-badge-info-text: #1d5fa8;
+  --color-badge-success-bg: #e3f3ea;
+  --color-badge-success-text: #1f7a4d;
+  --color-badge-danger-bg: #fde7e5;
+  --color-badge-danger-text: #b42318;
+}
+
+.appShell[data-theme="tamni"] {
+  --color-bg: #0d0f0e;
+  --color-surface: #171b18;
+  --color-border: rgba(255, 255, 255, 0.102);
+  --color-border-input: rgba(255, 255, 255, 0.217);
+  --color-text: #f1f3ef;
+  --color-text-muted: #8c948e;
+
+  --color-nav-text: #c4cac5;
+  --color-nav-bg-active: rgba(200, 241, 105, 0.14);
+  --color-nav-text-active: #f1f3ef;
+
+  --color-subnav-bg-active: #1d221f;
+  --color-subnav-icon-active: #f1f3ef;
+
+  --color-icon-chip-bg: rgba(200, 241, 105, 0.14);
+  --color-icon-chip-ink: #c8f169;
+
+  --btn-primary-bg: #c8f169;
+  --btn-primary-text: #0f2a22;
+
+  --color-pill-track: #0d0f0e;
+  --color-pill-text: #c4cac5;
+  --color-pill-bg-active: #c8f169;
+  --color-pill-text-active: #0f2a22;
+
+  --color-badge-neutral-bg: var(--color-border);
+  --color-badge-neutral-text: var(--color-text-muted);
+  --color-badge-warning-bg: rgba(255, 190, 70, 0.16);
+  --color-badge-warning-text: #f2c46b;
+  --color-badge-info-bg: rgba(29, 95, 168, 0.18);
+  --color-badge-info-text: #7fb4eb;
+  --color-badge-success-bg: rgba(31, 122, 77, 0.18);
+  --color-badge-success-text: #6fcf9e;
+  --color-badge-danger-bg: rgba(180, 35, 24, 0.18);
+  --color-badge-danger-text: #ef8a80;
+}
+
+@media (prefers-color-scheme: dark) {
+  .appShell:not([data-theme="svetli"]):not([data-theme="tamni"]) {
+    --color-bg: #0d0f0e;
+    --color-surface: #171b18;
+    --color-border: rgba(255, 255, 255, 0.102);
+    --color-border-input: rgba(255, 255, 255, 0.217);
+    --color-text: #f1f3ef;
+    --color-text-muted: #8c948e;
+
+    --color-nav-text: #c4cac5;
+    --color-nav-bg-active: rgba(200, 241, 105, 0.14);
+    --color-nav-text-active: #f1f3ef;
+
+    --color-subnav-bg-active: #1d221f;
+    --color-subnav-icon-active: #f1f3ef;
+
+    --color-icon-chip-bg: rgba(200, 241, 105, 0.14);
+    --color-icon-chip-ink: #c8f169;
+
+    --btn-primary-bg: #c8f169;
+    --btn-primary-text: #0f2a22;
+
+    --color-pill-track: #0d0f0e;
+    --color-pill-text: #c4cac5;
+    --color-pill-bg-active: #c8f169;
+    --color-pill-text-active: #0f2a22;
+
+    --color-badge-neutral-bg: var(--color-border);
+    --color-badge-neutral-text: var(--color-text-muted);
+    --color-badge-warning-bg: rgba(255, 190, 70, 0.16);
+    --color-badge-warning-text: #f2c46b;
+    --color-badge-info-bg: rgba(29, 95, 168, 0.18);
+    --color-badge-info-text: #7fb4eb;
+    --color-badge-success-bg: rgba(31, 122, 77, 0.18);
+    --color-badge-success-text: #6fcf9e;
+    --color-badge-danger-bg: rgba(180, 35, 24, 0.18);
+    --color-badge-danger-text: #ef8a80;
+  }
+}
+
+.appShell {
+  background: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+}

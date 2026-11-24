@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/Button";
 import { Wordmark } from "@/components/ui/Wordmark";
-import { IkonaPlus } from "@/components/ui/icons";
 import { OdjaviSeDugme } from "./OdjaviSeDugme";
 import { STAVKE_MENIJA } from "./navigacija";
 import styles from "./Sidebar.module.css";
 
+// "Nova faktura" NIJE u levom meniju (Korak 4b): frejmovi Poc1/Dk_Poc1 je pokazuju u gornjoj traci
+// (TopBar), ne u sidebar-u, pa je tako i ovde iako je Korak 4 pogrešno pretpostavio suprotno.
 export function Sidebar({ ime, firma, inicijal }: { ime: string; firma: string; inicijal: string }) {
   const putanja = usePathname();
 
@@ -17,10 +17,6 @@ export function Sidebar({ ime, firma, inicijal }: { ime: string; firma: string; 
       <Link href="/pocetna">
         <Wordmark />
       </Link>
-
-      <Button varijanta="akcent" puniRed>
-        <IkonaPlus size={18} /> Nova faktura
-      </Button>
 
       <ul className={styles.lista} style={{ listStyle: "none", margin: 0, padding: 0 }}>
         {STAVKE_MENIJA.map(({ href, naziv, Ikona }) => {

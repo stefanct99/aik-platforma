@@ -14,18 +14,24 @@ export function PodsetnikDialog({
   invoiceId,
   broj,
   billingEmail,
+  jezik,
   onClose,
   onPoslato,
 }: {
   invoiceId: string;
   broj: string;
   billingEmail: string;
+  jezik: "sr" | "en";
   onClose: () => void;
   onPoslato?: () => void;
 }) {
   const [uToku, pokreni] = useTransition();
+  // Spec 6.7: poruka je na JEZIKU FAKTURE ("Napisao sam ljubazan podsetnik na engleskom jer je to jezik
+  // fakture"), naslov ostaje fiksno na engleskom (tako i frejm Fak23 pokazuje - "Reminder: invoice ...").
   const [poruka] = useState(
-    `Poštovani,\n\nOvo je ljubazan podsetnik da faktura ${broj} kasni sa uplatom.\n\nHvala.`,
+    jezik === "en"
+      ? `Dear team,\n\nThis is a friendly reminder that invoice ${broj} is now overdue.\n\nBest regards.`
+      : `Poštovani,\n\nOvo je ljubazan podsetnik da faktura ${broj} kasni sa uplatom.\n\nHvala.`,
   );
 
   function posalji() {
@@ -50,7 +56,11 @@ export function PodsetnikDialog({
             defaultValue={poruka}
             disabled
           />
-          <span className={poljeStyles.pomocniTekst}>Napisao sam ljubazan podsetnik. Slobodno ga izmeni.</span>
+          <span className={poljeStyles.pomocniTekst}>
+            {jezik === "en"
+              ? "Napisao sam ljubazan podsetnik na engleskom jer je to jezik fakture. Slobodno ga izmeni."
+              : "Napisao sam ljubazan podsetnik. Slobodno ga izmeni."}
+          </span>
         </div>
         <div style={{ display: "flex", gap: "var(--space-2)", alignItems: "center", color: "var(--color-text-muted)" }}>
           <IkonaSpajalica size={18} />

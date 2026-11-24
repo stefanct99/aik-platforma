@@ -288,6 +288,7 @@ export function InvoiceDetailView({
           invoiceId={invoice.id}
           broj={invoice.number}
           billingEmail={invoice.client.billingEmail}
+          jezik={invoice.lang}
           onClose={() => setModal(null)}
           onPoslato={() => router.refresh()}
         />

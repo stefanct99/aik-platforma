@@ -27,6 +27,14 @@
   gap: var(--space-1);
 }
 
+/* Logo (direktno dete .sidebar, ne unutar .lista - Sidebar.tsx) - ispravka "podvlačenje na bočnom
+   meniju i logou": globalni "a { color: inherit }" (globals.css) ne resetuje text-decoration, pa su
+   logo i stavke menija nasleđivale podrazumevano podvlačenje linka iz pregledača. Frejm/prototip ga
+   nemaju ni u jednoj temi/stanju. */
+.sidebar > a {
+  text-decoration: none;
+}
+
 .stavka {
   display: flex;
   align-items: center;
@@ -37,6 +45,7 @@
   font-size: 1rem;
   font-weight: 400;
   color: var(--color-nav-text);
+  text-decoration: none;
 }
 
 .stavka:hover {

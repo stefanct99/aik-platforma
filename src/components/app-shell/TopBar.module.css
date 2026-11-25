@@ -21,6 +21,11 @@
 .mobilnoLevo {
   display: flex;
 }
+/* Logo na telefonu (isti logo kao u Sidebar-u, samo u drugom obliku trake) - ispravka "podvlačenje na
+   logou", isti uzrok kao Sidebar.module.css ".sidebar > a". */
+.mobilnoLevo a {
+  text-decoration: none;
+}
 @media (min-width: 1280px) {
   .mobilnoLevo {
     display: none;

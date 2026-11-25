@@ -60,6 +60,13 @@
   white-space: nowrap;
 }
 
+/* Ispravka "lomi se u dva reda": bez ove mere, table-layout:auto je ovu kolonu previše sužavao u korist
+   kolone "Podrazumevana stavka" (i ona ima elipsu) - širina je najduži naziv klijenta iz seed podataka
+   ("Joam Technologies LLC") plus razmak ćelije, potvrđeno uživo 1280-2560px. */
+.kolonaKlijent {
+  width: 220px;
+}
+
 .tabela td {
   padding: 0 24px;
   height: 64px;
@@ -75,10 +82,19 @@
   background: var(--color-bg);
 }
 
+/* Ispravka "lomi se u dva reda": ime klijenta (npr. "Joam Technologies LLC") se nije skraćivalo kad
+   kolona nema dovoljno mesta - isto ponašanje kao ostale kolone sa nepredvidivim tekstom (.ellip ispod):
+   skraćivanje sa tri tačke, pun naziv i dalje ostaje u title atributu (uživo potvrđeno 1280-2560px). */
 .klijentCelija {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
+}
+.klijentCelija span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .podnaslov {

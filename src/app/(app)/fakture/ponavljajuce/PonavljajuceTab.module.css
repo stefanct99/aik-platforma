@@ -24,14 +24,20 @@
 }
 
 /* Redovi su FLEKS, ne <table> - frejm Fak13 daje mere kao "flex 1.1/1.2" za Klijent/Stavku i FIKSNE
-   piksele za ostale kolone (170/110/160/84/32px), ne procentualne širine tabele. */
+   piksele za ostale kolone. Isto ponašanje kao prototip (referenca/prototip/css/base.css ".inv-table
+   td{white-space:nowrap}" + ".inv-table-wrap{overflow-x:auto}"): nijedna ćelija se ne lomi u dva reda -
+   Klijent/Stavka imaju ELIPSU za nepredvidiv tekst (.ellip), ostale kolone su proveravane uživo sa
+   stvarnim tekstom iz seed podataka (npr. "Mesečno, 28. u mesecu", "Traži moje odobrenje") i proširene
+   da stvarno stanu (frejm je ovde davao prekratke mere - ispravka "lomi u dva reda"), overflow-x:auto je
+   dodat kao ista bezbednosna mreža kao u prototipu za slučaj da nešto ipak ne stane. */
 .tabelaWrap {
   display: flex;
   flex-direction: column;
   background: var(--color-surface);
   border-radius: var(--radius-card);
   border: 1px solid var(--color-border);
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .tRed {
@@ -42,6 +48,7 @@
   height: 64px;
   border-top: 1px solid var(--color-border);
   font-size: 1rem;
+  white-space: nowrap;
 }
 
 .tZaglavlje {
@@ -51,7 +58,6 @@
   font-size: 0.875rem;
   font-weight: 400;
   color: var(--color-text-muted);
-  white-space: nowrap;
 }
 
 .cKlijent {
@@ -64,7 +70,7 @@
 }
 .cPonavlja {
   flex: none;
-  width: 170px;
+  width: 190px;
 }
 .cSledeca {
   flex: none;
@@ -72,11 +78,11 @@
 }
 .cSlanje {
   flex: none;
-  width: 160px;
+  width: 170px;
 }
 .cStatus {
   flex: none;
-  width: 84px;
+  width: 92px;
 }
 .cMeni {
   flex: none;

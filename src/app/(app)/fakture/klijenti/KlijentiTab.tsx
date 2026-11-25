@@ -133,7 +133,7 @@ export function KlijentiTab({
               <table className={styles.tabela}>
                 <thead>
                   <tr>
-                    <th>Klijent</th>
+                    <th className={styles.kolonaKlijent}>Klijent</th>
                     <th>Država</th>
                     <th>Podrazumevano</th>
                     <th>Podrazumevana stavka</th>
@@ -146,8 +146,12 @@ export function KlijentiTab({
                     <tr key={k.id} className={styles.red} onClick={() => setUredjivanje(k.id)}>
                       <td>
                         <div className={styles.klijentCelija}>
-                          <span>{k.name}</span>
-                          {k.billingEmail && <span className={styles.podnaslov}>{k.billingEmail}</span>}
+                          <span title={k.name}>{k.name}</span>
+                          {k.billingEmail && (
+                            <span className={styles.podnaslov} title={k.billingEmail}>
+                              {k.billingEmail}
+                            </span>
+                          )}
                         </div>
                       </td>
                       <td>{k.country}</td>

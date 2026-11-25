@@ -54,6 +54,12 @@ export default async function NovaFakturaPage({
 
   return (
     <InvoiceEditor
+      // key (bug nađen uživo, Korak 8b ispravka): Next.js App Router ne garantuje remount
+      // InvoiceEditor-a samo zato što su se searchParams promenili na ISTOJ putanji (npr. Dupliraj sa
+      // liste dok je korisnik VEĆ na /fakture/nova) - bez ovoga bi ostalo staro stanje forme (broj,
+      // klijent, stavke od PRETHODNE fakture) i izazivalo pogrešne provere (npr. broj se više ne
+      // poklapa sa novim datumom izdavanja). key tera React da napravi potpuno nov primerak.
+      key={pocetniDuplikat ? `dupliraj-${dupliraj}` : "nova"}
       postojeca={null}
       pocetniDuplikat={pocetniDuplikat}
       klijenti={klijenti.map((k) => ({

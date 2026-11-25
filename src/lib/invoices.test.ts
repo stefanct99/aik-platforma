@@ -780,3 +780,97 @@ describe("promeniBrojFakture (Korak 8b, spec 8.2, ručna izmena)", () => {
     expect(rezultat.ok).toBe(false);
   });
 });
+
+describe("promeniBrojFakture - poklapanje godine/meseca (Korak 8b ispravka, nalaz vlasnika)", () => {
+  it("prihvata TAČAN slučaj iz prijave: broj 1/26-11 sa datumom izdavanja 25.11.2026", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-11-25T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "x", qty: 1, price: 100 }],
+      status: "nacrt",
+    });
+    const rezultat = await promeniBrojFakture(korisnik.id, f.id, "1/26-11");
+    expect(rezultat.ok).toBe(true);
+  });
+
+  it.each([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])("prihvata ispravan mesec %i (bez vodeće nule)", async (mesec) => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const dan = String(mesec).padStart(2, "0");
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date(`2026-${dan}-15T00:00:00.000Z`),
+      dueDays: 7,
+      items: [{ desc: "x", qty: 1, price: 100 }],
+      status: "nacrt",
+    });
+    const rezultat = await promeniBrojFakture(korisnik.id, f.id, `1/26-${mesec}`);
+    expect(rezultat.ok).toBe(true);
+  });
+
+  it("granica 31.12/1.1: decembarska faktura prihvata GG-M decembra te godine", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-12-31T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "x", qty: 1, price: 100 }],
+      status: "nacrt",
+    });
+    const rezultat = await promeniBrojFakture(korisnik.id, f.id, "5/26-12");
+    expect(rezultat.ok).toBe(true);
+  });
+
+  it("granica 31.12/1.1: januarska faktura prihvata GG-M januara NAREDNE godine (ne 12 od prošle)", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2027-01-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "x", qty: 1, price: 100 }],
+      status: "nacrt",
+    });
+    const rezultat = await promeniBrojFakture(korisnik.id, f.id, "1/27-1");
+    expect(rezultat.ok).toBe(true);
+  });
+
+  it("odbija broj čiji mesec stvarno NE odgovara datumu izdavanja (1/26-10 sa datumom iz novembra)", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-11-25T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "x", qty: 1, price: 100 }],
+      status: "nacrt",
+    });
+    const rezultat = await promeniBrojFakture(korisnik.id, f.id, "1/26-10");
+    expect(rezultat.ok).toBe(false);
+    if (!rezultat.ok) expect(rezultat.razlog).toContain("26-11");
+  });
+
+  it("odbija broj čija godina ne odgovara datumu izdavanja", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-11-25T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "x", qty: 1, price: 100 }],
+      status: "nacrt",
+    });
+    const rezultat = await promeniBrojFakture(korisnik.id, f.id, "1/27-11");
+    expect(rezultat.ok).toBe(false);
+  });
+});

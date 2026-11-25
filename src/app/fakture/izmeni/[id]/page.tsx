@@ -36,6 +36,10 @@ export default async function IzmeniFakturuPage({ params }: { params: Promise<{ 
 
   return (
     <InvoiceEditor
+      // key (bug nađen uživo, Korak 8b ispravka): bez ovoga, prelazak sa izmene JEDNE fakture na
+      // drugu (isti page.tsx, samo drugačiji [id]) ne mora da remontira InvoiceEditor - ostalo bi staro
+      // stanje forme (broj, trenutniId...) od PRETHODNE fakture. key=id tera pravi, nov primerak.
+      key={id}
       postojeca={{
         id: faktura.id,
         broj: faktura.number,

@@ -13,6 +13,7 @@ import { IkonaStrelicaLevo, IkonaUpozorenje } from "@/components/auth-shell/auth
 import { IkonaSpajalica, IkonaKvacicaKrug } from "@/components/ui/icons";
 import { FixedThemeTogglePill } from "@/components/app-shell/FixedThemeTogglePill";
 import { InvoiceDoc } from "./InvoiceDoc";
+import { InvoiceDocPreview } from "./InvoiceDocPreview";
 import { posaljiFakturuAction } from "@/app/(app)/fakture/actions";
 import { formatNovacPuno } from "@/lib/money";
 import { formatDatumSrpski } from "@/lib/datum";
@@ -145,7 +146,19 @@ export function InvoiceSendStage({
             >
               Preuzmi PDF
             </Button>
-            <Button type="button" varijanta="tiho" onClick={() => router.push("/fakture/nova")}>
+            <Button
+              type="button"
+              varijanta="tiho"
+              onClick={() => {
+                // Pravi (ne klijentski) navigacija, namerno: korisnik je VEĆ na /fakture/nova (ovaj
+                // isti URL, Fak12 dugme "Napravi još jednu") - router.push na isti URL je no-op u
+                // Next.js App Router-u (nema promene putanje), pa bi React zadržao CEO stari prikaz
+                // (uključujući potvrdu slanja i sve staro stanje forme - broj, klijent, stavke) umesto
+                // prazne forme. window.location.href forsira pravo, puno učitavanje stranice.
+                // eslint-disable-next-line @next/next/no-location-assign-relative-destination -- namerno puno učitavanje, vidi komentar iznad
+                window.location.href = "/fakture/nova";
+              }}
+            >
               Napravi još jednu
             </Button>
           </div>
@@ -222,17 +235,19 @@ export function InvoiceSendStage({
             <span>PDF u prilogu</span>
           </div>
           <div className={styles.papirOmot}>
-            <InvoiceDoc
-              broj={broj}
-              valuta={valuta}
-              jezik={jezik}
-              datumIzdavanja={datumIzdavanja}
-              dueDays={rokDana}
-              stavke={stavke}
-              klijent={klijent}
-              firma={firma}
-              racun={account}
-            />
+            <InvoiceDocPreview>
+              <InvoiceDoc
+                broj={broj}
+                valuta={valuta}
+                jezik={jezik}
+                datumIzdavanja={datumIzdavanja}
+                dueDays={rokDana}
+                stavke={stavke}
+                klijent={klijent}
+                firma={firma}
+                racun={account}
+              />
+            </InvoiceDocPreview>
           </div>
         </div>
 

@@ -12,8 +12,9 @@ import { FixedThemeTogglePill } from "@/components/app-shell/FixedThemeTogglePil
 import { TemaProvider } from "@/components/app-shell/TemaContext";
 import type { Tema } from "@/lib/theme";
 import { IkonaUpozorenje } from "@/components/auth-shell/auth-icons";
-import { IkonaX, IkonaChevronDole, IkonaKanta } from "@/components/ui/icons";
+import { IkonaX, IkonaChevronDole, IkonaKanta, IkonaPretraga, IkonaPlus } from "@/components/ui/icons";
 import { InvoiceDoc } from "./InvoiceDoc";
+import { InvoiceDocPreview } from "./InvoiceDocPreview";
 import { ClientPanel } from "@/app/(app)/fakture/klijenti/ClientPanel";
 import type { NoviKlijent } from "@/app/(app)/fakture/actions";
 import { sacuvajNacrtAction, promeniBrojAction, obrisiNacrtAction } from "@/app/(app)/fakture/actions";
@@ -136,6 +137,8 @@ export function InvoiceEditor({
 
   const [klijentPicker, setKlijentPicker] = useState(false);
   const [pretragaKlijenta, setPretragaKlijenta] = useState("");
+  const [istaknutiKlijent, setIstaknutiKlijent] = useState(0);
+  const listaKlijenataRef = useRef<HTMLDivElement>(null);
   const [jezikPicker, setJezikPicker] = useState(false);
   const [noviKlijentOtvoren, setNoviKlijentOtvoren] = useState(false);
   const [showErrors, setShowErrors] = useState(false);
@@ -158,6 +161,7 @@ export function InvoiceEditor({
   const vremeTajmera = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prviRender = useRef(true);
 
+  const filtriraniKlijenti = svaKlijenti.filter((k) => k.name.toLowerCase().includes(pretragaKlijenta.trim().toLowerCase()));
   const account = racuni.find((r) => r.id === accountId) ?? racuni.find((r) => r.currency === currency) ?? null;
   const ukupno = izracunajUkupno(items);
   // issueDate je ZAKLJUČAN od prvog čuvanja (spec 7.4) - za postojeću fakturu prikazuje STVARAN datum
@@ -186,6 +190,25 @@ export function InvoiceEditor({
     setItems(podrazumevaneStavkeZaKlijenta(k));
     setKlijentPicker(false);
     setPretragaKlijenta("");
+  }
+
+  // Tastatura u padajućoj listi klijenta (zadatak Korak 8b ispravka, tačka 2): strelice pomeraju
+  // istaknutu stavku, Enter bira istaknutu, Escape zatvara listu.
+  function naTasterUListiKlijenata(e: React.KeyboardEvent) {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setIstaknutiKlijent((i) => Math.min(i + 1, filtriraniKlijenti.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setIstaknutiKlijent((i) => Math.max(i - 1, 0));
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      const izabran = filtriraniKlijenti[istaknutiKlijent];
+      if (izabran) postaviIzKlijenta(izabran);
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      setKlijentPicker(false);
+    }
   }
 
   function izmeniStavku(i: number, polje: keyof StavkaForme, vrednost: string | number) {
@@ -227,6 +250,11 @@ export function InvoiceEditor({
     setSacuvanoU(rezultat.sacuvanoU);
     return rezultat.id;
   }
+
+  useEffect(() => {
+    const stavka = listaKlijenataRef.current?.querySelector(`[data-indeks="${istaknutiKlijent}"]`);
+    stavka?.scrollIntoView({ block: "nearest" });
+  }, [istaknutiKlijent]);
 
   // Automatsko čuvanje (zadatak tačka 3): kratak zastoj (2s) posle poslednje izmene polja, ne posle
   // svakog tastera - i nikad za potpuno praznu formu (tad ne pravi nacrt, "Prazna forma koju korisnik
@@ -343,7 +371,7 @@ export function InvoiceEditor({
               <IkonaX size={18} /> Zatvori
             </button>
             <span className={styles.statusPilula}>
-              <span className={styles.statusPilulaDesktop}>{postojeca?.status === "poslata" ? "Izmena, " : "Nacrt, "}</span>
+              <span className={styles.statusPilulaDesktop}>{postojeca?.status === "poslata" ? "Izmena," : "Nacrt,"}</span>
               {indikator}
             </span>
           </div>
@@ -368,50 +396,91 @@ export function InvoiceEditor({
             )}
 
             <div className={styles.poljeOmot} style={{ position: "relative" }}>
-              <span className={styles.labela}>Klijent</span>
+              <div className={styles.labelaRedKlijent}>
+                <span className={styles.labela}>Klijent</span>
+                <a href="#" className={styles.noviKlijentGore} onClick={(e) => { e.preventDefault(); setNoviKlijentOtvoren(true); }}>
+                  + Novi klijent
+                </a>
+              </div>
               <button
                 type="button"
                 className={styles.kombo}
-                onClick={() => setKlijentPicker((v) => !v)}
+                onClick={() => {
+                  setKlijentPicker((v) => !v);
+                  setIstaknutiKlijent(0);
+                }}
               >
                 <span className={styles.komboTekst}>{klijent ? klijent.name : "Izaberi klijenta"}</span>
                 <IkonaChevronDole size={16} />
               </button>
-              <span className={styles.noviKlijentGore}>
-                <a href="#" onClick={(e) => { e.preventDefault(); setNoviKlijentOtvoren(true); }}>
-                  + Novi klijent
-                </a>
-              </span>
               {klijentPicker && (
-                <div className={styles.padajuciKlijent}>
-                  <input
-                    className={styles.pretragaKlijenta}
-                    placeholder="Traži klijenta"
-                    value={pretragaKlijenta}
-                    onChange={(e) => setPretragaKlijenta(e.target.value)}
-                    autoFocus
-                  />
-                  {svaKlijenti
-                    .filter((k) => k.name.toLowerCase().includes(pretragaKlijenta.trim().toLowerCase()))
-                    .map((k) => (
-                      <button key={k.id} type="button" className={styles.klijentRed} onClick={() => postaviIzKlijenta(k)}>
-                        <span className={styles.klijentRedGlavno}>
-                          <span>{k.name}</span>
-                          {k.billingEmail && <span className={styles.klijentRedMejl}>{k.billingEmail}</span>}
+                <div className={styles.padajuciKlijent} role="listbox">
+                  <div className={styles.pretragaKlijentaRed}>
+                    <IkonaPretraga size={18} />
+                    <input
+                      className={styles.pretragaKlijenta}
+                      placeholder="Traži klijenta"
+                      value={pretragaKlijenta}
+                      onChange={(e) => {
+                        setPretragaKlijenta(e.target.value);
+                        setIstaknutiKlijent(0);
+                      }}
+                      onKeyDown={naTasterUListiKlijenata}
+                      autoFocus
+                    />
+                  </div>
+                  {filtriraniKlijenti.length === 0 ? (
+                    <div className={styles.klijentNemaRezultata}>
+                      <span>Nema klijenta za &quot;{pretragaKlijenta}&quot;.</span>
+                      <button
+                        type="button"
+                        className={styles.noviKlijentDole}
+                        onClick={() => {
+                          setKlijentPicker(false);
+                          setNoviKlijentOtvoren(true);
+                        }}
+                      >
+                        <span className={styles.noviKlijentIkonica}>
+                          <IkonaPlus size={16} />
                         </span>
-                        <span className={styles.klijentRedOznaka}>{oznakaKlijentaUListi(k)}</span>
+                        Novi klijent
                       </button>
-                    ))}
-                  <button
-                    type="button"
-                    className={styles.noviKlijentDole}
-                    onClick={() => {
-                      setKlijentPicker(false);
-                      setNoviKlijentOtvoren(true);
-                    }}
-                  >
-                    + Novi klijent
-                  </button>
+                    </div>
+                  ) : (
+                    <>
+                      <div className={styles.listaKlijenata} ref={listaKlijenataRef}>
+                        {filtriraniKlijenti.map((k, i) => (
+                          <button
+                            key={k.id}
+                            type="button"
+                            data-indeks={i}
+                            className={`${styles.klijentRed} ${i === istaknutiKlijent ? styles.klijentRedIstaknut : ""}`}
+                            onMouseEnter={() => setIstaknutiKlijent(i)}
+                            onClick={() => postaviIzKlijenta(k)}
+                          >
+                            <span className={styles.klijentRedGlavno}>
+                              <span>{k.name}</span>
+                              {k.billingEmail && <span className={styles.klijentRedMejl}>{k.billingEmail}</span>}
+                            </span>
+                            <span className={styles.klijentRedOznaka}>{oznakaKlijentaUListi(k)}</span>
+                          </button>
+                        ))}
+                      </div>
+                      <button
+                        type="button"
+                        className={styles.noviKlijentDole}
+                        onClick={() => {
+                          setKlijentPicker(false);
+                          setNoviKlijentOtvoren(true);
+                        }}
+                      >
+                        <span className={styles.noviKlijentIkonica}>
+                          <IkonaPlus size={16} />
+                        </span>
+                        Novi klijent
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
               {showErrors && errClient && (
@@ -657,17 +726,19 @@ export function InvoiceEditor({
             </a>
           </div>
           <div className={styles.papirOmot}>
-            <InvoiceDoc
-              broj={broj}
-              valuta={currency}
-              jezik={lang}
-              datumIzdavanja={datumIzdavanja}
-              dueDays={dueDays}
-              stavke={items}
-              klijent={klijent ?? null}
-              firma={firma}
-              racun={account}
-            />
+            <InvoiceDocPreview>
+              <InvoiceDoc
+                broj={broj}
+                valuta={currency}
+                jezik={lang}
+                datumIzdavanja={datumIzdavanja}
+                dueDays={dueDays}
+                stavke={items}
+                klijent={klijent ?? null}
+                firma={firma}
+                racun={account}
+              />
+            </InvoiceDocPreview>
           </div>
         </div>
       </div>

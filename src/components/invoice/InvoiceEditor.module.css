@@ -51,6 +51,10 @@
 .statusPilula {
   display: inline-flex;
   align-items: center;
+  /* Razmak preko gap-a, ne preko razmaka na kraju teksta unutar .statusPilulaDesktop: flex stavke se
+     "blockifikuju" (CSS spec), pa UA briše razmak na kraju takve kutije kao "razmak na kraju reda" -
+     bez ovoga je tekst vizuelno izlazio kao "Nacrt,sačuvano" bez razmaka (nalaz vlasnika, Korak 8b). */
+  gap: 4px;
   height: 24px;
   padding: 0 10px;
   border-radius: 9999px;
@@ -145,11 +149,15 @@ select.kombo {
   appearance: none;
 }
 
-.noviKlijentGore {
-  align-self: flex-end;
-  margin-top: -28px;
+/* "Klijent" (labela) i "+ Novi klijent" u ISTOM redu - frejm Fak3/Fak8/Fak9/Fak19/Fak20 i PhFak
+   ekvivalenti: labela levo, link desno, isti red, bez preklapanja sa poljem ispod (nalaz vlasnika,
+   Korak 8b ispravka - ranija verzija je linkom "podigla" preko polja negativnom margin-om). */
+.labelaRedKlijent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
-.noviKlijentGore a,
+.noviKlijentGore,
 .linkMali {
   font-size: 0.875rem;
   color: var(--color-text);
@@ -157,7 +165,6 @@ select.kombo {
   text-underline-offset: 3px;
 }
 
-.padajuciKlijent,
 .padajuciMali {
   position: absolute;
   top: 72px;
@@ -175,20 +182,7 @@ select.kombo {
   max-height: 320px;
   overflow-y: auto;
 }
-
-.pretragaKlijenta {
-  height: 40px;
-  padding: 0 var(--space-3);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border-input);
-  background: var(--color-bg);
-  color: var(--color-text);
-  margin-bottom: var(--space-2);
-}
-
-.klijentRed,
-.padajuciMali button,
-.noviKlijentDole {
+.padajuciMali button {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -202,34 +196,142 @@ select.kombo {
   cursor: pointer;
   font-size: 0.9375rem;
 }
+.padajuciMali button:hover {
+  background: var(--color-bg);
+}
+
+/* Padajuća lista klijenta (Fak5/Dk_Fak5/PhFak5) - mere tačno iz frejma: 10px zaobljenje, senka, 44px
+   red pretrage (bez sopstvene ivice - ivica je na celom kontejneru), 56px red klijenta, 52px red "Novi
+   klijent" sa 24px limeta krugom. Nalaz vlasnika, Korak 8b ispravka - ranija verzija je bila generičan
+   padajuci meni (sitna pretraga, bez razdvojenih redova). */
+.padajuciKlijent {
+  position: absolute;
+  top: 72px;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-input);
+  border-radius: 10px;
+  box-shadow: var(--shadow-overlay);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.pretragaKlijentaRed {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 14px;
+  flex: none;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.pretragaKlijenta {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  font-size: 1rem;
+  font-family: var(--font-body);
+}
+
+.listaKlijenata {
+  display: flex;
+  flex-direction: column;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.klijentRed {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  height: 56px;
+  flex: none;
+  padding: 0 14px;
+  box-sizing: border-box;
+  background: none;
+  border: 0;
+  text-align: left;
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 1rem;
+}
 
 .klijentRed:hover,
-.padajuciMali button:hover,
-.noviKlijentDole:hover {
-  background: var(--color-bg);
+.klijentRedIstaknut {
+  background: var(--color-subnav-bg-active);
 }
 
 .klijentRedGlavno {
   display: flex;
   flex-direction: column;
+  gap: 2px;
   min-width: 0;
 }
 .klijentRedMejl {
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--color-text-muted);
 }
 .klijentRedOznaka {
   flex: none;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--color-text-muted);
+  white-space: nowrap;
 }
 
 .noviKlijentDole {
-  color: var(--color-text);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 52px;
+  flex: none;
+  padding: 0 14px;
+  box-sizing: border-box;
   border-top: 1px solid var(--color-border);
-  margin-top: var(--space-1);
+  background: none;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 0;
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 1rem;
+  text-align: left;
+}
+.noviKlijentDole:hover {
+  background: var(--color-bg);
+}
+.noviKlijentIkonica {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.klijentNemaRezultata {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-4) 14px;
+  gap: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: 0.9375rem;
+}
+.klijentNemaRezultata .noviKlijentDole {
+  border-top: 0;
+  padding: 0;
+  height: auto;
 }
 
 .poljeGreska,
@@ -438,9 +540,10 @@ select.kombo {
   color: var(--color-text);
 }
 
+/* Papir se skališe da popuni širinu kolone (InvoiceDocPreview, Korak 8b ispravka: "A4 pregled desno je
+   premali u odnosu na prostor") - raste sa prozorom umesto da ostane fiksnih 480px na širokim ekranima. */
 .papirOmot {
-  display: flex;
-  justify-content: center;
+  width: 100%;
 }
 
 .dijalogTelo {

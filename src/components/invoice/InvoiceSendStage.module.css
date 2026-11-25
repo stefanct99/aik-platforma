@@ -159,9 +159,10 @@
   font-size: 0.875rem;
   color: var(--color-text-muted);
 }
+/* Papir se skališe da popuni širinu kolone (InvoiceDocPreview, Korak 8b ispravka), isto kao u
+   InvoiceEditor-u - raste sa prozorom umesto da ostane fiksnih 480px. */
 .papirOmot {
-  display: flex;
-  justify-content: center;
+  width: 100%;
 }
 
 .pregledMobilni {

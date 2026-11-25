@@ -94,7 +94,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  align-items: center;
 }
 
 .karta {
@@ -174,20 +173,17 @@
   text-underline-offset: 3px;
 }
 
+/* Papir se skalira da popuni širinu kolone (InvoiceDocPreview, isti mehanizam kao InvoiceEditor/
+   InvoiceSendStage - "previše praznog prostora na velikim ekranima") umesto da ostane fiksnih 468px -
+   raste sa prozorom. Telefon ispod zadržava fiksnu širinu (336px, nepromenjeno) preko iste komponente,
+   samo manji izmereni prostor daje manju skalu - PDF/dokument ostaje nepromenjen, jedan izvor istine. */
 .papirOmot {
-  width: 468px;
-  height: 663px;
+  width: 100%;
   overflow: hidden;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-card-lg);
   background: #fff;
-}
-
-.papirSkaliran {
-  transform: scale(0.975);
-  transform-origin: 0 0;
-  width: 480px;
 }
 
 @media (max-width: 1023px) {
@@ -199,12 +195,9 @@
   }
   .desnaKolona {
     width: 100%;
+    align-items: center;
   }
   .papirOmot {
     width: 336px;
-    height: 476px;
-  }
-  .papirSkaliran {
-    transform: scale(0.7);
   }
 }

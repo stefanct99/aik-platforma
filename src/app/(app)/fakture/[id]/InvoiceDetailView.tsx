@@ -11,6 +11,7 @@ import { OznaciPlacenomDialog } from "@/components/fakture/OznaciPlacenomDialog"
 import { StornoDialog } from "@/components/fakture/StornoDialog";
 import { PodsetnikDialog } from "@/components/fakture/PodsetnikDialog";
 import { InvoiceDoc } from "@/components/invoice/InvoiceDoc";
+import { InvoiceDocPreview } from "@/components/invoice/InvoiceDocPreview";
 import { efektivniStatus, izracunajUkupno, rokFakture } from "@/lib/invoice-status";
 import { labelaStatusa } from "@/lib/invoice-display";
 import { formatNovacPuno } from "@/lib/money";
@@ -257,7 +258,7 @@ export function InvoiceDetailView({
             </Link>
           </div>
           <div className={styles.papirOmot}>
-            <div className={styles.papirSkaliran}>
+            <InvoiceDocPreview>
               <InvoiceDoc
                 broj={invoice.number}
                 valuta={invoice.currency}
@@ -269,7 +270,7 @@ export function InvoiceDetailView({
                 firma={business}
                 racun={invoice.account}
               />
-            </div>
+            </InvoiceDocPreview>
           </div>
         </div>
       </div>

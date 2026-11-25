@@ -4,7 +4,7 @@
 // stranicu koja prikazuje SAMO ovu komponentu) - "mora da izgleda isto" iz zadatka je zato doslovno
 // ispunjeno (isti kod, ne dva odvojena prikaza). Papir je UVEK svetao (bg #fff/#111), bez obzira na temu
 // aplikacije (potvrđeno: Dk_Fak15 crta isti beli papir u tamnoj temi).
-import { formatNovac } from "@/lib/money";
+import { formatNovacPuno } from "@/lib/money";
 import { IkonaFakture } from "@/components/ui/icons";
 import styles from "./InvoiceDoc.module.css";
 
@@ -178,16 +178,16 @@ export function InvoiceDoc({
         {stavke.map((st, i) => (
           <div className={styles.tabelaRed} key={i}>
             <span>{st.desc || "–"}</span>
-            <span>{formatNovac((st.qty || 1) * (st.price || 0), valuta)}</span>
+            <span>{formatNovacPuno((st.qty || 1) * (st.price || 0), valuta)}</span>
           </div>
         ))}
         <div className={styles.tabelaRed}>
           <span>{L.vat}</span>
-          <b>{formatNovac(0, valuta)}</b>
+          <b>{formatNovacPuno(0, valuta)}</b>
         </div>
         <div className={`${styles.tabelaRed} ${styles.ukupnoRed}`}>
           <span>{L.total}</span>
-          <span>{formatNovac(ukupno, valuta)}</span>
+          <span>{formatNovacPuno(ukupno, valuta)}</span>
         </div>
       </div>
 

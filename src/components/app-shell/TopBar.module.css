@@ -52,6 +52,15 @@
   gap: var(--space-3);
 }
 
+.temaDesktop {
+  display: none;
+}
+@media (min-width: 1280px) {
+  .temaDesktop {
+    display: flex;
+  }
+}
+
 .zvonce {
   width: 40px;
   height: 40px;
@@ -93,5 +102,9 @@
 @media (min-width: 1280px) {
   .novaFakturaDesktop {
     display: inline-flex;
+    /* Frejm Fak1: dugme u gornjoj traci je 40px visoko (ne 44px kao podrazumevano dugme dizajn sistema). */
+    min-height: 40px;
+    height: 40px;
+    padding: 0 16px;
   }
 }

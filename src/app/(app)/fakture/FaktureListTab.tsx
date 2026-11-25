@@ -11,7 +11,7 @@ import { OznaciPlacenomDialog } from "@/components/fakture/OznaciPlacenomDialog"
 import { StornoDialog } from "@/components/fakture/StornoDialog";
 import { efektivniStatus, type EfektivniStatus } from "@/lib/invoice-status";
 import { labelaStatusa } from "@/lib/invoice-display";
-import { formatNovac } from "@/lib/money";
+import { formatNovacKompaktno } from "@/lib/money";
 import { formatDatumSrpski } from "@/lib/datum";
 import { obrisiNacrtAction } from "./actions";
 import type { FakturaRed } from "@/lib/invoice-row";
@@ -129,8 +129,8 @@ export function FaktureListTab({ redovi, danasIso }: { redovi: FakturaRed[]; dan
   function zbirPoValuti(lista: Prosireni[]): string[] {
     const mapa = new Map<string, number>();
     lista.forEach((r) => mapa.set(r.currency, (mapa.get(r.currency) ?? 0) + r.total));
-    if (mapa.size === 0) return [formatNovac(0, "EUR")];
-    return Array.from(mapa.entries()).map(([c, v]) => formatNovac(v, c));
+    if (mapa.size === 0) return [formatNovacKompaktno(0, "EUR")];
+    return Array.from(mapa.entries()).map(([c, v]) => formatNovacKompaktno(v, c));
   }
 
   if (redovi.length === 0) {
@@ -324,7 +324,7 @@ export function FaktureListTab({ redovi, danasIso }: { redovi: FakturaRed[]; dan
                         : formatDatumSrpski(new Date(new Date(red.issueDate).getTime() + red.dueDays * 86400000))}
                     </td>
                     <td className={`${styles.desno} ${red.efektivni === "stornirana" ? styles.precrtano : ""}`}>
-                      {formatNovac(red.total, red.currency)}
+                      {formatNovacKompaktno(red.total, red.currency)}
                     </td>
                     <td>
                       <StatusZnacka status={red.efektivni} tekst={labelaStatusa(red.efektivni, new Date(red.issueDate), red.dueDays, danas)} />
@@ -353,7 +353,7 @@ export function FaktureListTab({ redovi, danasIso }: { redovi: FakturaRed[]; dan
                   {red.efektivni === "nacrt" ? "Nacrt" : red.number} ·{" "}
                   {red.efektivni === "nacrt" ? "Nije poslata" : `Rok ${formatDatumSrpski(new Date(new Date(red.issueDate).getTime() + red.dueDays * 86400000))}`}
                 </div>
-                <div className={styles.kartaRedIznos}>{formatNovac(red.total, red.currency)}</div>
+                <div className={styles.kartaRedIznos}>{formatNovacKompaktno(red.total, red.currency)}</div>
               </div>
             ))}
           </div>

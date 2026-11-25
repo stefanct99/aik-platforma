@@ -3,38 +3,31 @@
 import { useActionState, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { PillGroup } from "@/components/settings/PillGroup";
+import { useTemaDeljena } from "@/components/app-shell/TemaContext";
 import type { Tema, Jezik } from "@/lib/theme";
 import type { FormatDatuma } from "@/lib/datum";
 import { sacuvajIzgledAction, type JezikIIzgledStanje } from "./actions";
 import styles from "./JezikIIzgledForm.module.css";
 
-// Primenjuje izabranu temu odmah na ekranu (spec 7.13: "Prikaz se menja odmah"), pre nego što se
-// sačuva. .appShell je obično ime klase (iz src/styles/theme.css), ne iz CSS modula, zato je stabilno
-// za querySelector.
-function primeniTemuNaStranici(tema: Tema) {
-  const omot = document.querySelector<HTMLElement>(".appShell");
-  if (!omot) return;
-  if (tema === "sistem") omot.removeAttribute("data-theme");
-  else omot.setAttribute("data-theme", tema);
-}
-
 export function JezikIIzgledForm({
-  initialTema,
   initialJezik,
   initialFormatDatuma,
 }: {
-  initialTema: Tema;
   initialJezik: Jezik;
   initialFormatDatuma: FormatDatuma;
 }) {
+  // Korak 8a (ispravka): "tema" dolazi iz TemaContext-a (deljeno sa prekidačem u gornjoj traci), ne iz
+  // sopstvenog lokalnog stanja - PillGroup ovde i dalje samo PREGLEDA (čuva se tek na "Sačuvaj izmene",
+  // frejm Pd7 ima jedno zajedničko dugme za sve troje), ali prikazano "istaknuto" dugme sad ostaje
+  // usklađeno sa gornjom trakom čak i bez čuvanja.
+  const { tema, setTema } = useTemaDeljena();
   const pocetnoStanje: JezikIIzgledStanje = {
-    tema: initialTema,
+    tema,
     jezik: initialJezik,
     formatDatuma: initialFormatDatuma,
     sacuvano: false,
   };
   const [stanje, action, uToku] = useActionState(sacuvajIzgledAction, pocetnoStanje);
-  const [tema, setTema] = useState<Tema>(initialTema);
   const [jezik, setJezik] = useState<Jezik>(initialJezik);
   const [formatDatuma, setFormatDatuma] = useState<FormatDatuma>(initialFormatDatuma);
 
@@ -83,10 +76,7 @@ export function JezikIIzgledForm({
         ]}
         value={tema}
         disabled={uToku}
-        onChange={(izabrano) => {
-          setTema(izabrano);
-          primeniTemuNaStranici(izabrano);
-        }}
+        onChange={setTema}
       />
       <input type="hidden" name="tema" value={tema} />
 

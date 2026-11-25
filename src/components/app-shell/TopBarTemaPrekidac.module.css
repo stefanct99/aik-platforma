@@ -1,0 +1,40 @@
+/* Korak 8a (ispravka): prekidač teme u gornjoj traci aplikacije (frejm Fak1 i dr. - "data-theme-toggle",
+   prototip shell.js - ThemeTogglePill u topbar-actions). Za razliku od auth-shell pilule (fiksna, dole
+   desno na stranicama bez sesije), ovde je deo normalnog reda gornje trake, ne plutajuća. */
+.pilula {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.dugme {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.dugme:hover {
+  background: var(--color-bg);
+}
+
+.aktivno {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+}
+
+.aktivno:hover {
+  background: var(--btn-primary-bg);
+}

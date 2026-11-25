@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
-import { isValidTema, isValidJezik, isValidFormatDatuma } from "@/lib/theme";
+import { isValidJezik, isValidFormatDatuma } from "@/lib/theme";
 import { SettingsPageHeader } from "@/components/settings/SettingsPageHeader";
 import { JezikIIzgledForm } from "./JezikIIzgledForm";
 
@@ -9,7 +9,6 @@ export const instant = false;
 
 export default async function JezikIIzgledPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  const tema = session!.user.theme;
   const jezik = session!.user.jezik;
   const formatDatuma = session!.user.formatDatuma;
 
@@ -17,7 +16,6 @@ export default async function JezikIIzgledPage() {
     <>
       <SettingsPageHeader naslov="Jezik i izgled" opis="Kako se prikazuju tekst, datumi i boje." />
       <JezikIIzgledForm
-        initialTema={isValidTema(tema) ? tema : "sistem"}
         initialJezik={isValidJezik(jezik) ? jezik : "sr-lat"}
         initialFormatDatuma={isValidFormatDatuma(formatDatuma) ? formatDatuma : "dmy"}
       />

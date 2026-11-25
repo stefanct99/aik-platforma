@@ -13,7 +13,6 @@
 .glavni {
   box-sizing: border-box;
   padding: var(--space-4);
-  max-width: var(--content-max-width);
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -23,7 +22,11 @@
 @media (min-width: 1280px) {
   .glavni {
     /* Isti razmak od menija kao u frejmu (28px 40px), bez centriranja: sadržaj ostaje uz levu ivicu.
-       Gornji razmak daje TopBar (koji je iznad ovoga, van ovog kontejnera), zato je ovde 0 na vrhu. */
+       Gornji razmak daje TopBar (koji je iznad ovoga, van ovog kontejnera), zato je ovde 0 na vrhu.
+       Korak 8a (ispravka): frejmovi (Poc1/Pd1/Fak1 - "left:260px;right:0;padding:28px 40px") pokazuju
+       sadržaj do DESNE IVICE platna, bez gornje granice širine - raniji --content-max-width (1120px) nije
+       postojao ni u jednom frejmu i zato je uklonjen (desna ivica sadržaja se na širim ekranima nije
+       poklapala sa dugmetom u gornjoj traci, koja nema tu granicu). */
     padding: 0 40px 40px;
   }
 }

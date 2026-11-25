@@ -6,6 +6,7 @@
 import type { ReactNode } from "react";
 import { Wordmark } from "@/components/ui/Wordmark";
 import type { Tema } from "@/lib/theme";
+import { TemaProvider } from "@/components/app-shell/TemaContext";
 import { OnboardingThemeTogglePill } from "./OnboardingThemeTogglePill";
 import styles from "./OnboardingShell.module.css";
 
@@ -24,34 +25,36 @@ export function OnboardingShell({
 }) {
   return (
     <div className={`appShell ${styles.omot}`} data-theme={tema === "sistem" ? undefined : tema}>
-      <div className={styles.zaglavlje}>
-        <Wordmark />
-        <span className={styles.zaglavljeDesno}>
-          <a href="/pomoc">Pomoć</a>
-        </span>
-      </div>
-      <div className={styles.kartica}>
-        <div className={styles.progresOmot}>
-          <span className={styles.progresKorak}>Korak {korak} od 4</span>
-          <div className={styles.progresTraka}>
-            {[1, 2, 3, 4].map((n) => (
-              <span key={n} className={n <= korak ? styles.gotovo : ""} />
-            ))}
+      <TemaProvider initialTema={tema}>
+        <div className={styles.zaglavlje}>
+          <Wordmark />
+          <span className={styles.zaglavljeDesno}>
+            <a href="/pomoc">Pomoć</a>
+          </span>
+        </div>
+        <div className={styles.kartica}>
+          <div className={styles.progresOmot}>
+            <span className={styles.progresKorak}>Korak {korak} od 4</span>
+            <div className={styles.progresTraka}>
+              {[1, 2, 3, 4].map((n) => (
+                <span key={n} className={n <= korak ? styles.gotovo : ""} />
+              ))}
+            </div>
           </div>
+          <div className={styles.naslovOmot}>
+            <h1 className={styles.naslov}>{naslov}</h1>
+            <p className={styles.podnaslov}>{podnaslov}</p>
+          </div>
+          {children}
         </div>
-        <div className={styles.naslovOmot}>
-          <h1 className={styles.naslov}>{naslov}</h1>
-          <p className={styles.podnaslov}>{podnaslov}</p>
+        <div className={styles.podnozje}>
+          <span>© 2026 tvoj AI knjigovođa</span>
+          <a href="/uslovi">Uslovi</a>
+          <a href="/privatnost">Privatnost</a>
+          <a href="/pomoc">Pomoć</a>
         </div>
-        {children}
-      </div>
-      <div className={styles.podnozje}>
-        <span>© 2026 tvoj AI knjigovođa</span>
-        <a href="/uslovi">Uslovi</a>
-        <a href="/privatnost">Privatnost</a>
-        <a href="/pomoc">Pomoć</a>
-      </div>
-      <OnboardingThemeTogglePill tema={tema} />
+        <OnboardingThemeTogglePill />
+      </TemaProvider>
     </div>
   );
 }

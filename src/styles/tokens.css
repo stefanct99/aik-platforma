@@ -62,5 +62,4 @@
 
   /* Raspored (Korak 4b: 260px po frejmovima Poc1/Pd0/Pd1, ne 264px kao u Koraku 4) */
   --sidebar-width: 260px;
-  --content-max-width: 1120px;
 }

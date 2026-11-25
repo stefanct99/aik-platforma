@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { IkonaPretraga, IkonaPlus, IkonaProfilFirma, IkonaTacke } from "@/components/ui/icons";
 import { FaktureHeader } from "@/components/fakture/FaktureHeader";
 import { formatDatumSrpski } from "@/lib/datum";
-import { formatNovac } from "@/lib/money";
+import { formatNovacKompaktno } from "@/lib/money";
 import { obrisiIliArhivirajKlijentaAction } from "../actions";
 import { ClientPanel } from "./ClientPanel";
 import type { KlijentRed } from "./klijenti-tipovi";
@@ -47,7 +47,7 @@ export function KlijentiTab({
 
   function opisStavke(k: KlijentRed) {
     if (!k.defaultItemDesc) return null;
-    return `${k.defaultItemDesc}, ${formatNovac(k.defaultItemAmount ?? 0, k.defaultCurrency)}`;
+    return `${k.defaultItemDesc}, ${formatNovacKompaktno(k.defaultItemAmount ?? 0, k.defaultCurrency)}`;
   }
 
   if (klijenti.length === 0) {

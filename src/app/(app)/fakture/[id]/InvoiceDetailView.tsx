@@ -13,7 +13,7 @@ import { PodsetnikDialog } from "@/components/fakture/PodsetnikDialog";
 import { InvoiceDoc } from "@/components/invoice/InvoiceDoc";
 import { efektivniStatus, izracunajUkupno, rokFakture } from "@/lib/invoice-status";
 import { labelaStatusa } from "@/lib/invoice-display";
-import { formatNovac } from "@/lib/money";
+import { formatNovacPuno } from "@/lib/money";
 import { formatDatumSrpski } from "@/lib/datum";
 import { obrisiNacrtAction } from "../actions";
 import styles from "./InvoiceDetailView.module.css";
@@ -113,7 +113,7 @@ export function InvoiceDetailView({
             <StatusZnacka status={efektivni} tekst={labelaStatusa(efektivni, izdata, invoice.dueDays, danas)} />
           </h1>
           <p className={styles.opis}>
-            {invoice.client.name}, {formatNovac(ukupno, invoice.currency)}
+            {invoice.client.name}, {formatNovacPuno(ukupno, invoice.currency)}
           </p>
         </div>
         <div className={styles.akcije}>
@@ -191,7 +191,7 @@ export function InvoiceDetailView({
             </div>
             <div className={styles.kv}>
               <span className={styles.k}>Iznos</span>
-              <span className={styles.v}>{formatNovac(ukupno, invoice.currency)}</span>
+              <span className={styles.v}>{formatNovacPuno(ukupno, invoice.currency)}</span>
             </div>
             <div className={styles.kv}>
               <span className={styles.k}>Izdata</span>

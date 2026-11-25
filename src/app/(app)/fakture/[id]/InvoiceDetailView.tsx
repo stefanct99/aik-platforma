@@ -79,7 +79,7 @@ export function InvoiceDetailView({
     { kljuc: "izmeni", tekst: "Izmeni fakturu", href: `/fakture/izmeni/${invoice.id}` },
     { kljuc: "dupliraj", tekst: "Dupliraj fakturu", href: `/fakture/nova?dupliraj=${invoice.id}` },
     { kljuc: "pdf", tekst: "Preuzmi PDF", href: `/api/fakture/${invoice.id}/pdf` },
-    { kljuc: "ponavljajuca", tekst: "Napravi ponavljajuću od ove", href: "/fakture/ponavljajuce" },
+    { kljuc: "ponavljajuca", tekst: "Napravi ponavljajuću od ove", href: `/fakture/ponavljajuce?odFakture=${invoice.id}` },
     { kljuc: "storno", tekst: "Storniraj fakturu", opasno: true, onClick: () => setModal("storno") },
   ];
 

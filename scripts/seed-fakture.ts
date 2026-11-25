@@ -3,6 +3,7 @@
 // dana" (ne fiksni datumi iz frejma). NIKAD se ne pokreće u produkciji.
 import { prisma } from "../src/lib/prisma";
 import { createInvoiceWithHistory } from "../src/lib/invoices";
+import { createRecurringInvoice, postaviStatusPonavljajuce } from "../src/lib/recurring-invoices";
 
 function pre(dana: number): Date {
   const d = new Date();
@@ -247,7 +248,43 @@ async function main() {
     voidedAt: pre(5),
   });
 
-  console.log(`Gotovo: 6 klijenata i 8 faktura napravljeno za ${email}.`);
+  // 3 ponavljajuće fakture (Korak 8c, frejm Fak13, zadatak tačka 9) - startDate je u prošlosti (6
+  // meseci unazad, isti obrazac kao ostale fakture iznad - pre(N)) da nextDate ispadne na STVARNO
+  // sledeće pojavljivanje dana u mesecu računato od DANAŠNJEG dana, ne na fiksni datum iz frejma.
+  const pocetakPonavljanja = pre(180);
+
+  await createRecurringInvoice(korisnik.id, {
+    clientId: klijenti["Acme Inc."].id,
+    desc: "Webflow development",
+    amount: 90000,
+    dayOfMonth: 1,
+    startDate: pocetakPonavljanja,
+    endDate: null,
+    mode: "ask",
+  });
+
+  await createRecurringInvoice(korisnik.id, {
+    clientId: klijenti["Bluebird GmbH"].id,
+    desc: "Održavanje",
+    amount: 240000,
+    dayOfMonth: 28,
+    startDate: pocetakPonavljanja,
+    endDate: null,
+    mode: "auto",
+  });
+
+  const markoPonavljajuca = await createRecurringInvoice(korisnik.id, {
+    clientId: klijenti["Marko Petrović PR"].id,
+    desc: null,
+    amount: null,
+    dayOfMonth: 10,
+    startDate: pocetakPonavljanja,
+    endDate: null,
+    mode: "ask",
+  });
+  await postaviStatusPonavljajuce(korisnik.id, markoPonavljajuca.id, "pauzirana");
+
+  console.log(`Gotovo: 6 klijenata, 8 faktura i 3 ponavljajuće fakture napravljeno za ${email}.`);
 }
 
 main()

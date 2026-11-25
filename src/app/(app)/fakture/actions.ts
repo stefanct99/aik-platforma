@@ -16,14 +16,23 @@ import {
   type PodaciIzmeneFakture,
   type StavkaUnos,
 } from "@/lib/invoices";
-import { parseDatumSrpski, formatVremeSrpski } from "@/lib/datum";
+import { parseDatumSrpski, formatVremeSrpski, pocetakDanaUtc } from "@/lib/datum";
 import {
   createClient,
+  getClientForUser,
   removeOrArchiveClient,
   updateClient,
   validirajKlijentaPodatke,
   type KlijentPodaci,
 } from "@/lib/clients";
+import {
+  createRecurringInvoice,
+  postaviStatusPonavljajuce,
+  removeRecurringInvoice,
+  updateRecurringInvoice,
+  validirajPonavljajucuPodatke,
+  type PonavljajucaPodaci,
+} from "@/lib/recurring-invoices";
 
 async function trenutniKorisnik() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -289,4 +298,79 @@ export async function promeniBrojAction(invoiceId: string, noviBroj: string): Pr
   if (!rezultat.ok) return { ok: false, greska: rezultat.razlog };
   revalidatePath("/fakture");
   return { ok: true, greska: null };
+}
+
+// ===================== Ponavljajuće fakture (Korak 8c) =====================
+
+// Isto pravilo kao procitajKlijentPodatke/itemAmount: amount se upisuje SAMO ako je i opis unet (isti
+// obrazac, bez dupliranja odluke) - oboje prazno je "Iznos se upisuje pri slanju" (spec 3.5).
+function procitajPonavljajucuPodatke(formData: FormData): PonavljajucaPodaci {
+  const desc = String(formData.get("desc") || "").trim();
+  const amount = String(formData.get("amount") || "").trim();
+  const endDate = String(formData.get("endDate") || "").trim();
+  return {
+    clientId: String(formData.get("clientId") || ""),
+    desc: desc || null,
+    amount: desc && amount ? Math.round(Number(amount) * 100) : null,
+    dayOfMonth: Number(formData.get("dayOfMonth")) || 1,
+    startDate: pocetakDanaUtc(new Date(String(formData.get("startDate") || ""))),
+    endDate: endDate ? pocetakDanaUtc(new Date(endDate)) : null,
+    mode: formData.get("mode") === "auto" ? "auto" : "ask",
+  };
+}
+
+export type PonavljajucaStanje = {
+  errors: Partial<Record<"clientId" | "dayOfMonth" | "startDate" | "endDate" | "mode", string>>;
+  sacuvano: boolean;
+};
+
+export async function dodajPonavljajucuAction(
+  _prethodnoStanje: PonavljajucaStanje,
+  formData: FormData,
+): Promise<PonavljajucaStanje> {
+  const korisnik = await trenutniKorisnik();
+  const podaci = procitajPonavljajucuPodatke(formData);
+  const klijent = podaci.clientId ? await getClientForUser(korisnik.id, podaci.clientId) : null;
+  const errors = validirajPonavljajucuPodatke(podaci, klijent);
+  if (Object.keys(errors).length > 0) return { errors, sacuvano: false };
+
+  await createRecurringInvoice(korisnik.id, podaci);
+  revalidatePath("/fakture/ponavljajuce");
+  revalidatePath("/fakture");
+  revalidatePath("/fakture/klijenti");
+  return { errors: {}, sacuvano: true };
+}
+
+export async function izmeniPonavljajucuAction(
+  id: string,
+  _prethodnoStanje: PonavljajucaStanje,
+  formData: FormData,
+): Promise<PonavljajucaStanje> {
+  const korisnik = await trenutniKorisnik();
+  const podaci = procitajPonavljajucuPodatke(formData);
+  const klijent = podaci.clientId ? await getClientForUser(korisnik.id, podaci.clientId) : null;
+  const errors = validirajPonavljajucuPodatke(podaci, klijent);
+  if (Object.keys(errors).length > 0) return { errors, sacuvano: false };
+
+  const rezultat = await updateRecurringInvoice(korisnik.id, id, podaci);
+  if (!rezultat.ok) return { errors: { clientId: rezultat.razlog }, sacuvano: false };
+
+  revalidatePath("/fakture/ponavljajuce");
+  revalidatePath("/fakture");
+  revalidatePath("/fakture/klijenti");
+  return { errors: {}, sacuvano: true };
+}
+
+export async function postaviStatusPonavljajuceAction(id: string, status: "aktivna" | "pauzirana") {
+  const korisnik = await trenutniKorisnik();
+  await postaviStatusPonavljajuce(korisnik.id, id, status);
+  revalidatePath("/fakture/ponavljajuce");
+}
+
+export async function obrisiPonavljajucuAction(id: string) {
+  const korisnik = await trenutniKorisnik();
+  await removeRecurringInvoice(korisnik.id, id);
+  revalidatePath("/fakture/ponavljajuce");
+  revalidatePath("/fakture");
+  revalidatePath("/fakture/klijenti");
 }

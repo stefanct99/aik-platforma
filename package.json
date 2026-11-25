@@ -12,6 +12,7 @@
     "format:check": "prettier --check .",
     "make-admin": "tsx --env-file=.env.local scripts/make-admin.ts",
     "seed:fakture": "tsx --env-file=.env.local scripts/seed-fakture.ts",
+    "ponavljajuce:pokreni": "tsx --env-file=.env.local scripts/pokreni-ponavljajuce.ts",
     "test:db:pripremi": "tsx --env-file=.env.local scripts/pripremi-test-bazu.ts"
   },
   "dependencies": {

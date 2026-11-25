@@ -312,3 +312,14 @@ export function IkonaSat(props: IkonicaProps) {
     </Ikonica>
   );
 }
+
+// Korak 8c (baner iznad liste Ponavljajuće, frejm Fak13): ista putanja kao referenca/prototip/js/icons.js
+// I.sparkle, prepisana tačno (prototip isto crta stroke="currentColor", ne fill - isti Ikonica obrazac).
+export function IkonaSparkle(props: IkonicaProps) {
+  return (
+    <Ikonica {...props}>
+      <path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z" />
+      <path d="M19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z" />
+    </Ikonica>
+  );
+}

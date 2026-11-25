@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { getClientsForUser } from "@/lib/clients";
 import { getInvoicesForUser } from "@/lib/invoices";
 import { getAccountsForUser } from "@/lib/bank-accounts";
+import { getRecurringInvoicesForUser } from "@/lib/recurring-invoices";
 import { KlijentiTab } from "./KlijentiTab";
 import type { KlijentRed } from "./klijenti-tipovi";
 
@@ -10,10 +11,11 @@ export const instant = false;
 
 export default async function KlijentiPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  const [klijenti, fakture, racuni] = await Promise.all([
+  const [klijenti, fakture, racuni, ponavljajuce] = await Promise.all([
     getClientsForUser(session!.user.id),
     getInvoicesForUser(session!.user.id),
     getAccountsForUser(session!.user.id),
+    getRecurringInvoicesForUser(session!.user.id),
   ]);
 
   const poslednjaPoKlijentu = new Map<string, Date>();
@@ -22,6 +24,10 @@ export default async function KlijentiPage() {
     brojFakturaPoKlijentu.set(f.clientId, (brojFakturaPoKlijentu.get(f.clientId) ?? 0) + 1);
     const trenutna = poslednjaPoKlijentu.get(f.clientId);
     if (!trenutna || f.issueDate > trenutna) poslednjaPoKlijentu.set(f.clientId, f.issueDate);
+  }
+  const brojPonavljajucihPoKlijentu = new Map<string, number>();
+  for (const r of ponavljajuce) {
+    brojPonavljajucihPoKlijentu.set(r.clientId, (brojPonavljajucihPoKlijentu.get(r.clientId) ?? 0) + 1);
   }
 
   const redovi: KlijentRed[] = klijenti.map((k) => ({
@@ -41,14 +47,14 @@ export default async function KlijentiPage() {
     fxMode: k.fxMode,
     archived: k.archived,
     poslednjaFaktura: poslednjaPoKlijentu.get(k.id)?.toISOString() ?? null,
-    imaFaktura: (brojFakturaPoKlijentu.get(k.id) ?? 0) > 0,
+    imaFaktura: (brojFakturaPoKlijentu.get(k.id) ?? 0) > 0 || (brojPonavljajucihPoKlijentu.get(k.id) ?? 0) > 0,
   }));
 
   return (
     <KlijentiTab
       klijenti={redovi}
       racuni={racuni.map((r) => ({ id: r.id, currency: r.currency, bank: r.bank, iban: r.iban, number: r.number }))}
-      brojevi={{ fakture: fakture.length, klijenti: klijenti.length, ponavljajuce: 0 }}
+      brojevi={{ fakture: fakture.length, klijenti: klijenti.length, ponavljajuce: ponavljajuce.length }}
     />
   );
 }

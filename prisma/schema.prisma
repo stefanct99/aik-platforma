@@ -141,10 +141,11 @@ model Business {
   calendarToken       String  @unique
   calendarSyncEnabled Boolean @default(true)
 
-  bankAccounts BankAccount[]
-  clients      Client[]
-  invoices     Invoice[]
-  incomes      Income[]
+  bankAccounts      BankAccount[]
+  clients           Client[]
+  invoices          Invoice[]
+  incomes           Income[]
+  recurringInvoices RecurringInvoice[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -245,13 +246,52 @@ model Client {
   // "Klijent bez faktura može da se obriše" (spec 3.3) - inače se arhivira (src/lib/clients.ts).
   archived Boolean @default(false)
 
-  invoices Invoice[]
+  invoices          Invoice[]
+  recurringInvoices RecurringInvoice[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([businessId])
   @@map("client")
+}
+
+// Ponavljajuća faktura (Korak 8c, spec 3.5/6.8, frejmovi Fak13/Fak14). "Stavka (opis, iznos, može da
+// bude prazna)" (spec 3.5, frejm Fak13 treći red "Marko Petrović PR" - klijent bez podrazumevane cene
+// nema stavku UOPŠTE prikazanu, ne samo iznos) - desc i amount su oba nullable. Valuta NIJE sopstveno
+// polje (ni spec 3.5 ni frejm Fak14 je ne pominju, ni prototip RecurringPanel je ne pita) - uvek se
+// uzima iz client.defaultCurrency u trenutku prikaza/generisanja, isto za rok i račun (src/lib/
+// recurring-invoices.ts). mode koristi ISTE vrednosti kao Client.autoSendMode ("ask"/"auto") iz istog
+// razloga (već postojeća konvencija u šemi), ne nove nazive.
+model RecurringInvoice {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  clientId String
+  // Restrict, isto kao Invoice.client - klijent sa aktivnom ponavljajućom fakturom ne sme da se obriše
+  // direktno (src/lib/clients.ts imaFaktura/removeOrArchiveClient uključuje i ove).
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Restrict)
+
+  desc   String?
+  amount Int? // null = "Iznos se upisuje pri slanju" (spec 3.5, zadatak tačka 3: tad mode mora biti "ask")
+
+  frequency  String   @default("mesecno") // samo "mesecno" postoji u ovoj verziji (spec 3.5)
+  dayOfMonth Int // 1-31; ako mesec ima manje dana, koristi se poslednji dan tog meseca
+  startDate  DateTime
+  endDate    DateTime? // null = "Nikad"
+
+  mode   String @default("ask") // "ask" | "auto"
+  status String @default("aktivna") // "aktivna" | "pauzirana"
+
+  nextDate DateTime // datum sledeće fakture (spec 3.5) - pomera ga generisanje (src/lib/recurring-invoices.ts)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([businessId])
+  @@index([clientId])
+  @@map("recurring_invoice")
 }
 
 // Brojač faktura po firmi i po godini IZDAVANJA (ne po "poslovnoj godini") - Korak 8a, pravilo numeracije

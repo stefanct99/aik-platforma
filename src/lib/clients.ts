@@ -73,7 +73,10 @@ export type UklanjanjeKlijentaRezultat = { nacin: "obrisan" } | { nacin: "arhivi
 
 // "Klijent bez faktura može da se obriše" (spec 3.3), inače se arhivira (spec 7.6: "Obriši klijenta
 // samo ako nema faktura, inače Arhiviraj"). Nikad obe opcije u isto dugme - UI zove removeOrArchiveClient
-// i prikazuje tačno onaj natpis koji je ponašanje stvarno izvršilo.
+// i prikazuje tačno onaj natpis koji je ponašanje stvarno izvršilo. Ponavljajuće fakture (Korak 8c)
+// računaju se isto kao fakture - klijent sa aktivnim ili pauziranim rasporedom se arhivira, ne briše
+// (RecurringInvoice.client je Restrict u šemi, isto kao Invoice.client - direktan delete bi inače
+// pucao na FK grešci umesto da tiho arhivira).
 export async function removeOrArchiveClient(
   userId: string,
   clientId: string,
@@ -81,8 +84,7 @@ export async function removeOrArchiveClient(
   const klijent = await getClientForUser(userId, clientId);
   if (!klijent) throw new Error("Klijent ne postoji.");
 
-  const brojFaktura = await prisma.invoice.count({ where: { clientId: klijent.id } });
-  if (brojFaktura > 0) {
+  if (await imaFaktura(klijent.id)) {
     await prisma.client.update({ where: { id: klijent.id }, data: { archived: true } });
     return { nacin: "arhiviran" };
   }
@@ -93,6 +95,9 @@ export async function removeOrArchiveClient(
 
 // Da li klijent SME da se obriše direktno (za prikaz pravog natpisa dugmeta u panelu, spec 7.6).
 export async function imaFaktura(clientId: string): Promise<boolean> {
-  const broj = await prisma.invoice.count({ where: { clientId } });
-  return broj > 0;
+  const [brojFaktura, brojPonavljajucih] = await Promise.all([
+    prisma.invoice.count({ where: { clientId } }),
+    prisma.recurringInvoice.count({ where: { clientId } }),
+  ]);
+  return brojFaktura > 0 || brojPonavljajucih > 0;
 }

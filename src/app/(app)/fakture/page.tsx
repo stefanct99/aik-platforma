@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { getInvoicesForUser } from "@/lib/invoices";
 import { getClientsForUser } from "@/lib/clients";
+import { getRecurringInvoicesForUser } from "@/lib/recurring-invoices";
 import { izracunajUkupno } from "@/lib/invoice-status";
 import { pocetakDanaUtc } from "@/lib/datum";
 import { FaktureHeader } from "@/components/fakture/FaktureHeader";
@@ -12,9 +13,10 @@ export const instant = false;
 
 export default async function FakturePage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  const [fakture, klijenti] = await Promise.all([
+  const [fakture, klijenti, ponavljajuce] = await Promise.all([
     getInvoicesForUser(session!.user.id),
     getClientsForUser(session!.user.id),
+    getRecurringInvoicesForUser(session!.user.id),
   ]);
 
   const redovi: FakturaRed[] = fakture.map((f) => ({
@@ -33,7 +35,7 @@ export default async function FakturePage() {
 
   return (
     <>
-      <FaktureHeader brojevi={{ fakture: fakture.length, klijenti: klijenti.length, ponavljajuce: 0 }} />
+      <FaktureHeader brojevi={{ fakture: fakture.length, klijenti: klijenti.length, ponavljajuce: ponavljajuce.length }} />
       <FaktureListTab redovi={redovi} danasIso={pocetakDanaUtc().toISOString()} />
     </>
   );

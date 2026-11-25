@@ -157,12 +157,13 @@ select.kombo {
   align-items: center;
   justify-content: space-between;
 }
+/* Ispravka "podvlačenje": u prototipu ovi linkovi nisu podvučeni (globalni "a{text-decoration:none}" u
+   referenca/prototip/css/base.css) - uklonjeno i ovde, isti uzrok kao bočni meni/logo/pod-tabovi. */
 .noviKlijentGore,
 .linkMali {
   font-size: 0.875rem;
   color: var(--color-text);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  text-decoration: none;
 }
 
 .padajuciMali {
@@ -518,6 +519,7 @@ select.kombo {
   margin-right: auto;
   font-size: 0.875rem;
   color: var(--color-text);
+  text-decoration: none;
 }
 
 .pregledKolona {
@@ -538,6 +540,7 @@ select.kombo {
 }
 .pregledNatpis a {
   color: var(--color-text);
+  text-decoration: none;
 }
 
 /* Papir se skališe da popuni širinu kolone (InvoiceDocPreview, Korak 8b ispravka: "A4 pregled desno je

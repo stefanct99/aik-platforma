@@ -85,6 +85,9 @@
   padding: 0 var(--space-4);
   border-top: 1px solid var(--color-border);
   color: var(--color-text);
+  /* Ispravka "podvlačenje" (isti uzrok kao bočni meni/logo/pod-tabovi): u prototipu su ovo dugmad/redovi
+     bez linka, ovde Link. */
+  text-decoration: none;
 }
 .stavka:first-child {
   border-top: 0;

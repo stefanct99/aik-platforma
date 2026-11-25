@@ -26,6 +26,8 @@
   border-radius: var(--radius-sm);
   font-size: 1rem;
   color: var(--color-text);
+  /* Ispravka "podvlačenje" (isti uzrok kao bočni meni/logo): u prototipu su ovo dugmad, ovde Link. */
+  text-decoration: none;
 }
 
 .stavka svg {

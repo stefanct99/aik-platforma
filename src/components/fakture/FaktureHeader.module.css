@@ -45,6 +45,8 @@
   color: var(--color-text-muted);
   white-space: nowrap;
   border-bottom: 2px solid transparent;
+  /* Ispravka "podvlačenje" (isti uzrok kao bočni meni/logo): u prototipu su ovo dugmad, ovde Link. */
+  text-decoration: none;
 }
 
 .tabAktivan {

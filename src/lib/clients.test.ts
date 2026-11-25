@@ -44,6 +44,42 @@ afterAll(async () => {
   await prisma.user.deleteMany({ where: { id: { in: napravljeniKorisnici } } });
 });
 
+describe("createClient (Korak 8b ispravka 2026-11-25: naziv i adresa obavezni, ostalo opciono)", () => {
+  it("čuva klijenta sa samo nazivom i adresom (sve ostalo prazno)", async () => {
+    const { korisnik } = await napraviKorisnikaSaFirmom();
+    const klijent = await createClient(korisnik.id, {
+      name: "Minimalan klijent",
+      billingEmail: undefined,
+      country: "",
+      pib: undefined,
+      address: "Neka ulica 5, Beograd",
+      defaultCurrency: "EUR",
+      defaultLang: "sr",
+      defaultDueDays: 7,
+    });
+    expect(klijent.billingEmail).toBeNull();
+    expect(klijent.pib).toBeNull();
+    expect(klijent.address).toBe("Neka ulica 5, Beograd");
+  });
+
+  it("dozvoljava dva klijenta BEZ PIB-a u istoj firmi (nema jedinstvenosti za prazan PIB)", async () => {
+    const { korisnik } = await napraviKorisnikaSaFirmom();
+    const osnova = {
+      billingEmail: undefined,
+      country: "Srbija",
+      address: "Adresa",
+      defaultCurrency: "EUR" as const,
+      defaultLang: "sr" as const,
+      defaultDueDays: 7,
+    };
+    const prvi = await createClient(korisnik.id, { ...osnova, name: "Prvi bez PIB-a", pib: undefined });
+    const drugi = await createClient(korisnik.id, { ...osnova, name: "Drugi bez PIB-a", pib: undefined });
+    expect(prvi.id).not.toBe(drugi.id);
+    expect(prvi.pib).toBeNull();
+    expect(drugi.pib).toBeNull();
+  });
+});
+
 describe("removeOrArchiveClient (spec 3.3/7.6)", () => {
   it("briše klijenta bez faktura", async () => {
     const { korisnik } = await napraviKorisnikaSaFirmom();
@@ -51,6 +87,7 @@ describe("removeOrArchiveClient (spec 3.3/7.6)", () => {
       name: "Bez faktura",
       billingEmail: "a@primer.rs",
       country: "Srbija",
+      address: "Test ulica 1, Beograd",
       defaultCurrency: "EUR",
       defaultLang: "sr",
       defaultDueDays: 7,
@@ -66,6 +103,7 @@ describe("removeOrArchiveClient (spec 3.3/7.6)", () => {
       name: "Sa fakturom",
       billingEmail: "b@primer.rs",
       country: "Srbija",
+      address: "Test ulica 1, Beograd",
       defaultCurrency: "EUR",
       defaultLang: "sr",
       defaultDueDays: 7,
@@ -94,6 +132,7 @@ describe("removeOrArchiveClient (spec 3.3/7.6)", () => {
       name: "Za arhivu",
       billingEmail: "c@primer.rs",
       country: "Srbija",
+      address: "Test ulica 1, Beograd",
       defaultCurrency: "EUR",
       defaultLang: "sr",
       defaultDueDays: 7,
@@ -123,6 +162,7 @@ describe("removeOrArchiveClient (spec 3.3/7.6)", () => {
       name: "Klijent B",
       billingEmail: "d@primer.rs",
       country: "Srbija",
+      address: "Test ulica 1, Beograd",
       defaultCurrency: "EUR",
       defaultLang: "sr",
       defaultDueDays: 7,
@@ -140,6 +180,7 @@ describe("updateClient", () => {
       name: "Original",
       billingEmail: "e@primer.rs",
       country: "Srbija",
+      address: "Test ulica 1, Beograd",
       defaultCurrency: "EUR",
       defaultLang: "sr",
       defaultDueDays: 7,
@@ -149,6 +190,7 @@ describe("updateClient", () => {
         name: "Izmenjeno",
         billingEmail: "e@primer.rs",
         country: "Srbija",
+        address: "Test ulica 1, Beograd",
         defaultCurrency: "EUR",
         defaultLang: "sr",
         defaultDueDays: 7,
@@ -160,39 +202,59 @@ describe("updateClient", () => {
   });
 });
 
-describe("validirajKlijentaPodatke (Korak 8b, PIB za domaćeg klijenta)", () => {
+describe("validirajKlijentaPodatke (Korak 8b ispravka 2026-11-25: naziv i adresa obavezni, ostalo opciono)", () => {
   const osnova: KlijentPodaci = {
     name: "Test klijent",
     billingEmail: "test@primer.rs",
     country: "Srbija",
+    address: "Test ulica 1, Beograd",
     defaultCurrency: "EUR",
     defaultLang: "sr",
     defaultDueDays: 7,
   };
 
-  it("ne zahteva PIB za inostranog (ne-RSD) klijenta", () => {
-    const greske = validirajKlijentaPodatke({ ...osnova, defaultCurrency: "EUR", pib: undefined });
-    expect(greske.pib).toBeUndefined();
+  it("prolazi sa samo nazivom i adresom (sve ostalo prazno)", () => {
+    const greske = validirajKlijentaPodatke({
+      ...osnova,
+      billingEmail: undefined,
+      country: "",
+      pib: undefined,
+    });
+    expect(Object.keys(greske)).toHaveLength(0);
   });
 
-  it("odbija domaćeg (RSD) klijenta bez PIB-a", () => {
-    const greske = validirajKlijentaPodatke({ ...osnova, defaultCurrency: "RSD", pib: undefined });
-    expect(greske.pib).toBeTruthy();
-  });
-
-  it("odbija domaćeg klijenta sa PIB-om koji ne prolazi kontrolnu cifru (ISO 7064 MOD 11,10)", () => {
-    const greske = validirajKlijentaPodatke({ ...osnova, defaultCurrency: "RSD", pib: "103445380" });
-    expect(greske.pib).toBeTruthy();
-  });
-
-  it("prihvata domaćeg klijenta sa ispravnim PIB-om", () => {
-    const greske = validirajKlijentaPodatke({ ...osnova, defaultCurrency: "RSD", pib: "103445385" });
-    expect(greske.pib).toBeUndefined();
-  });
-
-  it("i dalje zahteva naziv i ispravan mejl, nezavisno od valute", () => {
-    const greske = validirajKlijentaPodatke({ ...osnova, name: "", billingEmail: "nije-mejl" });
+  it("blokira kad nedostaje naziv", () => {
+    const greske = validirajKlijentaPodatke({ ...osnova, name: "" });
     expect(greske.name).toBeTruthy();
-    expect(greske.billingEmail).toBeTruthy();
+  });
+
+  it("blokira kad nedostaje adresa", () => {
+    const greske = validirajKlijentaPodatke({ ...osnova, address: "" });
+    expect(greske.address).toBeTruthy();
+  });
+
+  it("ne zahteva mejl ni za domaćeg ni za inostranog klijenta", () => {
+    expect(validirajKlijentaPodatke({ ...osnova, defaultCurrency: "EUR", billingEmail: undefined }).billingEmail).toBeUndefined();
+    expect(validirajKlijentaPodatke({ ...osnova, defaultCurrency: "RSD", billingEmail: undefined }).billingEmail).toBeUndefined();
+  });
+
+  it("validira format mejla SAMO kad je nešto uneto", () => {
+    expect(validirajKlijentaPodatke({ ...osnova, billingEmail: "nije-mejl" }).billingEmail).toBeTruthy();
+    expect(validirajKlijentaPodatke({ ...osnova, billingEmail: "ok@primer.rs" }).billingEmail).toBeUndefined();
+  });
+
+  it("ne zahteva PIB ni za domaćeg ni za inostranog klijenta - prazan PIB nije greška", () => {
+    expect(validirajKlijentaPodatke({ ...osnova, defaultCurrency: "EUR", pib: undefined }).pib).toBeUndefined();
+    expect(validirajKlijentaPodatke({ ...osnova, defaultCurrency: "RSD", pib: undefined }).pib).toBeUndefined();
+  });
+
+  it("proverava ispravnost PIB-a (ISO 7064 MOD 11,10) ČIM je unet, bez obzira na valutu", () => {
+    expect(validirajKlijentaPodatke({ ...osnova, defaultCurrency: "EUR", pib: "103445380" }).pib).toBeTruthy();
+    expect(validirajKlijentaPodatke({ ...osnova, defaultCurrency: "RSD", pib: "103445380" }).pib).toBeTruthy();
+  });
+
+  it("prihvata ispravan PIB", () => {
+    const greske = validirajKlijentaPodatke({ ...osnova, pib: "103445385" });
+    expect(greske.pib).toBeUndefined();
   });
 });

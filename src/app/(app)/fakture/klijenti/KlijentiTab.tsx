@@ -30,7 +30,7 @@ export function KlijentiTab({
     (k) =>
       !upit.trim() ||
       k.name.toLowerCase().includes(upit.toLowerCase()) ||
-      k.billingEmail.toLowerCase().includes(upit.toLowerCase()),
+      (k.billingEmail ?? "").toLowerCase().includes(upit.toLowerCase()),
   );
 
   const klijentUredjivanje = uredjivanje && uredjivanje !== "new" ? klijenti.find((k) => k.id === uredjivanje) ?? null : null;
@@ -147,7 +147,7 @@ export function KlijentiTab({
                       <td>
                         <div className={styles.klijentCelija}>
                           <span>{k.name}</span>
-                          <span className={styles.podnaslov}>{k.billingEmail}</span>
+                          {k.billingEmail && <span className={styles.podnaslov}>{k.billingEmail}</span>}
                         </div>
                       </td>
                       <td>{k.country}</td>
@@ -175,7 +175,7 @@ export function KlijentiTab({
                   <div className={styles.kartaGore}>
                     <div className={styles.klijentCelija}>
                       <span>{k.name}</span>
-                      <span className={styles.podnaslov}>{k.billingEmail}</span>
+                      {k.billingEmail && <span className={styles.podnaslov}>{k.billingEmail}</span>}
                     </div>
                     <IkonaTacke size={20} />
                   </div>
@@ -183,9 +183,7 @@ export function KlijentiTab({
                     {opisStavke(k) ?? <span className={styles.podnaslov}>Iznos se upisuje na fakturi</span>}
                   </span>
                   <div className={styles.kartaDole}>
-                    <span>
-                      {k.country}, {opisPodrazumevanog(k)}
-                    </span>
+                    <span>{k.country ? `${k.country}, ${opisPodrazumevanog(k)}` : opisPodrazumevanog(k)}</span>
                     <span>{k.poslednjaFaktura ? formatDatumSrpski(new Date(k.poslednjaFaktura)) : "Nema faktura"}</span>
                   </div>
                 </div>

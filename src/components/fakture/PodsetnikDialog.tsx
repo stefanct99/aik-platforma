@@ -20,7 +20,7 @@ export function PodsetnikDialog({
 }: {
   invoiceId: string;
   broj: string;
-  billingEmail: string;
+  billingEmail: string | null;
   jezik: "sr" | "en";
   onClose: () => void;
   onPoslato?: () => void;
@@ -45,7 +45,7 @@ export function PodsetnikDialog({
   return (
     <Modal naslov="Pošalji podsetnik" onClose={onClose}>
       <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-5)" }}>
-        <Polje label="Za" name="za" defaultValue={billingEmail} readOnly disabled />
+        <Polje label="Za" name="za" defaultValue={billingEmail ?? ""} readOnly disabled />
         <Polje label="Naslov" name="naslov" defaultValue={`Reminder: invoice ${broj}`} readOnly disabled />
         <div className={poljeStyles.polje}>
           <label htmlFor="poruka">Poruka</label>

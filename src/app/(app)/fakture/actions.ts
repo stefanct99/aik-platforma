@@ -92,10 +92,10 @@ function procitajKlijentPodatke(formData: FormData): KlijentPodaci {
   const itemAmount = String(formData.get("itemAmount") || "").trim();
   return {
     name: String(formData.get("name") || "").trim(),
-    billingEmail: String(formData.get("billingEmail") || "").trim(),
+    billingEmail: String(formData.get("billingEmail") || "").trim() || undefined,
     country: String(formData.get("country") || "").trim(),
     pib: String(formData.get("pib") || "").trim() || undefined,
-    address: String(formData.get("address") || "").trim() || undefined,
+    address: String(formData.get("address") || "").trim(),
     defaultCurrency: String(formData.get("defaultCurrency") || "EUR"),
     defaultLang: formData.get("defaultLang") === "en" ? "en" : "sr",
     defaultDueDays: Number(formData.get("defaultDueDays")) || 7,
@@ -110,7 +110,7 @@ function procitajKlijentPodatke(formData: FormData): KlijentPodaci {
 export type NoviKlijent = {
   id: string;
   name: string;
-  billingEmail: string;
+  billingEmail: string | null;
   defaultCurrency: string;
   defaultLang: "sr" | "en";
   defaultDueDays: number;
@@ -230,7 +230,7 @@ export async function sacuvajNacrtAction(
 
 export type SlanjeFaktureStanje = {
   id: string | null;
-  errors: Partial<Record<"clientId" | "items" | "dueDays", string>>;
+  errors: Partial<Record<"clientId" | "items" | "dueDays" | "email", string>>;
   posalji: {
     broj: string;
     klijentIme: string;
@@ -243,7 +243,9 @@ export type SlanjeFaktureStanje = {
 
 // "Pregledaj i pošalji" -> "Pošalji fakturu" (zadatak tačka 6): prvo potpuna validacija (spec/Fak19), pa
 // čuvanje (da faktura ima id/broj pre slanja), pa stvarno slanje (sendInvoice je samo po sebi bezbedno od
-// dvostrukog klika - videti komentar tamo).
+// dvostrukog klika - videti komentar tamo). "adresa" (zadatak Korak 8b ispravka, tačka 4): kad klijent
+// nema sačuvan mejl, ekran slanja šalje ručno upisanu adresu ovde - sendInvoice je koristi SAMO za ovu
+// poruku, ne menja trajno klijentov profil.
 export async function posaljiFakturuAction(
   postojeciId: string | null,
   _prethodnoStanje: SlanjeFaktureStanje,
@@ -251,6 +253,7 @@ export async function posaljiFakturuAction(
 ): Promise<SlanjeFaktureStanje> {
   const korisnik = await trenutniKorisnik();
   const podaci = procitajFakturuPodatke(formData);
+  const adresa = String(formData.get("adresa") || "").trim();
 
   const greske = validirajFakturuPolja({ clientId: podaci.clientId || null, items: podaci.items, dueDays: podaci.dueDays });
   if (Object.keys(greske).length > 0) return { id: postojeciId, errors: greske, posalji: null };
@@ -258,8 +261,8 @@ export async function posaljiFakturuAction(
   const sacuvano = await sacuvajNacrt(korisnik.id, postojeciId, podaci);
   if (!sacuvano.ok) return { id: postojeciId, errors: { clientId: sacuvano.razlog }, posalji: null };
 
-  const rezultat = await sendInvoice(korisnik.id, sacuvano.id);
-  if (!rezultat.ok) return { id: sacuvano.id, errors: { clientId: rezultat.razlog }, posalji: null };
+  const rezultat = await sendInvoice(korisnik.id, sacuvano.id, adresa);
+  if (!rezultat.ok) return { id: sacuvano.id, errors: { email: rezultat.razlog }, posalji: null };
 
   revalidatePath("/fakture");
   revalidatePath(`/fakture/${sacuvano.id}`);

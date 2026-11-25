@@ -26,7 +26,7 @@ import styles from "./InvoiceEditor.module.css";
 export type KlijentZaFakturu = {
   id: string;
   name: string;
-  billingEmail: string;
+  billingEmail: string | null;
   defaultCurrency: string;
   defaultLang: "sr" | "en";
   defaultDueDays: number;
@@ -397,7 +397,7 @@ export function InvoiceEditor({
                       <button key={k.id} type="button" className={styles.klijentRed} onClick={() => postaviIzKlijenta(k)}>
                         <span className={styles.klijentRedGlavno}>
                           <span>{k.name}</span>
-                          <span className={styles.klijentRedMejl}>{k.billingEmail}</span>
+                          {k.billingEmail && <span className={styles.klijentRedMejl}>{k.billingEmail}</span>}
                         </span>
                         <span className={styles.klijentRedOznaka}>{oznakaKlijentaUListi(k)}</span>
                       </button>
@@ -422,7 +422,7 @@ export function InvoiceEditor({
               )}
             </div>
 
-            {klijent && (
+            {klijent?.billingEmail && (
               <div className={styles.saljemNa}>
                 <span>
                   Šaljem na <b>{klijent.billingEmail}</b>

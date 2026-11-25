@@ -218,11 +218,14 @@ model Client {
   businessId String
   business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
 
+  // Obavezno (odluka vlasnika, Korak 8b ispravka, 2026-11-25 - PREGAZI spec 3.3 i prototip, koji su
+  // tražili i mejl): naziv i adresa. Sve ostalo (mejl, PIB, zemlja...) je opciono - prazno polje nikad
+  // ne sme da blokira čuvanje klijenta ni slanje fakture (videti src/lib/clients.ts).
   name         String
   country      String?
-  billingEmail String
+  billingEmail String?
   pib          String?
-  address      String?
+  address      String
 
   defaultCurrency  String       @default("EUR")
   defaultLang      String       @default("sr") // "sr" ili "en"

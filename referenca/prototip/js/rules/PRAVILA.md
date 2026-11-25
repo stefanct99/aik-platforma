@@ -432,6 +432,29 @@ telefon/emulator van ovog alata, "nije proveravano" uživo na fizičkom uređaju
 
 ---
 
+## 10. Klijent — obavezna polja (Korak 8b ispravka, 2026-11-25)
+
+**[ODLUČENO sa Stefanom, Korak 8b ispravka 2026-11-25 — PREGAZI spec 3.3 i prototip, koji su tražili i
+mejl.]** Ovo pravilo nema prototipski `js/rules/*.js` fajl (nije jedno od osam pravila iz Faze 0) - unet
+je direktno kao odluka vlasnika, bez izvršne specifikacije u prototipu. Dokumentovano ovde jer je
+korisnik eksplicitno tražio da se evidentira pored ostalih odluka koje PREGAZE raniji tekst.
+
+**Pravilo**: kod klijenta su obavezni SAMO naziv i adresa (jedno kombinovano tekstualno polje u pravoj
+platformi - ulica, mesto i poštanski broj su već u istom unosu, frejm Fak4 nema odvojena potpolja za njih).
+Mejl za fakture, PIB, država i sve ostalo su opcioni - prazno polje nikad ne blokira čuvanje klijenta ni
+slanje fakture. Ako je PIB unet, i dalje se proverava ISO 7064 MOD 11,10 (odeljak 9 iznad, `isValidPib`
+princip) bez obzira na valutu/zemlju klijenta - greška se prikazuje SAMO kad je uneti PIB pogrešan, nikad
+zato što je prazan.
+
+**Posledice u pravoj platformi** (`src/lib/clients.ts`, `validirajKlijentaPodatke`; `prisma/schema.prisma`,
+model `Client`): `billingEmail` je sad nullable kolona (migracija
+`20261125040000_client_adresa_obavezna_mejl_opcion`), `address` je obavezna (NOT NULL, ista migracija -
+bezbedno u jednom koraku jer nijedan postojeći red nije imao prazno `address` ni `billingEmail`). Ekran
+slanja fakture (Fak11) traži ručan unos adrese kad klijent nema sačuvan mejl, i ne dozvoljava slanje dok
+ta adresa nije ispravna - videti `src/lib/invoices.ts`, `sendInvoice`.
+
+---
+
 ## Rezime: svi nalazi (poznata ograničenja) iz Faze 0, na jednom mestu
 
 1. ~~Limit — pragovi 80/90/100 nisu pravilo, nego UI provera~~ **ISPRAVLJENO u Round 30** (odeljak 1):

@@ -246,7 +246,9 @@ export async function voidInvoice(
 
   if (obavestiMejlom) {
     const klijent = await prisma.client.findUnique({ where: { id: faktura.clientId } });
-    if (klijent) {
+    // Klijent bez sačuvanog mejla (zadatak Korak 8b ispravka) - nema kome da se pošalje, obaveštenje se
+    // tiho preskače (storniranje samo po sebi i dalje uspeva, to nije deo ovog zahteva).
+    if (klijent?.billingEmail) {
       await posaljiRazvojniMejl(
         klijent.billingEmail,
         `Faktura ${faktura.number} je stornirana`,
@@ -267,7 +269,7 @@ export async function sendReminder(userId: string, invoiceId: string): Promise<b
   await prisma.$transaction([
     prisma.invoiceEvent.create({ data: { invoiceId: faktura.id, tip: "podsetnik_poslat", datum: sad } }),
   ]);
-  if (klijent) {
+  if (klijent?.billingEmail) {
     await posaljiRazvojniMejl(
       klijent.billingEmail,
       `Reminder: invoice ${faktura.number}`,
@@ -377,11 +379,24 @@ export type SlanjeFaktureRezultat = { ok: true; podaci: SlanjePodaci } | { ok: f
 // šalje ponovo (bez dvostrukog mejla), ali se potvrda ipak vraća korisniku kao uspeh. Mejl servis još ne
 // postoji (zadatak, tačka 6) - koristi se ista razvojna funkcija kao svuda u aplikaciji (posaljiRazvojniMejl),
 // koja samo ispisuje "[RAZVOJNI REŽIM]" u terminal.
-export async function sendInvoice(userId: string, invoiceId: string): Promise<SlanjeFaktureRezultat> {
+// prijemnaAdresa (zadatak Korak 8b ispravka, tačka 4): kad klijent nema sačuvan mejl, ekran slanja trazi
+// RUČAN unos adrese pre slanja - ovde se samo koristi za TU jednu poruku, ne čuva se trajno na klijentu
+// (korisnik nije tražio da se profil klijenta menja usput).
+export async function sendInvoice(
+  userId: string,
+  invoiceId: string,
+  prijemnaAdresa?: string,
+): Promise<SlanjeFaktureRezultat> {
   const faktura = await nadjiFakturuKorisnika(userId, invoiceId);
   if (!faktura) return { ok: false, razlog: "Faktura ne postoji." };
   if (faktura.status !== "nacrt" && faktura.status !== "poslata") {
     return { ok: false, razlog: "Faktura ne može da se pošalje u ovom stanju." };
+  }
+
+  const postojeca = await prisma.invoice.findUniqueOrThrow({ where: { id: invoiceId }, include: { client: true } });
+  const adresaZaSlanje = postojeca.client.billingEmail?.trim() || prijemnaAdresa?.trim();
+  if (!adresaZaSlanje || !adresaZaSlanje.includes("@")) {
+    return { ok: false, razlog: "Klijent nema sačuvan mejl - upiši ispravnu adresu pre slanja." };
   }
 
   const sad = new Date();
@@ -403,7 +418,7 @@ export async function sendInvoice(userId: string, invoiceId: string): Promise<Sl
   if (faktura.status === "nacrt") {
     const imeFirme = `${(puna.business.ownerName || "").trim()} ${puna.business.name}`.trim();
     await posaljiRazvojniMejl(
-      puna.client.billingEmail,
+      adresaZaSlanje,
       `Invoice ${puna.number} from ${imeFirme}`,
       `Faktura ${puna.number} je poslata. PDF: /api/fakture/${puna.id}/pdf (razvojni režim: prilog se ne šalje stvarno).`,
     );
@@ -415,7 +430,7 @@ export async function sendInvoice(userId: string, invoiceId: string): Promise<Sl
       id: puna.id,
       broj: puna.number,
       klijentIme: puna.client.name,
-      billingEmail: puna.client.billingEmail,
+      billingEmail: adresaZaSlanje,
       ukupno: izracunajUkupno(puna.items),
       valuta: puna.currency,
       rok: rokFakture(puna.issueDate, puna.dueDays),

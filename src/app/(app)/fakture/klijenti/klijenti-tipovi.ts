@@ -1,10 +1,10 @@
 export type KlijentRed = {
   id: string;
   name: string;
-  billingEmail: string;
+  billingEmail: string | null;
   country: string | null;
   pib: string | null;
-  address: string | null;
+  address: string;
   defaultCurrency: string;
   defaultLang: string;
   defaultDueDays: number;

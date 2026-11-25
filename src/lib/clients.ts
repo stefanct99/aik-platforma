@@ -7,10 +7,10 @@ import { isValidPib } from "./identifiers";
 
 export type KlijentPodaci = {
   name: string;
-  billingEmail: string;
+  billingEmail?: string | null;
   country: string;
-  pib?: string;
-  address?: string;
+  pib?: string | null;
+  address: string;
   defaultCurrency: string;
   defaultLang: "sr" | "en";
   defaultDueDays: number;
@@ -21,20 +21,23 @@ export type KlijentPodaci = {
   fxMode?: "proknjizi" | "prodaj_deo" | "prodaj_sve";
 };
 
-export type GreskeKlijentaPodataka = Partial<Record<"name" | "billingEmail" | "pib", string>>;
+export type GreskeKlijentaPodataka = Partial<Record<"name" | "address" | "billingEmail" | "pib", string>>;
 
-// Validacija forme Klijent (Korak 8a tab Klijenti, Korak 8b modal "Novi klijent" iz forme fakture - ISTA
-// validacija, zadatak 8b tačka 4). PIB (ISO 7064 MOD 11,10) se proverava SAMO za domaćeg (dinarskog)
-// klijenta - "Tip (domaći dinarski ili inostrani)" je izvedeno iz defaultCurrency==="RSD" (videti komentar
-// na Client u schema.prisma). Za inostranog klijenta polje ostaje slobodno (spec 3.3: neobavezno).
+// Validacija forme Klijent (Korak 8a tab Klijenti, Korak 8b modal "Novi klijent" iz forme fakture, Korak 8b
+// ispravka 2026-11-25 - ISTA validacija svuda, bez dupliranja). Odluka vlasnika PREGAZI spec 3.3 i
+// prototip: obavezni su SAMO naziv i adresa (jedno kombinovano tekstualno polje u ovoj bazi - ulica,
+// mesto i poštanski broj su već u istom unosu, nema zasebnih potpolja za njih). Mejl, PIB, država i sve
+// ostalo su opcioni - prazno polje nikad ne blokira čuvanje. PIB se i dalje proverava (ISO 7064 MOD
+// 11,10) ČIM je unet, bez obzira na valutu/zemlju klijenta - ali SAMO kad nije prazan.
 export function validirajKlijentaPodatke(podaci: KlijentPodaci): GreskeKlijentaPodataka {
   const errors: GreskeKlijentaPodataka = {};
-  if (!podaci.name) errors.name = "Unesi naziv klijenta";
-  if (!podaci.billingEmail || !podaci.billingEmail.includes("@")) {
+  if (!podaci.name?.trim()) errors.name = "Unesi naziv klijenta";
+  if (!podaci.address?.trim()) errors.address = "Unesi adresu klijenta";
+  if (podaci.billingEmail?.trim() && !podaci.billingEmail.includes("@")) {
     errors.billingEmail = "Unesi ispravan mejl za fakture";
   }
-  if (podaci.defaultCurrency === "RSD" && !isValidPib(podaci.pib)) {
-    errors.pib = "Unesi ispravan PIB (9 cifara) za domaćeg klijenta.";
+  if (podaci.pib?.trim() && !isValidPib(podaci.pib)) {
+    errors.pib = "Uneti PIB nije ispravan (9 cifara, ISO 7064 MOD 11,10).";
   }
   return errors;
 }

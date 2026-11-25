@@ -225,7 +225,7 @@ describe("removeAccount: račun u upotrebi na nacrtu fakture traži zamenu", () 
     });
     const biznis = await prisma.business.findFirstOrThrow({ where: { ownerId: korisnik.id } });
     const klijent = await prisma.client.create({
-      data: { businessId: biznis.id, name: "Test klijent", billingEmail: "k@primer.rs" },
+      data: { businessId: biznis.id, name: "Test klijent", billingEmail: "k@primer.rs", address: "Test adresa 1" },
     });
     await prisma.invoice.create({
       data: {

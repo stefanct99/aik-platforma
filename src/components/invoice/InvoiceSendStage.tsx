@@ -69,8 +69,18 @@ export function InvoiceSendStage({
   const [kopijaMeni, setKopijaMeni] = useState(false);
   const [uToku, setUToku] = useState(false);
   const [greska, setGreska] = useState<string | null>(null);
+  // Klijent bez sačuvanog mejla (Korak 8b ispravka, tačka 4): "Za" se unosi ručno ovde, samo za OVU
+  // poruku - ne menja trajno profil klijenta (korisnik nije tražio da se čuva).
+  const [adresa, setAdresa] = useState(klijent?.billingEmail ?? "");
+  const [adresaGreska, setAdresaGreska] = useState<string | null>(null);
 
   async function posaljiKlik() {
+    const trim = adresa.trim();
+    if (!trim || !trim.includes("@")) {
+      setAdresaGreska("Upiši ispravnu adresu pre slanja.");
+      return;
+    }
+    setAdresaGreska(null);
     setUToku(true);
     setGreska(null);
     const fd = new FormData();
@@ -80,10 +90,15 @@ export function InvoiceSendStage({
     fd.set("dueDays", String(rokDana));
     fd.set("accountId", account?.id ?? "");
     fd.set("note", "");
+    fd.set("adresa", trim);
     fd.set("stavke", JSON.stringify(stavke.map((s) => ({ desc: s.desc, qty: s.qty, price: s.price / 100 }))));
 
     const rezultat = await posaljiFakturuAction(id, { id: null, errors: {}, posalji: null }, fd);
     setUToku(false);
+    if (rezultat.errors.email) {
+      setAdresaGreska(rezultat.errors.email);
+      return;
+    }
     const prvaGreska = Object.values(rezultat.errors)[0];
     if (prvaGreska) {
       setGreska(prvaGreska);
@@ -160,7 +175,13 @@ export function InvoiceSendStage({
               </div>
             )}
 
-            <Polje label="Za" defaultValue={klijent?.billingEmail ?? ""} />
+            <Polje
+              label="Za"
+              value={adresa}
+              onChange={(e) => setAdresa(e.target.value)}
+              error={adresaGreska ?? undefined}
+              placeholder={klijent?.billingEmail ? undefined : "Upiši mejl adresu"}
+            />
             <a href="#" className={styles.linkMali} onClick={(e) => e.preventDefault()}>
               + Dodaj još jednu adresu
             </a>

@@ -104,6 +104,8 @@ Proizvoljan broj računa, u bilo kojoj valuti, bez ograničenja [ODLUČENO]. Pol
 
 ### 3.3 Klijent (Client)
 
+[ODLUČENO sa Stefanom, Korak 8b ispravka, 2026-11-25 - PREGAZI tekst ispod i prototip o tome šta je obavezno: obavezni su SAMO naziv i adresa. Mejl za fakture, PIB, država i sve ostalo su opcioni - prazno polje nikad ne blokira čuvanje klijenta ni slanje fakture. Ako je PIB unet, proverava se ISO 7064 MOD 11,10 bez obzira na valutu/zemlju klijenta, greška se prikazuje samo kad je uneti PIB pogrešan. Videti PRAVILA.md, odeljak 10, i src/lib/clients.ts.]
+
 Naziv, država, mejl za fakture (billing mejl), adresa (ulica, mesto, poštanski broj, država), tip (domaći dinarski ili inostrani), podrazumevani podaci: valuta, jezik fakture (srpski, engleski), rok plaćanja u danima, račun za uplatu, opciono podrazumevana stavka (opis i iznos). Pravila obrade mejlova banke po klijentu (vidi 7.7). Poslednja faktura (izvedeno). Klijent bez faktura može da se obriše.
 
 ### 3.4 Faktura (Invoice)

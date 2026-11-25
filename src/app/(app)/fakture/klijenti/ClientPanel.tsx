@@ -122,7 +122,14 @@ export function ClientPanel({
               disabled={uToku}
             />
           </div>
-          <Polje label="Adresa" name="address" value={address} onChange={(e) => setAddress(e.target.value)} disabled={uToku} />
+          <Polje
+            label="Adresa"
+            name="address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            error={stanje.errors.address}
+            disabled={uToku}
+          />
         </div>
 
         <hr className={styles.linija} />

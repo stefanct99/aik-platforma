@@ -8,7 +8,7 @@ export type FakturaRed = {
   dueDays: number;
   clientId: string;
   clientName: string;
-  clientEmail: string;
+  clientEmail: string | null;
   total: number;
   paidDate: string | null;
 };

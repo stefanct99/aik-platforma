@@ -43,7 +43,7 @@ async function napraviKorisnikaSaFirmomIKlijentom() {
   });
   const biznis = await prisma.business.findFirstOrThrow({ where: { ownerId: korisnik.id } });
   const klijent = await prisma.client.create({
-    data: { businessId: biznis.id, name: "Test klijent", billingEmail: "klijent@primer.rs" },
+    data: { businessId: biznis.id, name: "Test klijent", billingEmail: "klijent@primer.rs", address: "Test adresa 1" },
   });
   return { korisnik, biznis, klijent };
 }
@@ -434,7 +434,7 @@ describe("pogledajSledeciBroj (Korak 8b)", () => {
     expect(predlog).toBe("1/26-5");
     // Pregled ne sme da rezerviše ništa - sledeća STVARNA faktura i dalje dobija 1.
     const stvarna = await createInvoiceWithHistory(biznis.id, {
-      clientId: (await prisma.client.create({ data: { businessId: biznis.id, name: "K", billingEmail: "k@primer.rs" } })).id,
+      clientId: (await prisma.client.create({ data: { businessId: biznis.id, name: "K", billingEmail: "k@primer.rs", address: "Test adresa 1" } })).id,
       currency: "EUR",
       lang: "sr",
       issueDate: new Date("2026-05-10T00:00:00.000Z"),
@@ -621,6 +621,48 @@ describe("sendInvoice (Korak 8b, spec 8.1/6.4)", () => {
     });
     const rezultat = await sendInvoice(korisnik.id, f.id);
     expect(rezultat.ok).toBe(false);
+  });
+});
+
+describe("sendInvoice - klijent bez sačuvanog mejla (Korak 8b ispravka, 2026-11-25)", () => {
+  it("odbija slanje bez ručno unete adrese kad klijent nema mejl", async () => {
+    const { korisnik, biznis } = await napraviKorisnikaSaFirmomIKlijentom();
+    const klijentBezMejla = await prisma.client.create({
+      data: { businessId: biznis.id, name: "Bez mejla", billingEmail: null, address: "Adresa 1" },
+    });
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijentBezMejla.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-09-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "Usluga", qty: 1, price: 1000 }],
+      status: "nacrt",
+    });
+    const rezultat = await sendInvoice(korisnik.id, f.id);
+    expect(rezultat.ok).toBe(false);
+  });
+
+  it("prolazi (nacrt, slanje) kad klijent nema mejl ali je ručno uneta ispravna adresa", async () => {
+    const { korisnik, biznis } = await napraviKorisnikaSaFirmomIKlijentom();
+    const klijentBezMejla = await prisma.client.create({
+      data: { businessId: biznis.id, name: "Bez mejla", billingEmail: null, address: "Adresa 1" },
+    });
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijentBezMejla.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-09-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "Usluga", qty: 1, price: 1000 }],
+      status: "nacrt",
+    });
+    const rezultat = await sendInvoice(korisnik.id, f.id, "rucno-uneto@primer.rs");
+    expect(rezultat.ok).toBe(true);
+    if (rezultat.ok) expect(rezultat.podaci.billingEmail).toBe("rucno-uneto@primer.rs");
+
+    const ucitana = await getInvoiceForUser(korisnik.id, f.id);
+    expect(ucitana?.status).toBe("poslata");
   });
 });
 

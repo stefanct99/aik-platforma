@@ -28,7 +28,7 @@ type Faktura = {
   dueDays: number;
   note: string | null;
   voidedAt: string | null;
-  client: { id: string; name: string; billingEmail: string; address: string | null; country: string | null };
+  client: { id: string; name: string; billingEmail: string | null; address: string; country: string | null };
   account: {
     bank: string;
     type: string;
@@ -185,8 +185,12 @@ export function InvoiceDetailView({
               <span className={styles.k}>Klijent</span>
               <span className={styles.v}>
                 {invoice.client.name}
-                <br />
-                <span className={styles.podnaslov}>{invoice.client.billingEmail}</span>
+                {invoice.client.billingEmail && (
+                  <>
+                    <br />
+                    <span className={styles.podnaslov}>{invoice.client.billingEmail}</span>
+                  </>
+                )}
               </span>
             </div>
             <div className={styles.kv}>
@@ -213,7 +217,11 @@ export function InvoiceDetailView({
               {invoice.events.map((d, i) => (
                 <div className={styles.linijaStavka} key={i}>
                   <span className={styles.t1}>
-                    {d.tip === "poslata" ? `Poslata na ${invoice.client.billingEmail}` : NAZIV_DOGADJAJA[d.tip] ?? d.tip}
+                    {d.tip === "poslata"
+                      ? invoice.client.billingEmail
+                        ? `Poslata na ${invoice.client.billingEmail}`
+                        : "Poslata"
+                      : (NAZIV_DOGADJAJA[d.tip] ?? d.tip)}
                   </span>
                   <span>{formatDatumSrpski(new Date(d.datum))}</span>
                 </div>

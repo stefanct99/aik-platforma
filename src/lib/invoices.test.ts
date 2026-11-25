@@ -6,9 +6,15 @@ import {
   createInvoiceWithHistory,
   getInvoiceForUser,
   markInvoicePaid,
+  pogledajSledeciBroj,
+  promeniBrojFakture,
   proveriJedinstvenostBroja,
   removeDraftInvoice,
+  sacuvajNacrt,
+  sendInvoice,
   sendReminder,
+  updateInvoiceWithItems,
+  validirajFakturuPolja,
   voidInvoice,
 } from "./invoices";
 
@@ -417,6 +423,318 @@ describe("removeDraftInvoice - vraćanje broja (spec 8.2)", () => {
       sentAt: new Date("2026-08-01T00:00:00.000Z"),
     });
     const rezultat = await removeDraftInvoice(korisnik.id, f.id);
+    expect(rezultat.ok).toBe(false);
+  });
+});
+
+describe("pogledajSledeciBroj (Korak 8b)", () => {
+  it("predlaže 1 kad brojač za tu godinu još ne postoji, bez upisa", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmomIKlijentom();
+    const predlog = await pogledajSledeciBroj(biznis.id, new Date("2026-05-10T00:00:00.000Z"));
+    expect(predlog).toBe("1/26-5");
+    // Pregled ne sme da rezerviše ništa - sledeća STVARNA faktura i dalje dobija 1.
+    const stvarna = await createInvoiceWithHistory(biznis.id, {
+      clientId: (await prisma.client.create({ data: { businessId: biznis.id, name: "K", billingEmail: "k@primer.rs" } })).id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-05-10T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "x", qty: 1, price: 100 }],
+      status: "nacrt",
+    });
+    expect(stvarna.number).toBe("1/26-5");
+  });
+
+  it("predlaže sledeći broj kad brojač već postoji", async () => {
+    const { biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-06-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "x", qty: 1, price: 100 }],
+      status: "nacrt",
+    });
+    const predlog = await pogledajSledeciBroj(biznis.id, new Date("2026-06-15T00:00:00.000Z"));
+    expect(predlog).toBe("2/26-6");
+  });
+});
+
+describe("validirajFakturuPolja (Korak 8b, spec 7.4/Fak19)", () => {
+  it("vraća grešku za klijenta kad nije izabran", () => {
+    const greske = validirajFakturuPolja({ clientId: null, items: [{ desc: "x", qty: 1, price: 100 }], dueDays: 7 });
+    expect(greske.clientId).toBeTruthy();
+    expect(greske.items).toBeUndefined();
+  });
+
+  it("vraća grešku za stavke kad nijedna nema opis i iznos > 0", () => {
+    const greske = validirajFakturuPolja({ clientId: "c1", items: [{ desc: "", qty: 1, price: 0 }], dueDays: 7 });
+    expect(greske.items).toBeTruthy();
+  });
+
+  it("prolazi kad je sve ispravno", () => {
+    const greske = validirajFakturuPolja({ clientId: "c1", items: [{ desc: "Usluga", qty: 1, price: 100 }], dueDays: 7 });
+    expect(Object.keys(greske)).toHaveLength(0);
+  });
+
+  it("vraća grešku za rok manji od 1 dana", () => {
+    const greske = validirajFakturuPolja({ clientId: "c1", items: [{ desc: "x", qty: 1, price: 100 }], dueDays: 0 });
+    expect(greske.dueDays).toBeTruthy();
+  });
+});
+
+describe("sacuvajNacrt i updateInvoiceWithItems (Korak 8b)", () => {
+  it("prvi poziv pravi novu fakturu (broj se rezerviše), drugi ažurira istu bez novog broja", async () => {
+    const { korisnik, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const prvi = await sacuvajNacrt(korisnik.id, null, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      dueDays: 7,
+      items: [{ desc: "Usluga", qty: 1, price: 1000 }],
+    });
+    expect(prvi.ok).toBe(true);
+    if (!prvi.ok) return;
+
+    const drugi = await sacuvajNacrt(korisnik.id, prvi.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      dueDays: 14,
+      items: [{ desc: "Usluga izmenjena", qty: 2, price: 2000 }],
+    });
+    expect(drugi.ok).toBe(true);
+    if (!drugi.ok) return;
+    expect(drugi.id).toBe(prvi.id);
+    expect(drugi.broj).toBe(prvi.broj); // broj se NE menja na običnom čuvanju
+
+    const ucitana = await getInvoiceForUser(korisnik.id, prvi.id);
+    expect(ucitana?.dueDays).toBe(14);
+    expect(ucitana?.items).toHaveLength(1);
+    expect(ucitana?.items[0].desc).toBe("Usluga izmenjena");
+    expect(ucitana?.items[0].qty).toBe(2);
+  });
+
+  it("updateInvoiceWithItems odbija izmenu plaćene ili stornirane fakture", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-08-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "x", qty: 1, price: 100 }],
+      status: "placena",
+      sentAt: new Date("2026-08-01T00:00:00.000Z"),
+      paidDate: new Date("2026-08-05T00:00:00.000Z"),
+    });
+    const rezultat = await updateInvoiceWithItems(korisnik.id, f.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      dueDays: 7,
+      items: [{ desc: "y", qty: 1, price: 200 }],
+    });
+    expect(rezultat.ok).toBe(false);
+  });
+
+  it("izolacija: korisnik A ne može da sačuva nacrt preko id-a fakture korisnika B", async () => {
+    const a = await napraviKorisnikaSaFirmomIKlijentom();
+    const b = await napraviKorisnikaSaFirmomIKlijentom();
+    const fB = await createInvoiceWithHistory(b.biznis.id, {
+      clientId: b.klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-08-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "x", qty: 1, price: 100 }],
+      status: "nacrt",
+    });
+    const rezultat = await sacuvajNacrt(a.korisnik.id, fB.id, {
+      clientId: a.klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      dueDays: 7,
+      items: [{ desc: "y", qty: 1, price: 200 }],
+    });
+    expect(rezultat.ok).toBe(false);
+  });
+});
+
+describe("sendInvoice (Korak 8b, spec 8.1/6.4)", () => {
+  it("prebacuje nacrt u poslata, beleži istoriju i vraća podatke za potvrdu", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-09-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "Usluga", qty: 2, price: 1000 }],
+      status: "nacrt",
+    });
+    const rezultat = await sendInvoice(korisnik.id, f.id);
+    expect(rezultat.ok).toBe(true);
+    if (!rezultat.ok) return;
+    expect(rezultat.podaci.ukupno).toBe(2000);
+    expect(rezultat.podaci.billingEmail).toBe(klijent.billingEmail);
+
+    const ucitana = await getInvoiceForUser(korisnik.id, f.id);
+    expect(ucitana?.status).toBe("poslata");
+    expect(ucitana?.sentAt).not.toBeNull();
+    const dogadjaji = await prisma.invoiceEvent.findMany({ where: { invoiceId: f.id } });
+    expect(dogadjaji.filter((d) => d.tip === "poslata")).toHaveLength(1);
+  });
+
+  it("bezbedno od dvostrukog slanja: drugi poziv ne pravi duplu istoriju, i dalje vraća uspeh", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-09-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "Usluga", qty: 1, price: 1000 }],
+      status: "nacrt",
+    });
+    const [prvi, drugi] = await Promise.all([sendInvoice(korisnik.id, f.id), sendInvoice(korisnik.id, f.id)]);
+    expect(prvi.ok).toBe(true);
+    expect(drugi.ok).toBe(true);
+
+    const dogadjaji = await prisma.invoiceEvent.findMany({ where: { invoiceId: f.id, tip: "poslata" } });
+    expect(dogadjaji).toHaveLength(1); // ne dva - nema duplog mejla/istorije
+  });
+
+  it("odbija slanje stornirane fakture", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-09-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "x", qty: 1, price: 100 }],
+      status: "stornirana",
+      sentAt: new Date("2026-09-01T00:00:00.000Z"),
+      voidedAt: new Date("2026-09-02T00:00:00.000Z"),
+    });
+    const rezultat = await sendInvoice(korisnik.id, f.id);
+    expect(rezultat.ok).toBe(false);
+  });
+});
+
+describe("promeniBrojFakture (Korak 8b, spec 8.2, ručna izmena)", () => {
+  it("menja broj kad je format ispravan i broj slobodan", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-05-10T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "x", qty: 1, price: 100 }],
+      status: "nacrt",
+    });
+    const rezultat = await promeniBrojFakture(korisnik.id, f.id, "50/26-5");
+    expect(rezultat.ok).toBe(true);
+    const ucitana = await getInvoiceForUser(korisnik.id, f.id);
+    expect(ucitana?.number).toBe("50/26-5");
+  });
+
+  it("odbija broj sa pogrešnim formatom", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-05-10T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "x", qty: 1, price: 100 }],
+      status: "nacrt",
+    });
+    const rezultat = await promeniBrojFakture(korisnik.id, f.id, "nije-broj");
+    expect(rezultat.ok).toBe(false);
+  });
+
+  it("odbija godinu/mesec koji se ne poklapaju sa stvarnim datumom izdavanja", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-05-10T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "x", qty: 1, price: 100 }],
+      status: "nacrt",
+    });
+    const rezultat = await promeniBrojFakture(korisnik.id, f.id, "5/27-5");
+    expect(rezultat.ok).toBe(false);
+  });
+
+  it("odbija broj koji je već zauzet drugom fakturom iste firme", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const prva = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-05-10T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "x", qty: 1, price: 100 }],
+      status: "nacrt",
+    });
+    const druga = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-05-20T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "x", qty: 1, price: 100 }],
+      status: "nacrt",
+    });
+    const rezultat = await promeniBrojFakture(korisnik.id, druga.id, prva.number);
+    expect(rezultat.ok).toBe(false);
+  });
+
+  it("pomera brojač unapred kad je ručno unet broj veći od trenutnog - budući auto-broj se ne sudara", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-05-10T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "x", qty: 1, price: 100 }],
+      status: "nacrt",
+    });
+    await promeniBrojFakture(korisnik.id, f.id, "10/26-5");
+
+    const sledeca = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-05-21T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "y", qty: 1, price: 100 }],
+      status: "nacrt",
+    });
+    expect(sledeca.number).toBe("11/26-5"); // ne "2/26-5" - brojač je pomeren posle ručne izmene
+  });
+
+  it("odbija promenu broja na plaćenoj fakturi", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-05-10T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "x", qty: 1, price: 100 }],
+      status: "placena",
+      sentAt: new Date("2026-05-10T00:00:00.000Z"),
+      paidDate: new Date("2026-05-15T00:00:00.000Z"),
+    });
+    const rezultat = await promeniBrojFakture(korisnik.id, f.id, "99/26-5");
     expect(rezultat.ok).toBe(false);
   });
 });

@@ -3,7 +3,15 @@ import { afterAll, describe, expect, it } from "vitest";
 import { prisma } from "./prisma";
 import { saveOnboardingStep1 } from "./business";
 import { createInvoiceWithHistory } from "./invoices";
-import { createClient, getClientsForUser, imaFaktura, removeOrArchiveClient, updateClient } from "./clients";
+import {
+  createClient,
+  getClientsForUser,
+  imaFaktura,
+  removeOrArchiveClient,
+  updateClient,
+  validirajKlijentaPodatke,
+  type KlijentPodaci,
+} from "./clients";
 
 const napravljeniKorisnici: string[] = [];
 
@@ -149,5 +157,42 @@ describe("updateClient", () => {
 
     const ucitan = await prisma.client.findUnique({ where: { id: klijentB.id } });
     expect(ucitan?.name).toBe("Original");
+  });
+});
+
+describe("validirajKlijentaPodatke (Korak 8b, PIB za domaćeg klijenta)", () => {
+  const osnova: KlijentPodaci = {
+    name: "Test klijent",
+    billingEmail: "test@primer.rs",
+    country: "Srbija",
+    defaultCurrency: "EUR",
+    defaultLang: "sr",
+    defaultDueDays: 7,
+  };
+
+  it("ne zahteva PIB za inostranog (ne-RSD) klijenta", () => {
+    const greske = validirajKlijentaPodatke({ ...osnova, defaultCurrency: "EUR", pib: undefined });
+    expect(greske.pib).toBeUndefined();
+  });
+
+  it("odbija domaćeg (RSD) klijenta bez PIB-a", () => {
+    const greske = validirajKlijentaPodatke({ ...osnova, defaultCurrency: "RSD", pib: undefined });
+    expect(greske.pib).toBeTruthy();
+  });
+
+  it("odbija domaćeg klijenta sa PIB-om koji ne prolazi kontrolnu cifru (ISO 7064 MOD 11,10)", () => {
+    const greske = validirajKlijentaPodatke({ ...osnova, defaultCurrency: "RSD", pib: "103445380" });
+    expect(greske.pib).toBeTruthy();
+  });
+
+  it("prihvata domaćeg klijenta sa ispravnim PIB-om", () => {
+    const greske = validirajKlijentaPodatke({ ...osnova, defaultCurrency: "RSD", pib: "103445385" });
+    expect(greske.pib).toBeUndefined();
+  });
+
+  it("i dalje zahteva naziv i ispravan mejl, nezavisno od valute", () => {
+    const greske = validirajKlijentaPodatke({ ...osnova, name: "", billingEmail: "nije-mejl" });
+    expect(greske.name).toBeTruthy();
+    expect(greske.billingEmail).toBeTruthy();
   });
 });

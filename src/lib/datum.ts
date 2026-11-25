@@ -46,3 +46,12 @@ export function pocetakDanaUtc(datum: Date = new Date()): Date {
   d.setUTCHours(0, 0, 0, 0);
   return d;
 }
+
+// Korak 8b (Nova faktura): indikator automatskog čuvanja nacrta ("Nacrt, sačuvano u 16:52", frejm Fak8a
+// zbirna ispravka ga ne pominje, ali spec 7.4 traži tačno ovaj oblik sata) - lokalno vreme servera
+// (razvojno okruženje, jedna vremenska zona), ne UTC kao datumi iznad.
+export function formatVremeSrpski(datum: Date): string {
+  const sat = String(datum.getHours()).padStart(2, "0");
+  const minut = String(datum.getMinutes()).padStart(2, "0");
+  return `${sat}:${minut}`;
+}

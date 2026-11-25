@@ -1,14 +1,14 @@
 "use client";
 
 import { IkonaMesec, IkonaSunce } from "@/components/auth-shell/auth-icons";
-import { useTemaPrekidac } from "@/components/app-shell/use-tema-prekidac";
+import { useTemaPrekidac } from "./use-tema-prekidac";
 import styles from "@/components/auth-shell/ThemeTogglePill.module.css";
 
-// Za razliku od pre-login ThemeTogglePill (Korak 5, localStorage), ovde korisnik VEĆ ima sesiju, pa
-// klik odmah i trajno čuva temu preko iste akcije kao Podešavanja > Jezik i izgled (useTemaPrekidac,
-// deljeno i sa gornjom trakom aplikacije - Korak 8a) - nema potrebe za localStorage ni blokirajućom
-// skriptom, tema je već tačna iz SSR-a (videti OnboardingShell, koji postavlja TemaProvider).
-export function OnboardingThemeTogglePill() {
+// Plutajuća pilula (fiksno dole desno), za SVAKI ceo ekran koji nema gornju traku aplikacije (TopBar) sa
+// svojim ugrađenim prekidačem - pre-login ekrani (auth-shell), onboarding, i Nova faktura/Izmena (Korak
+// 8b, frejm Fak3/Fak11/Fak12 "position:absolute;bottom:24px;right:24px", potvrđeno i na telefonu).
+// Deli isto stanje (useTemaPrekidac/TemaContext) kao TopBar i Podešavanja, bez duple logike.
+export function FixedThemeTogglePill() {
   const { efektivnoTamno, izaberi } = useTemaPrekidac();
 
   return (

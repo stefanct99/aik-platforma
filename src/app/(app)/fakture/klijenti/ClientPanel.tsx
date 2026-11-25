@@ -5,7 +5,7 @@ import { useActionState, useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Polje } from "@/components/ui/Polje";
 import { SidePanel } from "@/components/ui/SidePanel";
-import { dodajKlijentaAction, izmeniKlijentaAction, type KlijentStanje } from "../actions";
+import { dodajKlijentaAction, izmeniKlijentaAction, type KlijentStanje, type NoviKlijent } from "../actions";
 import type { KlijentRed } from "./klijenti-tipovi";
 import styles from "./ClientPanel.module.css";
 
@@ -33,7 +33,7 @@ export function ClientPanel({
   klijent: KlijentRed | null;
   racuni: { id: string; currency: string; bank: string; iban: string | null; number: string | null }[];
   onClose: () => void;
-  onSaved: () => void;
+  onSaved: (noviKlijent?: NoviKlijent) => void;
   onObrisi?: () => void;
 }) {
   const isNew = !klijent;
@@ -45,8 +45,25 @@ export function ClientPanel({
   const [autoSendMode, setAutoSendMode] = useState(klijent?.autoSendMode ?? "nasledi");
   const [fxMode, setFxMode] = useState(klijent?.fxMode ?? "proknjizi");
 
+  // Kontrolisana polja (Korak 8b, otkriveno uzgred dok se gradio modal "Novi klijent" u formi fakture):
+  // React 19 posle svake izmene stanja iz <form action={...}> SAMA vraća nekontrolisana polja (ona sa
+  // samo defaultValue) na početnu vrednost - i kad akcija uspe, i kad vrati greške. Dok su polja bila
+  // nekontrolisana, neuspela validacija (npr. PIB) je brisala sve što je korisnik otkucao, uključujući
+  // Naziv i Mejl - prava greška, ne nešto namerno. Ispravljeno ovde (u 8b, jer je modal iz forme fakture
+  // prvi put stvarno isprobao ponovnu validaciju), važi i za postojeći tab Klijenti (ista komponenta).
+  const [name, setName] = useState(klijent?.name ?? "");
+  const [billingEmail, setBillingEmail] = useState(klijent?.billingEmail ?? "");
+  const [country, setCountry] = useState(klijent?.country ?? "");
+  const [pib, setPib] = useState(klijent?.pib ?? "");
+  const [address, setAddress] = useState(klijent?.address ?? "");
+  const [itemDesc, setItemDesc] = useState(klijent?.defaultItemDesc ?? "");
+  const [itemAmount, setItemAmount] = useState(
+    klijent?.defaultItemAmount != null ? String(klijent.defaultItemAmount / 100) : "",
+  );
+  const [defaultDueDays, setDefaultDueDays] = useState(String(klijent?.defaultDueDays ?? 7));
+
   useEffect(() => {
-    if (stanje.sacuvano) onSaved();
+    if (stanje.sacuvano) onSaved(stanje.klijent);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stanje.sacuvano]);
 
@@ -75,21 +92,37 @@ export function ClientPanel({
       >
         <div className={styles.sekcija}>
           <span className={styles.naslovSekcije}>Podaci o klijentu</span>
-          <Polje label="Naziv klijenta" name="name" defaultValue={klijent?.name} error={stanje.errors.name} disabled={uToku} />
+          <Polje
+            label="Naziv klijenta"
+            name="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            error={stanje.errors.name}
+            disabled={uToku}
+          />
           <Polje
             label="Mejl za fakture"
             name="billingEmail"
             type="email"
             hint="Fakture šaljem na ovu adresu."
-            defaultValue={klijent?.billingEmail}
+            value={billingEmail}
+            onChange={(e) => setBillingEmail(e.target.value)}
             error={stanje.errors.billingEmail}
             disabled={uToku}
           />
           <div className={styles.red}>
-            <Polje label="Država" name="country" defaultValue={klijent?.country ?? ""} disabled={uToku} />
-            <Polje label="PIB ili VAT" name="pib" defaultValue={klijent?.pib ?? ""} placeholder="–" disabled={uToku} />
+            <Polje label="Država" name="country" value={country} onChange={(e) => setCountry(e.target.value)} disabled={uToku} />
+            <Polje
+              label="PIB ili VAT"
+              name="pib"
+              value={pib}
+              onChange={(e) => setPib(e.target.value)}
+              error={stanje.errors.pib}
+              placeholder="–"
+              disabled={uToku}
+            />
           </div>
-          <Polje label="Adresa" name="address" defaultValue={klijent?.address ?? ""} disabled={uToku} />
+          <Polje label="Adresa" name="address" value={address} onChange={(e) => setAddress(e.target.value)} disabled={uToku} />
         </div>
 
         <hr className={styles.linija} />
@@ -137,7 +170,8 @@ export function ClientPanel({
             name="defaultDueDays"
             type="number"
             min={1}
-            defaultValue={klijent?.defaultDueDays ?? 7}
+            value={defaultDueDays}
+            onChange={(e) => setDefaultDueDays(e.target.value)}
             disabled={uToku}
           />
 
@@ -173,7 +207,8 @@ export function ClientPanel({
                 className={styles.unosProst}
                 name="itemDesc"
                 placeholder="Opis"
-                defaultValue={klijent?.defaultItemDesc ?? ""}
+                value={itemDesc}
+                onChange={(e) => setItemDesc(e.target.value)}
                 disabled={uToku}
               />
               <input
@@ -182,7 +217,8 @@ export function ClientPanel({
                 type="number"
                 step="0.01"
                 placeholder="Cena"
-                defaultValue={klijent?.defaultItemAmount != null ? klijent.defaultItemAmount / 100 : ""}
+                value={itemAmount}
+                onChange={(e) => setItemAmount(e.target.value)}
                 disabled={uToku}
               />
             </div>

@@ -3,6 +3,7 @@
 
 import { prisma } from "./prisma";
 import { getBusinessForUser } from "./business";
+import { isValidPib } from "./identifiers";
 
 export type KlijentPodaci = {
   name: string;
@@ -19,6 +20,24 @@ export type KlijentPodaci = {
   autoSendMode?: "nasledi" | "ask" | "auto";
   fxMode?: "proknjizi" | "prodaj_deo" | "prodaj_sve";
 };
+
+export type GreskeKlijentaPodataka = Partial<Record<"name" | "billingEmail" | "pib", string>>;
+
+// Validacija forme Klijent (Korak 8a tab Klijenti, Korak 8b modal "Novi klijent" iz forme fakture - ISTA
+// validacija, zadatak 8b tačka 4). PIB (ISO 7064 MOD 11,10) se proverava SAMO za domaćeg (dinarskog)
+// klijenta - "Tip (domaći dinarski ili inostrani)" je izvedeno iz defaultCurrency==="RSD" (videti komentar
+// na Client u schema.prisma). Za inostranog klijenta polje ostaje slobodno (spec 3.3: neobavezno).
+export function validirajKlijentaPodatke(podaci: KlijentPodaci): GreskeKlijentaPodataka {
+  const errors: GreskeKlijentaPodataka = {};
+  if (!podaci.name) errors.name = "Unesi naziv klijenta";
+  if (!podaci.billingEmail || !podaci.billingEmail.includes("@")) {
+    errors.billingEmail = "Unesi ispravan mejl za fakture";
+  }
+  if (podaci.defaultCurrency === "RSD" && !isValidPib(podaci.pib)) {
+    errors.pib = "Unesi ispravan PIB (9 cifara) za domaćeg klijenta.";
+  }
+  return errors;
+}
 
 export async function getClientsForUser(userId: string, ukljuciArhivirane = false) {
   const biznis = await getBusinessForUser(userId);

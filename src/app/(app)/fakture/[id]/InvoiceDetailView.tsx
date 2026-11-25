@@ -76,8 +76,8 @@ export function InvoiceDetailView({
   }
 
   const menuItems: StavkaMenija[] = [
-    { kljuc: "izmeni", tekst: "Izmeni fakturu", href: "/fakture/nova" },
-    { kljuc: "dupliraj", tekst: "Dupliraj fakturu", href: "/fakture/nova" },
+    { kljuc: "izmeni", tekst: "Izmeni fakturu", href: `/fakture/izmeni/${invoice.id}` },
+    { kljuc: "dupliraj", tekst: "Dupliraj fakturu", href: `/fakture/nova?dupliraj=${invoice.id}` },
     { kljuc: "pdf", tekst: "Preuzmi PDF", href: `/api/fakture/${invoice.id}/pdf` },
     { kljuc: "ponavljajuca", tekst: "Napravi ponavljajuću od ove", href: "/fakture/ponavljajuce" },
     { kljuc: "storno", tekst: "Storniraj fakturu", opasno: true, onClick: () => setModal("storno") },
@@ -119,7 +119,7 @@ export function InvoiceDetailView({
         <div className={styles.akcije}>
           {efektivni === "nacrt" && (
             <>
-              <Button varijanta="primarno" onClick={() => router.push("/fakture/nova")}>
+              <Button varijanta="primarno" onClick={() => router.push(`/fakture/izmeni/${invoice.id}`)}>
                 Nastavi uređivanje
               </Button>
               <Button

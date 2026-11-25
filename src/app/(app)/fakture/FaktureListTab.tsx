@@ -163,7 +163,7 @@ export function FaktureListTab({ redovi, danasIso }: { redovi: FakturaRed[]; dan
   function stavkeMenija(red: Prosireni): StavkaMenija[] {
     if (red.efektivni === "nacrt") {
       return [
-        { kljuc: "nastavi", tekst: "Nastavi uređivanje", href: "/fakture/nova" },
+        { kljuc: "nastavi", tekst: "Nastavi uređivanje", href: `/fakture/izmeni/${red.id}` },
         {
           kljuc: "obrisi",
           tekst: "Obriši",
@@ -177,8 +177,10 @@ export function FaktureListTab({ redovi, danasIso }: { redovi: FakturaRed[]; dan
     }
     const stavke: StavkaMenija[] = [
       { kljuc: "otvori", tekst: "Otvori", href: `/fakture/${red.id}` },
-      { kljuc: "dupliraj", tekst: "Dupliraj", href: "/fakture/nova" },
+      { kljuc: "dupliraj", tekst: "Dupliraj", href: `/fakture/nova?dupliraj=${red.id}` },
       { kljuc: "pdf", tekst: "Preuzmi PDF", href: `/api/fakture/${red.id}/pdf` },
+      // "Pošalji ponovo" i dalje vodi na praznu formu (nasleđeno iz 8a) - stvarno ponovno slanje nije u
+      // obimu Koraka 8b (videti izveštaj, tačka "šta ostaje otvoreno").
       { kljuc: "posalji", tekst: "Pošalji ponovo", href: "/fakture/nova" },
     ];
     if (red.efektivni !== "placena") {

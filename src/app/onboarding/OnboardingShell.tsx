@@ -7,7 +7,7 @@ import type { ReactNode } from "react";
 import { Wordmark } from "@/components/ui/Wordmark";
 import type { Tema } from "@/lib/theme";
 import { TemaProvider } from "@/components/app-shell/TemaContext";
-import { OnboardingThemeTogglePill } from "./OnboardingThemeTogglePill";
+import { FixedThemeTogglePill } from "@/components/app-shell/FixedThemeTogglePill";
 import styles from "./OnboardingShell.module.css";
 
 export function OnboardingShell({
@@ -53,7 +53,7 @@ export function OnboardingShell({
           <a href="/privatnost">Privatnost</a>
           <a href="/pomoc">Pomoć</a>
         </div>
-        <OnboardingThemeTogglePill />
+        <FixedThemeTogglePill />
       </TemaProvider>
     </div>
   );

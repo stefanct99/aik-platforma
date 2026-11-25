@@ -1,0 +1,532 @@
+/* Nova faktura / izmena (Korak 8b, frejm Fak3 i dalje) - pun ekran, BEZ Sidebar/TopBar (frejm nema meni).
+   Desktop: dve kolone (forma 720px fiksno, pregled popunjava ostatak - frejm "width:720px;flex:none").
+   Telefon (<1024px, isti prag kao ostatak aplikacije): jedna kolona, pregled je kartica UNUTAR iste
+   forme/skrola (frejm PhFak3 - NE poseban ekran/sheet kako prototip radi, videti izveštaj). */
+
+.omot {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: var(--color-bg);
+  overflow-y: auto;
+}
+
+.red {
+  display: flex;
+  min-height: 100%;
+}
+
+.formaKolona {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+}
+
+.gornjaTraka {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  padding: 0 var(--space-6);
+}
+
+.zatvoriPilula,
+.nazadPilula {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 40px;
+  padding: 0 14px 0 10px;
+  border-radius: 9999px;
+  border: 1px solid var(--color-border-input);
+  background: var(--color-surface);
+  font-size: 1rem;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.statusPilula {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 9999px;
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.telo {
+  flex: 1;
+  box-sizing: border-box;
+  padding: 0 var(--space-6) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.naslov {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: -0.025em;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.banerGreska,
+.upozorenjePoslata {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-card);
+  background: var(--color-alert-danger-bg);
+  color: var(--color-alert-danger-text);
+  font-size: 0.875rem;
+}
+
+.upozorenjePoslata {
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+}
+
+.poljeOmot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.labela {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.kombo,
+.unosProst {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  height: 44px;
+  padding: 0 14px;
+  box-sizing: border-box;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-input);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 1rem;
+  font-family: var(--font-body);
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+}
+
+.unosProst {
+  cursor: text;
+}
+
+.unosProst:disabled {
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  cursor: default;
+}
+
+.komboTekst {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+select.kombo {
+  appearance: none;
+}
+
+.noviKlijentGore {
+  align-self: flex-end;
+  margin-top: -28px;
+}
+.noviKlijentGore a,
+.linkMali {
+  font-size: 0.875rem;
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.padajuciKlijent,
+.padajuciMali {
+  position: absolute;
+  top: 72px;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-overlay);
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.pretragaKlijenta {
+  height: 40px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-input);
+  background: var(--color-bg);
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+}
+
+.klijentRed,
+.padajuciMali button,
+.noviKlijentDole {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: none;
+  border: 0;
+  text-align: left;
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 0.9375rem;
+}
+
+.klijentRed:hover,
+.padajuciMali button:hover,
+.noviKlijentDole:hover {
+  background: var(--color-bg);
+}
+
+.klijentRedGlavno {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.klijentRedMejl {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+.klijentRedOznaka {
+  flex: none;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.noviKlijentDole {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  border-top: 1px solid var(--color-border);
+  margin-top: var(--space-1);
+}
+
+.poljeGreska,
+.poljeGreskaTekst {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.8125rem;
+  color: var(--color-danger);
+}
+
+.saljemNa {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: -6px;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.hintTekst {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.redPolja {
+  display: flex;
+  gap: var(--space-3);
+}
+.redPolja > .poljeOmot {
+  flex: 1;
+  min-width: 0;
+}
+
+.segmentiran {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 9px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-input);
+  height: 44px;
+  box-sizing: border-box;
+}
+.segmentiran button {
+  flex: 1;
+  border-radius: 6px;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+}
+.segmentiran .aktivno {
+  background: var(--color-text);
+  color: var(--color-bg);
+}
+
+.karticaStavke {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.naslovSekcije {
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+.zaglavljeStavki {
+  display: flex;
+  gap: var(--space-3);
+  padding-bottom: var(--space-2);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.redStavke {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.stOpis {
+  flex: 1;
+  min-width: 0;
+}
+.stKol {
+  width: 48px;
+  text-align: right;
+  flex: none;
+}
+.stCena {
+  width: 88px;
+  text-align: right;
+  flex: none;
+}
+.stIznos {
+  width: 96px;
+  text-align: right;
+  flex: none;
+}
+.stIznosPrikaz {
+  width: 96px;
+  text-align: right;
+  flex: none;
+  font-size: 1rem;
+}
+
+.redStavke .unosProst {
+  height: 40px;
+}
+
+.ukloniStavku {
+  flex: none;
+  width: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.dodajStavku {
+  align-self: flex-start;
+  background: none;
+  border: 0;
+  padding: var(--space-2) 0;
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.redUkupno {
+  display: flex;
+  justify-content: space-between;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-border);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+.redUkupnoGlavni {
+  font-size: 1.125rem;
+  color: var(--color-text);
+}
+
+.pregledMobilni {
+  display: none;
+}
+
+.papirOmotMobilni {
+  display: flex;
+  justify-content: center;
+}
+.papirSkaliranMobilni {
+  width: 301px;
+  height: 426px;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-overlay);
+}
+.papirSkaliranMobilni > * {
+  transform: scale(0.627);
+  transform-origin: 0 0;
+}
+
+.dugmad {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.promeniIzgledLink {
+  margin-right: auto;
+  font-size: 0.875rem;
+  color: var(--color-text);
+}
+
+.pregledKolona {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  background: var(--color-bg);
+}
+
+.pregledNatpis {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+.pregledNatpis a {
+  color: var(--color-text);
+}
+
+.papirOmot {
+  display: flex;
+  justify-content: center;
+}
+
+.dijalogTelo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.dijalogTelo p {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+.dijalogDugmad {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+@media (max-width: 1023px) {
+  .red {
+    flex-direction: column;
+  }
+  .gornjaTraka {
+    padding: 0 var(--space-4);
+    height: 56px;
+  }
+  .telo {
+    padding: 0 var(--space-4) var(--space-5);
+  }
+  .statusPilula span:first-child {
+    display: none;
+  }
+  .pregledKolona {
+    display: none;
+  }
+  .pregledMobilni {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    box-sizing: border-box;
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border-radius: var(--radius-card);
+    border: 1px solid var(--color-border);
+  }
+  .dugmad {
+    position: sticky;
+    bottom: 0;
+    background: var(--color-surface);
+    margin: 0 calc(var(--space-4) * -1) calc(var(--space-4) * -1);
+    padding: var(--space-3) var(--space-4) var(--space-5);
+    flex-direction: column;
+  }
+  .promeniIzgledLink {
+    order: 3;
+    text-align: center;
+    margin-right: 0;
+  }
+
+  /* Red stavke (Opis/Kol./Cena/Iznos) u jednom redu je na 390px necitljivo uzak (okviri za ovaj TAČAN
+     slučaj - prazan/uređiv red stavke na telefonu - ne postoje; pokazuju samo već popunjen prikaz u
+     stilu teksta, ne polja za unos). Razumno rešenje: Opis u svom redu preko cele širine, Kol./Cena/
+     Iznos ispod u drugom redu - navedeno u izveštaju kao mesto gde sam morao da odlučim sam. */
+  .zaglavljeStavki {
+    display: none;
+  }
+  .redStavke {
+    flex-wrap: wrap;
+  }
+  .stOpis {
+    flex: 1 1 100%;
+    order: 1;
+  }
+  .stKol {
+    order: 2;
+    width: 56px;
+  }
+  .stCena {
+    order: 3;
+    width: 100px;
+  }
+  .stIznosPrikaz {
+    order: 4;
+    flex: 1;
+    width: auto;
+  }
+  .ukloniStavku {
+    order: 5;
+  }
+}

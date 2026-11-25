@@ -5,9 +5,40 @@
 import { prisma } from "./prisma";
 import { getBusinessForUser } from "./business";
 import { formatBrojFakture, parseBrojFakture } from "./invoice-numbering";
+import { izracunajUkupno, rokFakture } from "./invoice-status";
+import { pocetakDanaUtc } from "./datum";
 import { posaljiRazvojniMejl } from "./mail";
 
 export type StavkaUnos = { desc: string; qty: number; price: number };
+
+// Pregled sledećeg broja PRE čuvanja (Korak 8b, forma Nova faktura): čita brojač bez pisanja, da forma
+// odmah prikaže predlog broja (frejmovi Fak3/9/20 ga uvek prikazuju popunjenog) - broj se STVARNO
+// rezerviše tek pri prvom čuvanju nacrta ili slanju (createInvoiceWithHistory), kao do sada.
+export async function pogledajSledeciBroj(businessId: string, datumIzdavanja: Date): Promise<string> {
+  const godina = datumIzdavanja.getUTCFullYear();
+  const brojac = await prisma.invoiceCounter.findUnique({ where: { businessId_year: { businessId, year: godina } } });
+  return formatBrojFakture((brojac?.lastNumber ?? 0) + 1, datumIzdavanja);
+}
+
+export type GreskeFaktureForme = Partial<Record<"clientId" | "items" | "dueDays", string>>;
+
+// Validacija forme Nova faktura (Korak 8b, spec 7.4, frejm Fak19) - zajedničko za čuvanje nacrta (gde se
+// NE primenjuje, nacrt sme da bude nepotpun) i slanje (gde MORA da prođe bez grešaka).
+export function validirajFakturuPolja(podaci: {
+  clientId: string | null;
+  items: StavkaUnos[];
+  dueDays: number;
+}): GreskeFaktureForme {
+  const errors: GreskeFaktureForme = {};
+  if (!podaci.clientId) errors.clientId = "Izaberi klijenta kome šalješ fakturu.";
+  if (!podaci.items.some((st) => st.desc.trim() && st.price > 0)) {
+    errors.items = "Upiši opis stavke i iznos veći od 0.";
+  }
+  if (!Number.isFinite(podaci.dueDays) || podaci.dueDays < 1) {
+    errors.dueDays = "Rok plaćanja mora biti bar 1 dan.";
+  }
+  return errors;
+}
 
 // Atomski sledeći broj za firmu i GODINU IZDAVANJA (ne "danas") - jedna SQL izjava (INSERT ... ON
 // CONFLICT DO UPDATE ... RETURNING), pa dve istovremene fakture ne mogu dobiti isti broj (@@id na
@@ -244,6 +275,203 @@ export async function sendReminder(userId: string, invoiceId: string): Promise<b
     );
   }
   return true;
+}
+
+export type PodaciIzmeneFakture = {
+  clientId: string;
+  currency: string;
+  lang: "sr" | "en";
+  dueDays: number;
+  accountId?: string | null;
+  note?: string | null;
+  items: StavkaUnos[];
+};
+
+export type AzuriranjeFaktureRezultat = { ok: true } | { ok: false; razlog: string };
+
+// Izmena postojeće fakture (Korak 8b): koristi i autosave/"Sačuvaj nacrt" nad VEĆ sačuvanim nacrtom, i
+// "Izmeni fakturu" nad već poslatom (spec 6.9: dozvoljeno, uz upozorenje u formi - ovde se samo primenjuje
+// izmena). Broj, status, issueDate i istorijski datumi se NE diraju ovde - issueDate i broj su zaključani
+// od prvog čuvanja (spec 7.4: "broj... rezerviše tek pri slanju ili čuvanju nacrta, ne pri otvaranju
+// forme"), status/sentAt menjaju isključivo sendInvoice/markInvoicePaid/voidInvoice.
+export async function updateInvoiceWithItems(
+  userId: string,
+  invoiceId: string,
+  podaci: PodaciIzmeneFakture,
+): Promise<AzuriranjeFaktureRezultat> {
+  const faktura = await nadjiFakturuKorisnika(userId, invoiceId);
+  if (!faktura) return { ok: false, razlog: "Faktura ne postoji." };
+  if (faktura.status === "placena" || faktura.status === "stornirana") {
+    return { ok: false, razlog: "Plaćena ili stornirana faktura ne može da se menja." };
+  }
+
+  await prisma.$transaction([
+    prisma.invoiceItem.deleteMany({ where: { invoiceId } }),
+    prisma.invoice.update({
+      where: { id: invoiceId },
+      data: {
+        clientId: podaci.clientId,
+        currency: podaci.currency,
+        lang: podaci.lang,
+        dueDays: podaci.dueDays,
+        accountId: podaci.accountId ?? null,
+        note: podaci.note ?? null,
+        items: {
+          create: podaci.items.map((st, i) => ({ desc: st.desc, qty: st.qty, price: st.price, redosled: i })),
+        },
+      },
+    }),
+  ]);
+
+  return { ok: true };
+}
+
+export type NacrtRezultat = { ok: true; id: string; broj: string } | { ok: false; razlog: string };
+
+// Čuva nacrt - pravi novu fakturu (prvi put, broj se tad rezerviše) ili ažurira postojeću (bez diranja
+// broja). Koristi i automatsko čuvanje i dugme "Sačuvaj nacrt" (Korak 8b, tačka 3).
+export async function sacuvajNacrt(
+  userId: string,
+  postojeciId: string | null,
+  podaci: PodaciIzmeneFakture,
+): Promise<NacrtRezultat> {
+  if (postojeciId) {
+    const rezultat = await updateInvoiceWithItems(userId, postojeciId, podaci);
+    if (!rezultat.ok) return rezultat;
+    const osvezena = await nadjiFakturuKorisnika(userId, postojeciId);
+    if (!osvezena) return { ok: false, razlog: "Faktura ne postoji." };
+    return { ok: true, id: osvezena.id, broj: osvezena.number };
+  }
+
+  const biznis = await getBusinessForUser(userId);
+  if (!biznis) return { ok: false, razlog: "Firma ne postoji." };
+
+  const faktura = await createInvoiceWithHistory(biznis.id, {
+    clientId: podaci.clientId,
+    currency: podaci.currency,
+    lang: podaci.lang,
+    issueDate: pocetakDanaUtc(),
+    dueDays: podaci.dueDays,
+    accountId: podaci.accountId,
+    note: podaci.note,
+    items: podaci.items,
+    status: "nacrt",
+  });
+  return { ok: true, id: faktura.id, broj: faktura.number };
+}
+
+export type SlanjePodaci = {
+  id: string;
+  broj: string;
+  klijentIme: string;
+  billingEmail: string;
+  ukupno: number;
+  valuta: string;
+  rok: Date;
+};
+
+export type SlanjeFaktureRezultat = { ok: true; podaci: SlanjePodaci } | { ok: false; razlog: string };
+
+// Slanje fakture (Korak 8b, spec 8.1, tačka 6): atomski prelaz nacrt->poslata preko updateMany sa
+// WHERE status='nacrt' - ako je faktura u međuvremenu (dupli klik) VEĆ poslata, count je 0 i mejl se NE
+// šalje ponovo (bez dvostrukog mejla), ali se potvrda ipak vraća korisniku kao uspeh. Mejl servis još ne
+// postoji (zadatak, tačka 6) - koristi se ista razvojna funkcija kao svuda u aplikaciji (posaljiRazvojniMejl),
+// koja samo ispisuje "[RAZVOJNI REŽIM]" u terminal.
+export async function sendInvoice(userId: string, invoiceId: string): Promise<SlanjeFaktureRezultat> {
+  const faktura = await nadjiFakturuKorisnika(userId, invoiceId);
+  if (!faktura) return { ok: false, razlog: "Faktura ne postoji." };
+  if (faktura.status !== "nacrt" && faktura.status !== "poslata") {
+    return { ok: false, razlog: "Faktura ne može da se pošalje u ovom stanju." };
+  }
+
+  const sad = new Date();
+  if (faktura.status === "nacrt") {
+    const rezultat = await prisma.invoice.updateMany({
+      where: { id: invoiceId, status: "nacrt" },
+      data: { status: "poslata", sentAt: sad },
+    });
+    if (rezultat.count === 1) {
+      await prisma.invoiceEvent.create({ data: { invoiceId, tip: "poslata", datum: sad } });
+    }
+  }
+
+  const puna = await prisma.invoice.findUniqueOrThrow({
+    where: { id: invoiceId },
+    include: { client: true, items: true, business: true },
+  });
+
+  if (faktura.status === "nacrt") {
+    const imeFirme = `${(puna.business.ownerName || "").trim()} ${puna.business.name}`.trim();
+    await posaljiRazvojniMejl(
+      puna.client.billingEmail,
+      `Invoice ${puna.number} from ${imeFirme}`,
+      `Faktura ${puna.number} je poslata. PDF: /api/fakture/${puna.id}/pdf (razvojni režim: prilog se ne šalje stvarno).`,
+    );
+  }
+
+  return {
+    ok: true,
+    podaci: {
+      id: puna.id,
+      broj: puna.number,
+      klijentIme: puna.client.name,
+      billingEmail: puna.client.billingEmail,
+      ukupno: izracunajUkupno(puna.items),
+      valuta: puna.currency,
+      rok: rokFakture(puna.issueDate, puna.dueDays),
+    },
+  };
+}
+
+export type PromenaBrojaRezultat = { ok: true } | { ok: false; razlog: string };
+
+// Ručna promena broja (spec 8.2, zadatak tačka 5): format + jedinstvenost unutar firme. Godina i mesec u
+// unetom broju moraju odgovarati STVARNOM datumu izdavanja (broj je po definiciji vezan za taj datum -
+// vidi formatBrojFakture), inače bi ručni unos mogao da napravi besmislen broj. Ako je uneti redni broj
+// veći od trenutnog brojača za tu godinu, brojač se pomera napred da budući automatski brojevi ne upadnu
+// u isti broj kasnije (najbolji napor - nije atomski protiv istovremene ručne izmene, retka akcija).
+export async function promeniBrojFakture(
+  userId: string,
+  invoiceId: string,
+  noviBroj: string,
+): Promise<PromenaBrojaRezultat> {
+  const faktura = await nadjiFakturuKorisnika(userId, invoiceId);
+  if (!faktura) return { ok: false, razlog: "Faktura ne postoji." };
+  if (faktura.status === "placena" || faktura.status === "stornirana") {
+    return { ok: false, razlog: "Broj ne može da se menja na plaćenoj ili storniranoj fakturi." };
+  }
+
+  const parsirano = parseBrojFakture(noviBroj);
+  if (!parsirano) return { ok: false, razlog: "Broj mora biti u obliku N/GG-M, na primer 25/26-11." };
+
+  const godina = faktura.issueDate.getUTCFullYear();
+  const ocekivanaGodina2 = String(godina).slice(-2);
+  const ocekivaniMesec = faktura.issueDate.getUTCMonth() + 1;
+  if (parsirano.godina2 !== ocekivanaGodina2 || parsirano.mesec !== ocekivaniMesec) {
+    return {
+      ok: false,
+      razlog: `Godina i mesec u broju moraju odgovarati datumu izdavanja (${ocekivanaGodina2}-${ocekivaniMesec}).`,
+    };
+  }
+
+  const slobodan = await proveriJedinstvenostBroja(faktura.businessId, noviBroj, faktura.id);
+  if (!slobodan) return { ok: false, razlog: `Broj ${noviBroj} je već zauzet.` };
+
+  await prisma.$transaction(async (tx) => {
+    await tx.invoice.update({ where: { id: faktura.id }, data: { number: noviBroj } });
+    const trenutni = await tx.invoiceCounter.findUnique({
+      where: { businessId_year: { businessId: faktura.businessId, year: godina } },
+    });
+    if ((trenutni?.lastNumber ?? 0) < parsirano.redniBroj) {
+      await tx.invoiceCounter.upsert({
+        where: { businessId_year: { businessId: faktura.businessId, year: godina } },
+        update: { lastNumber: parsirano.redniBroj },
+        create: { businessId: faktura.businessId, year: godina, lastNumber: parsirano.redniBroj },
+      });
+    }
+  });
+
+  return { ok: true };
 }
 
 export type BrisanjeNacrtaRezultat = { ok: true } | { ok: false; razlog: string };

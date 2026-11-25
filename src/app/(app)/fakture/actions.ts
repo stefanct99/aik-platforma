@@ -4,9 +4,26 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
-import { markInvoicePaid, removeDraftInvoice, sendReminder, voidInvoice } from "@/lib/invoices";
-import { parseDatumSrpski } from "@/lib/datum";
-import { createClient, removeOrArchiveClient, updateClient, type KlijentPodaci } from "@/lib/clients";
+import {
+  markInvoicePaid,
+  promeniBrojFakture,
+  removeDraftInvoice,
+  sacuvajNacrt,
+  sendInvoice,
+  sendReminder,
+  validirajFakturuPolja,
+  voidInvoice,
+  type PodaciIzmeneFakture,
+  type StavkaUnos,
+} from "@/lib/invoices";
+import { parseDatumSrpski, formatVremeSrpski } from "@/lib/datum";
+import {
+  createClient,
+  removeOrArchiveClient,
+  updateClient,
+  validirajKlijentaPodatke,
+  type KlijentPodaci,
+} from "@/lib/clients";
 
 async function trenutniKorisnik() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -90,16 +107,22 @@ function procitajKlijentPodatke(formData: FormData): KlijentPodaci {
   };
 }
 
-export type KlijentStanje = { errors: Partial<Record<string, string>>; sacuvano: boolean };
+export type NoviKlijent = {
+  id: string;
+  name: string;
+  billingEmail: string;
+  defaultCurrency: string;
+  defaultLang: "sr" | "en";
+  defaultDueDays: number;
+  defaultAccountId: string | null;
+  defaultItemDesc: string | null;
+  defaultItemAmount: number | null;
+  country: string | null;
+  pib: string | null;
+  address: string | null;
+};
 
-function validirajKlijenta(podaci: KlijentPodaci): KlijentStanje["errors"] {
-  const errors: KlijentStanje["errors"] = {};
-  if (!podaci.name) errors.name = "Unesi naziv klijenta";
-  if (!podaci.billingEmail || !podaci.billingEmail.includes("@")) {
-    errors.billingEmail = "Unesi ispravan mejl za fakture";
-  }
-  return errors;
-}
+export type KlijentStanje = { errors: Partial<Record<string, string>>; sacuvano: boolean; klijent?: NoviKlijent };
 
 export async function dodajKlijentaAction(
   _prethodnoStanje: KlijentStanje,
@@ -107,12 +130,29 @@ export async function dodajKlijentaAction(
 ): Promise<KlijentStanje> {
   const korisnik = await trenutniKorisnik();
   const podaci = procitajKlijentPodatke(formData);
-  const errors = validirajKlijenta(podaci);
+  const errors = validirajKlijentaPodatke(podaci);
   if (Object.keys(errors).length > 0) return { errors, sacuvano: false };
 
-  await createClient(korisnik.id, podaci);
+  const klijent = await createClient(korisnik.id, podaci);
   revalidatePath("/fakture/klijenti");
-  return { errors: {}, sacuvano: true };
+  return {
+    errors: {},
+    sacuvano: true,
+    klijent: {
+      id: klijent.id,
+      name: klijent.name,
+      billingEmail: klijent.billingEmail,
+      defaultCurrency: klijent.defaultCurrency,
+      defaultLang: klijent.defaultLang as "sr" | "en",
+      defaultDueDays: klijent.defaultDueDays,
+      defaultAccountId: klijent.defaultAccountId,
+      defaultItemDesc: klijent.defaultItemDesc,
+      defaultItemAmount: klijent.defaultItemAmount,
+      country: klijent.country,
+      pib: klijent.pib,
+      address: klijent.address,
+    },
+  };
 }
 
 export async function izmeniKlijentaAction(
@@ -122,7 +162,7 @@ export async function izmeniKlijentaAction(
 ): Promise<KlijentStanje> {
   const korisnik = await trenutniKorisnik();
   const podaci = procitajKlijentPodatke(formData);
-  const errors = validirajKlijenta(podaci);
+  const errors = validirajKlijentaPodatke(podaci);
   if (Object.keys(errors).length > 0) return { errors, sacuvano: false };
 
   await updateClient(korisnik.id, clientId, podaci);
@@ -135,4 +175,115 @@ export async function obrisiIliArhivirajKlijentaAction(clientId: string) {
   const rezultat = await removeOrArchiveClient(korisnik.id, clientId);
   revalidatePath("/fakture/klijenti");
   return rezultat;
+}
+
+// ===================== Nova faktura / izmena (Korak 8b) =====================
+
+// Stavke putuju kao JSON string u skrivenom polju (ista ideja kao ostala "izvedena" skrivena polja u
+// ClientPanel-u, samo za niz, ne pojedinačnu vrednost) - broj stavki je promenljiv, FormData nema prirodan
+// oblik za niz objekata.
+function procitajFakturuPodatke(formData: FormData): PodaciIzmeneFakture {
+  let sirove: { desc?: string; qty?: string | number; price?: string | number }[] = [];
+  try {
+    sirove = JSON.parse(String(formData.get("stavke") || "[]"));
+  } catch {
+    sirove = [];
+  }
+  const items: StavkaUnos[] = sirove.map((s) => ({
+    desc: String(s.desc || "").trim(),
+    qty: Math.max(1, Math.round(Number(s.qty) || 1)),
+    price: Math.round((Number(s.price) || 0) * 100),
+  }));
+
+  return {
+    clientId: String(formData.get("clientId") || ""),
+    currency: String(formData.get("currency") || "EUR"),
+    lang: formData.get("lang") === "en" ? "en" : "sr",
+    dueDays: Number(formData.get("dueDays")) || 0,
+    accountId: String(formData.get("accountId") || "") || null,
+    note: String(formData.get("note") || "").trim() || null,
+    items,
+  };
+}
+
+export type NacrtStanje = { id: string | null; broj: string | null; sacuvanoU: string | null; greska: string | null };
+
+// Čuva nacrt (automatsko čuvanje, nekoliko sekundi posle poslednje izmene, i dugme "Sačuvaj nacrt",
+// zadatak tačka 3). BEZ validacije sadržaja - nacrt sme da bude nepotpun, validacija je samo pri slanju.
+export async function sacuvajNacrtAction(
+  postojeciId: string | null,
+  _prethodnoStanje: NacrtStanje,
+  formData: FormData,
+): Promise<NacrtStanje> {
+  const korisnik = await trenutniKorisnik();
+  const podaci = procitajFakturuPodatke(formData);
+  if (!podaci.clientId) {
+    return { id: postojeciId, broj: null, sacuvanoU: null, greska: "Izaberi klijenta kome šalješ fakturu." };
+  }
+
+  const rezultat = await sacuvajNacrt(korisnik.id, postojeciId, podaci);
+  if (!rezultat.ok) return { id: postojeciId, broj: null, sacuvanoU: null, greska: rezultat.razlog };
+
+  revalidatePath("/fakture");
+  return { id: rezultat.id, broj: rezultat.broj, sacuvanoU: formatVremeSrpski(new Date()), greska: null };
+}
+
+export type SlanjeFaktureStanje = {
+  id: string | null;
+  errors: Partial<Record<"clientId" | "items" | "dueDays", string>>;
+  posalji: {
+    broj: string;
+    klijentIme: string;
+    billingEmail: string;
+    ukupno: number;
+    valuta: string;
+    rokIso: string;
+  } | null;
+};
+
+// "Pregledaj i pošalji" -> "Pošalji fakturu" (zadatak tačka 6): prvo potpuna validacija (spec/Fak19), pa
+// čuvanje (da faktura ima id/broj pre slanja), pa stvarno slanje (sendInvoice je samo po sebi bezbedno od
+// dvostrukog klika - videti komentar tamo).
+export async function posaljiFakturuAction(
+  postojeciId: string | null,
+  _prethodnoStanje: SlanjeFaktureStanje,
+  formData: FormData,
+): Promise<SlanjeFaktureStanje> {
+  const korisnik = await trenutniKorisnik();
+  const podaci = procitajFakturuPodatke(formData);
+
+  const greske = validirajFakturuPolja({ clientId: podaci.clientId || null, items: podaci.items, dueDays: podaci.dueDays });
+  if (Object.keys(greske).length > 0) return { id: postojeciId, errors: greske, posalji: null };
+
+  const sacuvano = await sacuvajNacrt(korisnik.id, postojeciId, podaci);
+  if (!sacuvano.ok) return { id: postojeciId, errors: { clientId: sacuvano.razlog }, posalji: null };
+
+  const rezultat = await sendInvoice(korisnik.id, sacuvano.id);
+  if (!rezultat.ok) return { id: sacuvano.id, errors: { clientId: rezultat.razlog }, posalji: null };
+
+  revalidatePath("/fakture");
+  revalidatePath(`/fakture/${sacuvano.id}`);
+  return {
+    id: sacuvano.id,
+    errors: {},
+    posalji: {
+      broj: rezultat.podaci.broj,
+      klijentIme: rezultat.podaci.klijentIme,
+      billingEmail: rezultat.podaci.billingEmail,
+      ukupno: rezultat.podaci.ukupno,
+      valuta: rezultat.podaci.valuta,
+      rokIso: rezultat.podaci.rok.toISOString(),
+    },
+  };
+}
+
+export type BrojStanje = { ok: boolean; greska: string | null };
+
+// Ručna promena broja (zadatak tačka 5) - pozvano direktno (ne kao <form action>) pri izlasku iz polja.
+export async function promeniBrojAction(invoiceId: string, noviBroj: string): Promise<BrojStanje> {
+  const korisnik = await trenutniKorisnik();
+  const rezultat = await promeniBrojFakture(korisnik.id, invoiceId, noviBroj);
+  if (!rezultat.ok) return { ok: false, greska: rezultat.razlog };
+  revalidatePath("/fakture");
+  return { ok: true, greska: null };
 }

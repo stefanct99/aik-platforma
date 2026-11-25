@@ -14,7 +14,7 @@ import {
 } from "@/lib/theme";
 import type { FormatDatuma } from "@/lib/datum";
 
-// Zadržano za useTemaPrekidac (OnboardingThemeTogglePill i TopBarTemaPrekidac, Korak 5/6/8a): te pilule
+// Zadržano za useTemaPrekidac (FixedThemeTogglePill i TopBarTemaPrekidac, Korak 5/6/8a/8b): te pilule
 // menjaju SAMO temu, ne prikazuju Jezik/Format datuma, pa im treba uža akcija koja ne zahteva ta dva
 // polja u formi.
 export type TemaStanje = { tema: Tema; sacuvano: boolean };

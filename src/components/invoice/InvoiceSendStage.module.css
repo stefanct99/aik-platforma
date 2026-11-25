@@ -1,0 +1,290 @@
+/* Ekran slanja (Fak11/PhFak11) i potvrda (Fak12/PhFak12) - iste mere kao InvoiceEditor.module.css gde se
+   poklapaju (forma/pregled raspored, 44px polja), ne uvoze se odatle da ostanu nezavisni fajlovi (isti
+   obrazac kao ostali parovi komponenta+CSS u ovom projektu). */
+
+.omot {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: var(--color-bg);
+  overflow-y: auto;
+}
+
+.red {
+  display: flex;
+  min-height: 100%;
+}
+
+.formaKolona {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+}
+
+.gornjaTraka {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  padding: 0 var(--space-6);
+}
+
+.nazadPilula {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 40px;
+  padding: 0 14px 0 10px;
+  border-radius: 9999px;
+  border: 1px solid var(--color-border-input);
+  background: var(--color-surface);
+  font-size: 1rem;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.statusPilulaDesktop {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 9999px;
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.telo {
+  flex: 1;
+  box-sizing: border-box;
+  padding: 0 var(--space-6) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.naslov {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: -0.025em;
+  font-weight: 400;
+}
+
+.banerGreska {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-card);
+  background: var(--color-alert-danger-bg);
+  color: var(--color-alert-danger-text);
+  font-size: 0.875rem;
+}
+
+.poljeOmot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.labela {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.linkMali {
+  align-self: flex-start;
+  margin-top: -6px;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.tekstualnoPolje {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-input);
+  background: var(--color-surface);
+  color: var(--color-text);
+  resize: vertical;
+}
+
+.hintTekst {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.prilogRed {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-text-muted);
+}
+.prilogRed > div {
+  color: var(--color-text);
+}
+
+.kvacicaRed {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 1rem;
+}
+
+.dugmad {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: space-between;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.pregledKolona {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  background: var(--color-bg);
+}
+.pregledNatpis {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+.papirOmot {
+  display: flex;
+  justify-content: center;
+}
+
+.pregledMobilni {
+  display: none;
+}
+.papirOmotMobilni {
+  display: flex;
+  justify-content: center;
+}
+.papirSkaliranMobilni {
+  width: 301px;
+  height: 426px;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-overlay);
+}
+.papirSkaliranMobilni > * {
+  transform: scale(0.627);
+  transform-origin: 0 0;
+}
+.naslovSekcije {
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+/* Potvrda (Fak12) */
+.senkaPotvrde {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  background: rgba(22, 26, 23, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+.karticaPotvrde {
+  width: 420px;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-overlay);
+}
+.ikonaKrug {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+}
+.tekstStog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+}
+.naslovPotvrde {
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+.opisPotvrde {
+  color: var(--color-text-muted);
+}
+.kv {
+  width: 100%;
+  border-top: 1px solid var(--color-border);
+}
+.kvRed {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-2) 0;
+  font-size: 0.9375rem;
+}
+.kvRed span:first-child {
+  color: var(--color-text-muted);
+}
+.dugmadPotvrde {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@media (max-width: 1023px) {
+  .red {
+    flex-direction: column;
+  }
+  .gornjaTraka {
+    padding: 0 var(--space-4);
+    height: 56px;
+  }
+  .statusPilulaDesktop {
+    display: none;
+  }
+  .telo {
+    padding: 0 var(--space-4) var(--space-5);
+  }
+  .pregledKolona {
+    display: none;
+  }
+  .pregledMobilni {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    box-sizing: border-box;
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border-radius: var(--radius-card);
+    border: 1px solid var(--color-border);
+    margin: 0 var(--space-4) var(--space-4);
+  }
+  .dugmad {
+    flex-direction: column;
+  }
+}

@@ -20,11 +20,12 @@
   background: var(--color-bg);
 }
 
+/* position/top/left se postavljaju inline iz JS-a (portal u document.body, src/lib/meni-pozicija.ts) -
+   ovde ostaju samo mere/boje/senka/radijus, nepromenjeni u odnosu na raniju verziju (isti izgled). z-
+   index je namerno visok - meni je u document.body, iznad zaglavlja, bočnog menija i svih dosadašnjih
+   preklopnih slojeva u aplikaciji (SidePanel/Modal su na 100). */
 .padajuci {
-  position: absolute;
-  right: 0;
-  top: 40px;
-  z-index: 6;
+  z-index: 200;
   width: 260px;
   box-sizing: border-box;
   padding: 6px;

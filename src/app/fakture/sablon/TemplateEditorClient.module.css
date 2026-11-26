@@ -527,3 +527,78 @@
   font-size: 1rem;
   color: var(--color-text);
 }
+
+/* ===================== Dijalog "Raspored" (Korak 8d-6, frejm Fak24) ===================== */
+.rasporedPodnaslov {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  margin-top: -8px;
+}
+
+.rasporedGrid {
+  display: flex;
+  gap: var(--space-4);
+  justify-content: space-between;
+}
+
+.rasporedKartica {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.875rem;
+  text-align: center;
+  background: none;
+  border: 0;
+  padding: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.rasporedOkvirKartice {
+  position: relative;
+  width: 170px;
+  height: 226px;
+  box-sizing: border-box;
+  background: var(--color-surface);
+  border-radius: 6px;
+  border: 1px solid var(--color-border-input);
+  box-shadow: 0 8px 20px -14px rgba(15, 42, 34, 0.4);
+  overflow: hidden;
+  flex: none;
+}
+
+.rasporedOkvirIzabran {
+  border: 2px solid #0f2a22;
+}
+
+.rasporedIme {
+  color: var(--color-nav-text);
+}
+
+/* Izabrana kartica: svetla tema pokazuje baš akcent-zelenu (#0F2A22, ista vrednost kao okvir kartice),
+   tamna tema običnu (svetliju) boju teksta (--color-text) - frejm (Fak24/Dk_Fak24) ovo pokazuje baš
+   ovako asimetrično, nije ista boja preslikana u oba. */
+.rasporedImeIzabrano {
+  color: #0f2a22;
+}
+
+:global(.appShell[data-theme="tamni"]) .rasporedImeIzabrano {
+  color: var(--color-text);
+}
+
+.rasporedNapomena {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--color-badge-warning-bg);
+  color: var(--color-badge-warning-text);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.rasporedDugmad {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}

@@ -22,6 +22,8 @@ import {
   azurirajTabelu,
   azurirajDokument,
   azurirajAkcentBoju,
+  primeniRaspored,
+  SVI_RASPOREDI,
   type PodaciSablona,
 } from "./invoice-templates";
 import {
@@ -43,6 +45,7 @@ function celaIzmena(podaci: PodaciSablona): IzmenaSablona {
     table: podaci.table,
     doc: podaci.doc,
     accentColor: podaci.accentColor,
+    layout: podaci.layout,
   };
 }
 
@@ -478,6 +481,85 @@ describe("azurirajAkcentBoju - čista funkcija (Korak 8d-4b)", () => {
   });
 });
 
+describe("primeniRaspored - čista funkcija (Korak 8d-6)", () => {
+  it("Klasičan je jednak podrazumevanom rasporedu (pozicije, topBar, sideBar)", () => {
+    const sablon = napraviPodrazumevaniSablonPodatke();
+    const novi = primeniRaspored(sablon, "klasican");
+    expect(novi.layout).toBe("klasican");
+    expect(novi.blockProps).toEqual(sablon.blockProps);
+    expect(novi.doc.topBar).toBe(false);
+    expect(novi.doc.sideBar).toBe(false);
+  });
+
+  it("Moderan pomera SVE blokove +14px udesno (x), ne menja y/širinu/visinu, uključuje traku sa strane", () => {
+    const sablon = napraviPodrazumevaniSablonPodatke();
+    const novi = primeniRaspored(sablon, "moderan");
+    expect(novi.layout).toBe("moderan");
+    for (const blok of Object.keys(novi.blockProps) as (keyof typeof novi.blockProps)[]) {
+      expect(novi.blockProps[blok].x).toBe(sablon.blockProps[blok].x + 14);
+      expect(novi.blockProps[blok].y).toBe(sablon.blockProps[blok].y);
+      expect(novi.blockProps[blok].w).toBe(sablon.blockProps[blok].w);
+      expect(novi.blockProps[blok].h).toBe(sablon.blockProps[blok].h);
+    }
+    expect(novi.doc.sideBar).toBe(true);
+    expect(novi.doc.topBar).toBe(false);
+  });
+
+  it("Minimalan ima IDENTIČNE pozicije kao Klasičan (prototip nema osnovu za drugačiji raspored)", () => {
+    const sablon = napraviPodrazumevaniSablonPodatke();
+    const novi = primeniRaspored(sablon, "minimalan");
+    expect(novi.layout).toBe("minimalan");
+    expect(novi.blockProps).toEqual(sablon.blockProps);
+    expect(novi.doc.topBar).toBe(false);
+    expect(novi.doc.sideBar).toBe(false);
+  });
+
+  it("Kompaktan ne pomera pozicije, samo uključuje traku na vrhu", () => {
+    const sablon = napraviPodrazumevaniSablonPodatke();
+    const novi = primeniRaspored(sablon, "kompaktan");
+    expect(novi.layout).toBe("kompaktan");
+    expect(novi.blockProps).toEqual(sablon.blockProps);
+    expect(novi.doc.topBar).toBe(true);
+    expect(novi.doc.sideBar).toBe(false);
+  });
+
+  it("čuva boje, poravnanje, uključenost blokova i podešavanja tabele/cele fakture - menja SAMO pozicije i topBar/sideBar", () => {
+    const sablon = napraviPodrazumevaniSablonPodatke();
+    sablon.blockProps.firma.color = "#1F4FBF";
+    sablon.blockProps.firma.align = "center";
+    sablon.blockProps.firma.x = 999; // ručno pomeren blok
+    sablon.blocksOff = ["rok"];
+    sablon.table.zebra = true;
+    sablon.doc.footerText = "Hvala";
+    sablon.accentColor = "#B4281E";
+
+    const novi = primeniRaspored(sablon, "moderan");
+
+    expect(novi.blockProps.firma.color).toBe("#1F4FBF"); // boja ostaje
+    expect(novi.blockProps.firma.align).toBe("center"); // poravnanje ostaje
+    expect(novi.blockProps.firma.x).not.toBe(999); // ručno pomerena pozicija se VRAĆA na mesto rasporeda
+    expect(novi.blocksOff).toEqual(["rok"]); // uključenost bloka ostaje
+    expect(novi.table.zebra).toBe(true); // podešavanje tabele ostaje
+    expect(novi.doc.footerText).toBe("Hvala"); // podešavanje cele fakture ostaje
+    expect(novi.accentColor).toBe("#B4281E"); // boja akcenta ostaje
+  });
+
+  it("ne menja originalni objekat prosleđenog šablona (da 'Odustani' sigurno ništa ne menja ako se ne pozove primeniRaspored)", () => {
+    const sablon = napraviPodrazumevaniSablonPodatke();
+    const kopija = JSON.parse(JSON.stringify(sablon));
+    primeniRaspored(sablon, "kompaktan");
+    expect(sablon).toEqual(kopija);
+  });
+
+  it("SVI_RASPOREDI ima tačno 4 rasporeda, svaki daje validan rezultat", () => {
+    expect(SVI_RASPOREDI).toHaveLength(4);
+    const sablon = napraviPodrazumevaniSablonPodatke();
+    for (const r of SVI_RASPOREDI) {
+      expect(primeniRaspored(sablon, r).layout).toBe(r);
+    }
+  });
+});
+
 describe("Ispravka posle testa editora: sačuvana izmena se odmah vidi (tačka 1)", () => {
   it("izmena poravnanja/veličine/boje bloka je odmah vidljiva kroz NOV, nezavisan poziv za učitavanje (kao nova stranica)", async () => {
     const { biznis } = await napraviKorisnikaSaFirmom();
@@ -642,5 +724,59 @@ describe("sacuvajSablon - nivoi Tabela i Cela faktura (Korak 8d-4b)", () => {
     const ucitanZaFakturu = await ucitajSablonZaFakturu(faktura);
     expect(ucitanZaFakturu.table.zebra).toBe(false);
     expect(ucitanZaFakturu.accentColor).toBe("#0F2A22");
+  });
+});
+
+describe("sacuvajSablon - raspored (Korak 8d-6)", () => {
+  it("upisuje primenjen raspored (layout i pozicije blokova), odmah vidljivo kroz nov poziv za učitavanje", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const podaci = primeniRaspored(napraviPodrazumevaniSablonPodatke(), "moderan");
+
+    const rezultat = await sacuvajSablon(biznis.id, celaIzmena(podaci));
+    expect(rezultat.ok).toBe(true);
+
+    const svezeUcitan = await ucitajPodrazumevaniSablon(biznis.id);
+    expect(svezeUcitan.layout).toBe("moderan");
+    expect(svezeUcitan.doc.sideBar).toBe(true);
+    expect(svezeUcitan.blockProps.firma.x).toBe(napraviPodrazumevaniSablonPodatke().blockProps.firma.x + 14);
+  });
+
+  it("'Vrati na podrazumevano' vraća raspored na Klasičan", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const podaci = primeniRaspored(napraviPodrazumevaniSablonPodatke(), "kompaktan");
+    await sacuvajSablon(biznis.id, celaIzmena(podaci));
+
+    const vraceno = await vratiSablonNaPodrazumevano(biznis.id);
+    expect(vraceno.layout).toBe("klasican");
+    expect(vraceno.doc.topBar).toBe(false);
+  });
+
+  it("već poslata faktura ostaje nepromenjena nakon promene rasporeda", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const klijent = await prisma.client.create({
+      data: { businessId: biznis.id, name: "Test klijent", billingEmail: "klijent@primer.rs", address: "Adresa 1" },
+    });
+    const zamrznutSablon = napraviPodrazumevaniSablonPodatke();
+    const faktura = await prisma.invoice.create({
+      data: {
+        businessId: biznis.id,
+        clientId: klijent.id,
+        number: "1/26-3",
+        currency: "EUR",
+        lang: "sr",
+        issueDate: new Date("2026-01-01T00:00:00.000Z"),
+        dueDays: 7,
+        status: "poslata",
+        sentAt: new Date("2026-01-01T00:00:00.000Z"),
+        templateSnapshot: zamrznutSablon,
+      },
+    });
+
+    const noviPodaci = primeniRaspored(napraviPodrazumevaniSablonPodatke(), "kompaktan");
+    await sacuvajSablon(biznis.id, celaIzmena(noviPodaci));
+
+    const ucitanZaFakturu = await ucitajSablonZaFakturu(faktura);
+    expect(ucitanZaFakturu.layout).toBe("klasican");
+    expect(ucitanZaFakturu.doc.topBar).toBe(false);
   });
 });

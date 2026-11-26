@@ -11,14 +11,21 @@ export function Modal({
   naslov,
   children,
   onClose,
+  sirina,
 }: {
   naslov: string;
   children: ReactNode;
   onClose?: () => void;
+  /** Širina kartice u px (podrazumevano 440, iz CSS-a) - npr. Korak 8d-6, dijalog "Raspored" (840px, Fak24). */
+  sirina?: number;
 }) {
   return (
     <div className={styles.senka} onMouseDown={onClose}>
-      <div className={styles.kartica} onMouseDown={(dogadjaj) => dogadjaj.stopPropagation()}>
+      <div
+        className={styles.kartica}
+        style={sirina ? { maxWidth: sirina } : undefined}
+        onMouseDown={(dogadjaj) => dogadjaj.stopPropagation()}
+      >
         <span className={styles.naslov}>{naslov}</span>
         {children}
       </div>

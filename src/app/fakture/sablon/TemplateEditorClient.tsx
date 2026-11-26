@@ -10,11 +10,14 @@ import { FixedThemeTogglePill } from "@/components/app-shell/FixedThemeTogglePil
 import type { Tema } from "@/lib/theme";
 import { IkonaX, IkonaChevronDole } from "@/components/ui/icons";
 import { Toggle } from "@/components/ui/Toggle";
+import { Modal } from "@/components/ui/Modal";
 import { InvoiceDoc } from "@/components/invoice/InvoiceDoc";
 import {
   NAZIVI_BLOKOVA,
   NAZIVI_KOLONA_TABELE,
   SVE_KOLONE_TABELE,
+  NAZIVI_RASPOREDA,
+  SVI_RASPOREDI,
   prebaciUkljucenostBloka,
   azurirajSvojstvaBloka,
   validirajSvojstvaBloka,
@@ -22,9 +25,11 @@ import {
   azurirajTabelu,
   azurirajDokument,
   azurirajAkcentBoju,
+  primeniRaspored,
   type PodaciSablona,
   type BlokKljuc,
   type SvojstvaBloka,
+  type Raspored,
 } from "@/lib/invoice-templates";
 import { sacuvajSablonAction, vratiSablonNaPodrazumevanoAction } from "@/app/(app)/fakture/actions";
 import styles from "./TemplateEditorClient.module.css";
@@ -64,6 +69,128 @@ function IkonaRucka() {
       <circle cx="9" cy="18" r="1.6" />
       <circle cx="15" cy="18" r="1.6" />
     </svg>
+  );
+}
+
+// Male sličice rasporeda u dijalogu "Raspored" (Korak 8d-6, frejm Fak24) - čisto ilustrativne (nisu
+// stvarni prikaz fakture), prepisane piksel po piksel iz okvira (Fak24/Dk_Fak24, kartica 170x226).
+// "Ink"/akcent boje (#161A17/#0F2A22/#C8F169) su ISTE u obe teme (predstavljaju boju na papiru, ne boju
+// aplikacije) - samo "prigušena" boja traka koristi var(--color-toggle-off-bg) (D9D6D0/343A36, tačan
+// token već u app-u za istu namenu).
+function Pravougaonik({
+  left,
+  top,
+  width,
+  height,
+  boja,
+  radius = 2,
+}: {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  boja: string;
+  radius?: number;
+}) {
+  return <div style={{ position: "absolute", left, top, width, height, background: boja, borderRadius: radius }} />;
+}
+
+const PRIGUSENO = "var(--color-toggle-off-bg)";
+const INK = "#161A17";
+const AKCENT = "#0F2A22";
+const LIMETA = "#C8F169";
+
+function RasporedPregled({ raspored }: { raspored: Raspored }) {
+  if (raspored === "klasican") {
+    return (
+      <>
+        <Pravougaonik left={12} top={12} width={22} height={22} boja={AKCENT} radius={4} />
+        <Pravougaonik left={112} top={16} width={44} height={6} boja={PRIGUSENO} />
+        <Pravougaonik left={12} top={50} width={60} height={6} boja={PRIGUSENO} />
+        <Pravougaonik left={12} top={60} width={60} height={24} boja={PRIGUSENO} />
+        <Pravougaonik left={96} top={50} width={62} height={6} boja={PRIGUSENO} />
+        <Pravougaonik left={96} top={60} width={62} height={36} boja={PRIGUSENO} />
+        <div
+          style={{
+            position: "absolute",
+            left: 12,
+            top: 112,
+            width: 146,
+            height: 60,
+            border: `1px solid ${INK}`,
+            background: "var(--color-surface)",
+          }}
+        />
+        <Pravougaonik left={12} top={184} width={60} height={6} boja={PRIGUSENO} />
+      </>
+    );
+  }
+
+  if (raspored === "moderan") {
+    return (
+      <>
+        <Pravougaonik left={0} top={0} width={52} height={226} boja={AKCENT} radius={0} />
+        <Pravougaonik left={10} top={12} width={22} height={22} boja={LIMETA} radius={4} />
+        <Pravougaonik left={8} top={52} width={36} height={5} boja="rgba(255,255,255,0.5)" />
+        <Pravougaonik left={8} top={62} width={36} height={5} boja="rgba(255,255,255,0.5)" />
+        <Pravougaonik left={8} top={160} width={36} height={5} boja="rgba(255,255,255,0.5)" />
+        <Pravougaonik left={68} top={16} width={70} height={8} boja={PRIGUSENO} />
+        <Pravougaonik left={68} top={40} width={60} height={6} boja={PRIGUSENO} />
+        <Pravougaonik left={68} top={50} width={60} height={24} boja={PRIGUSENO} />
+        <div
+          style={{
+            position: "absolute",
+            left: 68,
+            top: 96,
+            width: 90,
+            height: 70,
+            borderTop: `2px solid ${AKCENT}`,
+            background: "var(--color-nav-bg-active)",
+          }}
+        />
+      </>
+    );
+  }
+
+  if (raspored === "minimalan") {
+    return (
+      <>
+        <Pravougaonik left={14} top={18} width={70} height={12} boja={INK} />
+        <Pravougaonik left={14} top={44} width={40} height={5} boja={PRIGUSENO} />
+        <Pravougaonik left={14} top={54} width={40} height={5} boja={PRIGUSENO} />
+        <Pravougaonik left={110} top={44} width={46} height={5} boja={PRIGUSENO} />
+        <Pravougaonik left={110} top={54} width={46} height={5} boja={PRIGUSENO} />
+        <Pravougaonik left={14} top={92} width={142} height={1} boja={INK} radius={0} />
+        <Pravougaonik left={14} top={106} width={142} height={1} boja={PRIGUSENO} radius={0} />
+        <Pravougaonik left={14} top={126} width={142} height={1} boja={PRIGUSENO} radius={0} />
+        <Pravougaonik left={14} top={146} width={142} height={1} boja={PRIGUSENO} radius={0} />
+        <Pravougaonik left={96} top={170} width={60} height={8} boja={INK} />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Pravougaonik left={0} top={0} width={170} height={44} boja={AKCENT} radius={0} />
+      <Pravougaonik left={10} top={10} width={22} height={22} boja={LIMETA} radius={4} />
+      <Pravougaonik left={112} top={16} width={48} height={8} boja="rgba(255,255,255,0.6)" />
+      <Pravougaonik left={12} top={58} width={70} height={6} boja={PRIGUSENO} />
+      <Pravougaonik left={12} top={68} width={70} height={18} boja={PRIGUSENO} />
+      <Pravougaonik left={96} top={58} width={62} height={6} boja={PRIGUSENO} />
+      <Pravougaonik left={96} top={68} width={62} height={18} boja={PRIGUSENO} />
+      <div
+        style={{
+          position: "absolute",
+          left: 12,
+          top: 100,
+          width: 146,
+          height: 80,
+          border: `1px solid ${INK}`,
+          background: "var(--color-surface)",
+        }}
+      />
+      <Pravougaonik left={96} top={194} width={60} height={8} boja={AKCENT} />
+    </>
   );
 }
 
@@ -159,6 +286,8 @@ export function TemplateEditorClient({
   const [zoom, setZoom] = useState(100);
   const [cuvanje, setCuvanje] = useState<"mirno" | "cuvam">("mirno");
   const [greska, setGreska] = useState<string | null>(null);
+  const [rasporedOtvoren, setRasporedOtvoren] = useState(false);
+  const [rasporedIzbor, setRasporedIzbor] = useState<Raspored>(sablon.layout);
 
   function izmeniSablon(novi: PodaciSablona) {
     setSablon(novi);
@@ -183,6 +312,7 @@ export function TemplateEditorClient({
       table: sablon.table,
       doc: sablon.doc,
       accentColor: sablon.accentColor,
+      layout: sablon.layout,
     });
     setCuvanje("mirno");
     if (!rezultat.ok) {
@@ -217,9 +347,14 @@ export function TemplateEditorClient({
               {izmenjeno && <span className={styles.znacka}>Izmene nisu sačuvane</span>}
             </div>
             <div className={styles.topbarDesno}>
-              {/* "Raspored" otvara dijalog sa 4 predloška rasporeda - dolazi u Koraku 8d-6, ovde je samo
-                  vidljivo i onemogućeno (zadatak Korak 8d-4 tačka 2). */}
-              <button type="button" className={styles.dugmeMalo} disabled>
+              <button
+                type="button"
+                className={styles.dugmeMalo}
+                onClick={() => {
+                  setRasporedIzbor(sablon.layout);
+                  setRasporedOtvoren(true);
+                }}
+              >
                 Raspored
               </button>
               <button type="button" className={styles.dugmeMalo} onClick={naVratiPodrazumevano}>
@@ -683,6 +818,51 @@ export function TemplateEditorClient({
             </div>
           </div>
         </div>
+        {rasporedOtvoren && (
+          <Modal naslov="Izaberi raspored" sirina={840} onClose={() => setRasporedOtvoren(false)}>
+            <span className={styles.rasporedPodnaslov}>
+              Ovo je polazna tačka. Posle možeš sve da menjaš. Tvoji podaci i boje ostaju.
+            </span>
+            <div className={styles.rasporedGrid}>
+              {SVI_RASPOREDI.map((r) => {
+                const aktivan = rasporedIzbor === r;
+                return (
+                  <button
+                    key={r}
+                    type="button"
+                    className={styles.rasporedKartica}
+                    onClick={() => setRasporedIzbor(r)}
+                  >
+                    <div className={`${styles.rasporedOkvirKartice} ${aktivan ? styles.rasporedOkvirIzabran : ""}`}>
+                      <RasporedPregled raspored={r} />
+                    </div>
+                    <span className={aktivan ? styles.rasporedImeIzabrano : styles.rasporedIme}>
+                      {NAZIVI_RASPOREDA[r]}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            <div className={styles.rasporedNapomena}>
+              Kad primeniš novi raspored, blokove koje si ručno pomerio vraćam na njihova mesta.
+            </div>
+            <div className={styles.rasporedDugmad}>
+              <button type="button" className={styles.dugmeMalo} onClick={() => setRasporedOtvoren(false)}>
+                Odustani
+              </button>
+              <button
+                type="button"
+                className={`${styles.dugmeMalo} ${styles.dugmePrimarno}`}
+                onClick={() => {
+                  izmeniSablon(primeniRaspored(sablon, rasporedIzbor));
+                  setRasporedOtvoren(false);
+                }}
+              >
+                Primeni raspored
+              </button>
+            </div>
+          </Modal>
+        )}
         <FixedThemeTogglePill />
       </TemaProvider>
     </div>

@@ -15,6 +15,7 @@ import {
   type PodaciSablona,
   type PodesavanjaTabele,
   type PodesavanjaDokumenta,
+  type Raspored,
 } from "./invoice-templates";
 
 // Idempotentno: ako firma već ima podrazumevani šablon, vraća njega (ne pravi drugi). Ovim se - isto kao
@@ -57,13 +58,14 @@ export type IzmenaSablona = {
   table: PodesavanjaTabele;
   doc: PodesavanjaDokumenta;
   accentColor: string;
+  layout: Raspored;
 };
 
 export type SacuvajSablonRezultat = { ok: true; sablon: PodaciSablona } | { ok: false; razlog: string };
 
 // Upisuje izmene u PODRAZUMEVANI šablon firme (za sada postoji samo jedan šablon po firmi - izbor između
-// više šablona dolazi u 8d-7). Menja blocks/blocksOff/blockProps (nivo Blok) i, od Koraka 8d-4b, i
-// table/doc/accentColor (nivoi Tabela i Cela faktura) - layout (Raspored) ostaje netaknut, dolazi u 8d-6.
+// više šablona dolazi u 8d-7). Menja blocks/blocksOff/blockProps (nivo Blok), table/doc/accentColor
+// (nivoi Tabela i Cela faktura, Korak 8d-4b) i, od Koraka 8d-6, i layout (dijalog "Raspored").
 // Već poslate fakture ovo ne dotiče - one crtaju iz svoje zamrznute kopije (Invoice.templateSnapshot),
 // ne iz ovog reda (videti ucitajSablonZaFakturu).
 export async function sacuvajSablon(businessId: string, izmena: IzmenaSablona): Promise<SacuvajSablonRezultat> {
@@ -86,6 +88,7 @@ export async function sacuvajSablon(businessId: string, izmena: IzmenaSablona): 
       table: izmena.table,
       doc: izmena.doc,
       accentColor: izmena.accentColor,
+      layout: izmena.layout,
     },
   });
   return { ok: true, sablon: sablonRedUPodatke(azuriran) };

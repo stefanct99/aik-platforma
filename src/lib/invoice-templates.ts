@@ -406,3 +406,70 @@ export function azurirajDokument(sablon: PodaciSablona, izmena: Partial<Podesava
 export function azurirajAkcentBoju(sablon: PodaciSablona, boja: string): PodaciSablona {
   return { ...sablon, accentColor: boja };
 }
+
+// ===================== Dijalog "Raspored" (Korak 8d-6, frejm Fak24) =====================
+
+export type Raspored = PodaciSablona["layout"];
+
+export const NAZIVI_RASPOREDA: Record<Raspored, string> = {
+  klasican: "Klasičan",
+  moderan: "Moderan, traka sa strane",
+  minimalan: "Minimalan",
+  kompaktan: "Kompaktan, traka na vrhu",
+};
+
+export const SVI_RASPOREDI: Raspored[] = ["klasican", "moderan", "minimalan", "kompaktan"];
+
+// Osnovne pozicije/veličine blokova ("danas", isto što i blockProps u napraviPodrazumevaniSablonPodatke) -
+// IZVEDENO iz te funkcije (ne prepisano ručno) da nikad ne mogu da se raziđu. "Primeni raspored" svaki
+// put kreće OD OVIH pozicija (ne od trenutnih, možda ručno pomerenih) - to je i traženo ponašanje
+// ("blokove koje si ručno pomerio vraćam na njihova mesta", napomena u dijalogu).
+const OSNOVNE_POZICIJE_BLOKOVA: Record<BlokKljuc, { x: number; y: number; w: number; h: number }> = (() => {
+  const osnovni = napraviPodrazumevaniSablonPodatke().blockProps;
+  const pozicije = {} as Record<BlokKljuc, { x: number; y: number; w: number; h: number }>;
+  for (const blok of Object.keys(osnovni) as BlokKljuc[]) {
+    const p = osnovni[blok];
+    pozicije[blok] = { x: p.x, y: p.y, w: p.w, h: p.h };
+  }
+  return pozicije;
+})();
+
+// Presети rasporeda - DIREKTNO iz prototipa (referenca/prototip/js/store.js, window.AIK.TEMPLATE_LAYOUTS):
+// Moderan samo pomera sve blokove +14px udesno (da traka sa strane, 10px, ne preklopi sadržaj) i uključuje
+// sideBar; Kompaktan ništa ne pomera, samo uključuje topBar; Minimalan ima IDENTIČNE pozicije kao Klasičan
+// (prototip ovo priznaje otvoreno - "Minimalan nema frejm-osnovu za drugačiji raspored od Klasičnog pa
+// ostaje identičan, iskreno, ne izmišljeno"). Mali pregledi u dijalogu (Fak24) pokazuju razrađeniju
+// zamišljenu šemu za Minimalan/Kompaktan, ali to su SAMO ilustrativne sličice opcije u dijalogu, ne stvarni
+// raspored koji se primenjuje na fakturu - zadatak izričito traži da se "Primeni raspored" ponašanje
+// zasniva na definicijama u prototipu, ne na sličicama (izveštaj).
+const PRESETI_RASPOREDA: Record<Raspored, { topBar: boolean; sideBar: boolean; dx: number; dy: number }> = {
+  klasican: { topBar: false, sideBar: false, dx: 0, dy: 0 },
+  moderan: { topBar: false, sideBar: true, dx: 14, dy: 0 },
+  minimalan: { topBar: false, sideBar: false, dx: 0, dy: 0 },
+  kompaktan: { topBar: true, sideBar: false, dx: 0, dy: 0 },
+};
+
+// Primenjuje raspored: menja SAMO pozicije/veličine blokova (x/y/w/h) i traku sa strane/na vrhu (doc.topBar/
+// sideBar) i samo polje "layout". Boje, poravnanje, veličina teksta, font, pozadina/okvir po bloku,
+// uključenost blokova, tabela stavki i ostala podešavanja cele fakture ostaju netaknuti ("Tvoji podaci i
+// boje ostaju", napomena u dijalogu).
+export function primeniRaspored(sablon: PodaciSablona, raspored: Raspored): PodaciSablona {
+  const preset = PRESETI_RASPOREDA[raspored];
+  const noveBlockProps = { ...sablon.blockProps };
+  for (const blok of Object.keys(noveBlockProps) as BlokKljuc[]) {
+    const baza = OSNOVNE_POZICIJE_BLOKOVA[blok];
+    noveBlockProps[blok] = {
+      ...noveBlockProps[blok],
+      x: baza.x + preset.dx,
+      y: baza.y + preset.dy,
+      w: baza.w,
+      h: baza.h,
+    };
+  }
+  return {
+    ...sablon,
+    layout: raspored,
+    blockProps: noveBlockProps,
+    doc: { ...sablon.doc, topBar: preset.topBar, sideBar: preset.sideBar },
+  };
+}

@@ -22,6 +22,7 @@ import {
 } from "./invoice-templates";
 import {
   osigurajPodrazumevaniSablon,
+  ucitajPodrazumevaniSablon,
   ucitajSablonZaFakturu,
   sacuvajSablon,
   vratiSablonNaPodrazumevano,
@@ -352,6 +353,41 @@ describe("validirajSvojstvaBloka - čista funkcija (Korak 8d-4)", () => {
 
   it("ne javlja grešku za polja koja nisu deo izmene", () => {
     expect(validirajSvojstvaBloka({ color: "#000" })).toEqual({});
+  });
+});
+
+describe("Ispravka posle testa editora: sačuvana izmena se odmah vidi (tačka 1)", () => {
+  it("izmena poravnanja/veličine/boje bloka je odmah vidljiva kroz NOV, nezavisan poziv za učitavanje (kao nova stranica)", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const podaci = napraviPodrazumevaniSablonPodatke();
+    podaci.blockProps.napomena.color = "#B4281E";
+    podaci.blockProps.rok.align = "center";
+    podaci.blockProps.rok.size = "veci";
+
+    const rezultat = await sacuvajSablon(biznis.id, {
+      blocks: podaci.blocks,
+      blocksOff: podaci.blocksOff,
+      blockProps: podaci.blockProps,
+    });
+    expect(rezultat.ok).toBe(true);
+
+    // Simulira NOVU, nezavisnu posetu stranici (Nova faktura, pregled nacrta, Pošalji ponovo, PDF) - nov
+    // poziv ucitajPodrazumevaniSablon, ne ponovna upotreba objekta iz sacuvajSablon.
+    const svezeUcitan = await ucitajPodrazumevaniSablon(biznis.id);
+    expect(svezeUcitan.blockProps.napomena.color).toBe("#B4281E");
+    expect(svezeUcitan.blockProps.rok.align).toBe("center");
+    expect(svezeUcitan.blockProps.rok.size).toBe("veci");
+  });
+
+  it("isključivanje/uključivanje bloka je odmah vidljivo kroz nov poziv za učitavanje", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const podaci = napraviPodrazumevaniSablonPodatke();
+    const noviBlocksOff = [...podaci.blocksOff, "rok" as const];
+
+    await sacuvajSablon(biznis.id, { blocks: podaci.blocks, blocksOff: noviBlocksOff, blockProps: podaci.blockProps });
+
+    const svezeUcitan = await ucitajPodrazumevaniSablon(biznis.id);
+    expect(svezeUcitan.blocksOff).toContain("rok");
   });
 });
 

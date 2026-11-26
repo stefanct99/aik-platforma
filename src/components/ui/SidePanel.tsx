@@ -13,19 +13,30 @@ export function SidePanel({
   onClose,
   footer,
   children,
+  mobilnoDugmeZatvoriTekst,
 }: {
   naslov: string;
   onClose: () => void;
   footer: ReactNode;
   children: ReactNode;
+  // Korak 8 ispravka: frejmovi Fakture (PhFak7/PhFak14/PhFak28) na telefonu imaju pilulu "X + Zatvori"
+  // umesto gole X ikonice - Pd10 (Dodaj račun, Korak 4/7) je nema, zato je ovo opciono i podrazumevano
+  // isključeno (ne diramo postojeći Podešavanja panel). Desktop je nepromenjen u oba slučaja.
+  mobilnoDugmeZatvoriTekst?: boolean;
 }) {
   return (
     <div className={styles.senka} onMouseDown={onClose}>
       <div className={styles.panel} onMouseDown={(dogadjaj) => dogadjaj.stopPropagation()}>
         <div className={styles.zaglavlje}>
           <span className={styles.naslov}>{naslov}</span>
-          <button type="button" className={styles.zatvoriDugme} onClick={onClose} aria-label="Zatvori">
+          <button
+            type="button"
+            className={`${styles.zatvoriDugme} ${mobilnoDugmeZatvoriTekst ? styles.zatvoriDugmeTekst : ""}`}
+            onClick={onClose}
+            aria-label="Zatvori"
+          >
             <IkonaX size={20} />
+            {mobilnoDugmeZatvoriTekst && <span className={styles.zatvoriTekst}>Zatvori</span>}
           </button>
         </div>
         <div className={styles.telo}>{children}</div>

@@ -43,6 +43,10 @@
   cursor: pointer;
 }
 
+.zatvoriTekst {
+  display: none;
+}
+
 .telo {
   flex: 1;
   box-sizing: border-box;
@@ -87,5 +91,23 @@
   }
   .zaglavlje {
     padding: 0 20px;
+  }
+  /* Ispravka "X umesto Zatvori na telefonu" (frejmovi PhFak7/PhFak14/PhFak28): pilula sa X ikonicom i
+     tekstom, samo na telefonu - desktop ostaje gola kružna X (nepromenjeno). */
+  .zatvoriDugmeTekst {
+    width: auto;
+    height: 36px;
+    padding: 0 12px 0 8px;
+    gap: var(--space-2);
+    border: 1px solid var(--color-border-input);
+    background: var(--color-surface);
+    font-size: 0.875rem;
+  }
+  .zatvoriDugmeTekst svg {
+    width: 16px;
+    height: 16px;
+  }
+  .zatvoriDugmeTekst .zatvoriTekst {
+    display: inline;
   }
 }

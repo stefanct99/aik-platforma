@@ -1,9 +1,8 @@
 // Nova/Uredi ponavljajuća faktura (Korak 8c, frejm Fak14/PhFak14, spec 3.5/6.8 tačka 2). SidePanel (560px,
-// isti kao Pd10/ClientPanel) - frejm PhFak14 na telefonu ima tekstualno dugme "Zatvori" u zaglavlju umesto
-// samog X, ali SidePanel je deljena komponenta (koristi je i "Dodaj račun" i ClientPanel) - ne menjam je za
-// jednu formu, X ikonica ostaje ista na telefonu svuda u aplikaciji (odstupanje od frejma, prijavljeno u
-// izveštaju). Footer ima SAMO "Odustani"/"Sačuvaj" (frejm, potvrđeno direktnom ekstrakcijom - brisanje
-// postoji isključivo iz ⋯ menija na listi, ne iz forme).
+// isti kao Pd10/ClientPanel) - na telefonu koristi "Zatvori" pilulu (mobilnoDugmeZatvoriTekst), tačno po
+// PhFak14 (ispravka - Pd10/"Dodaj račun" tu pilulu nema, pa je ovo opciono na samoj SidePanel komponenti,
+// ne podrazumevano). Footer ima SAMO "Odustani"/"Sačuvaj" (frejm, potvrđeno direktnom ekstrakcijom -
+// brisanje postoji isključivo iz ⋯ menija na listi, ne iz forme).
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
@@ -123,6 +122,7 @@ export function RecurringPanel({
       <SidePanel
         naslov={isNew ? "Nova ponavljajuća faktura" : "Izmeni ponavljajuću fakturu"}
         onClose={onClose}
+        mobilnoDugmeZatvoriTekst
         footer={
           <>
             <Button type="button" varijanta="sekundarno" disabled={uToku} onClick={onClose}>

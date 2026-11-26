@@ -72,6 +72,7 @@ export function ClientPanel({
       <SidePanel
         naslov={isNew ? "Novi klijent" : "Uredi klijenta"}
         onClose={onClose}
+        mobilnoDugmeZatvoriTekst
         footer={
           <div className={styles.podnozjeRed}>
             {!isNew && (

@@ -297,6 +297,13 @@ export function InvoiceEditor({
     if (id) setStage("send");
   }
 
+  // "Promeni izgled fakture" (Korak 8d-4) - vodi na editor šablona, i pamti odakle se došlo (nazad na
+  // istu, već sačuvanu fakturu ako postoji, inače na praznu formu Nova faktura).
+  function naPromeniIzgled() {
+    const povratak = trenutniId ? `/fakture/izmeni/${trenutniId}` : "/fakture/nova";
+    router.push(`/fakture/sablon?povratak=${encodeURIComponent(povratak)}`);
+  }
+
   function zatvori() {
     if (vremeTajmera.current) clearTimeout(vremeTajmera.current);
     if (imaIStogaSeMoraPitatiPriZatvaranju) {
@@ -701,7 +708,7 @@ export function InvoiceEditor({
             <div className={styles.dugmad}>
               {postojeca?.status === "poslata" ? (
                 <>
-                  <a href="#" className={styles.promeniIzgledLink} onClick={(e) => e.preventDefault()}>
+                  <a href="#" className={styles.promeniIzgledLink} onClick={(e) => { e.preventDefault(); naPromeniIzgled(); }}>
                     Promeni izgled fakture
                   </a>
                   <Button type="button" varijanta="primarno" onClick={naSacuvajNacrt}>
@@ -713,7 +720,7 @@ export function InvoiceEditor({
                   <Button type="button" varijanta="sekundarno" onClick={naSacuvajNacrt}>
                     Sačuvaj nacrt
                   </Button>
-                  <a href="#" className={styles.promeniIzgledLink} onClick={(e) => e.preventDefault()}>
+                  <a href="#" className={styles.promeniIzgledLink} onClick={(e) => { e.preventDefault(); naPromeniIzgled(); }}>
                     Promeni izgled fakture
                   </a>
                   <Button type="button" varijanta="primarno" onClick={naPregledajIPosalji}>
@@ -728,7 +735,7 @@ export function InvoiceEditor({
         <div className={styles.pregledKolona}>
           <div className={styles.pregledNatpis}>
             <span>Pregled uživo</span>
-            <a href="#" onClick={(e) => e.preventDefault()}>
+            <a href="#" onClick={(e) => { e.preventDefault(); naPromeniIzgled(); }}>
               Promeni izgled fakture
             </a>
           </div>

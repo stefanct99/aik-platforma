@@ -4,6 +4,13 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
+import { getBusinessForUser } from "@/lib/business";
+import {
+  sacuvajSablon,
+  vratiSablonNaPodrazumevano,
+  type IzmenaSablona,
+} from "@/lib/invoice-templates-db";
+import type { PodaciSablona } from "@/lib/invoice-templates";
 import {
   markInvoicePaid,
   promeniBrojFakture,
@@ -414,4 +421,34 @@ export async function obrisiPonavljajucuAction(id: string) {
   revalidatePath("/fakture/ponavljajuce");
   revalidatePath("/fakture");
   revalidatePath("/fakture/klijenti");
+}
+
+// ===================== Editor šablona fakture (Korak 8d-4) =====================
+// Firma se, kao svuda u ovom fajlu, uzima ISKLJUČIVO preko getBusinessForUser(korisnik.id) - korisnik A
+// ne može da upiše izmene u šablon firme korisnika B čak i da pogodi/izmisli tuđ podatak.
+
+export type SacuvajSablonStanje = { ok: true; sablon: PodaciSablona } | { ok: false; greska: string };
+
+export async function sacuvajSablonAction(izmena: IzmenaSablona): Promise<SacuvajSablonStanje> {
+  const korisnik = await trenutniKorisnik();
+  const biznis = await getBusinessForUser(korisnik.id);
+  if (!biznis) return { ok: false, greska: "Firma ne postoji." };
+
+  const rezultat = await sacuvajSablon(biznis.id, izmena);
+  if (!rezultat.ok) return { ok: false, greska: rezultat.razlog };
+
+  revalidatePath("/fakture/nova");
+  revalidatePath("/fakture/sablon");
+  return { ok: true, sablon: rezultat.sablon };
+}
+
+export async function vratiSablonNaPodrazumevanoAction(): Promise<PodaciSablona> {
+  const korisnik = await trenutniKorisnik();
+  const biznis = await getBusinessForUser(korisnik.id);
+  if (!biznis) throw new Error("Firma ne postoji.");
+
+  const podaci = await vratiSablonNaPodrazumevano(biznis.id);
+  revalidatePath("/fakture/nova");
+  revalidatePath("/fakture/sablon");
+  return podaci;
 }

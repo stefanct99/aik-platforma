@@ -2,12 +2,14 @@
 // komponenta koja crta fakturu IZ ŠABLONA (src/lib/invoice-templates.ts): koji blokovi su vidljivi, u kom
 // redosledu, i njihov stil (poravnanje, veličina, boja, pozadina, okvir), plus podešavanja tabele stavki i
 // cele fakture (boja akcenta, margine, traka, žig, podnožje, logo). Ista komponenta se koristi za uživo
-// pregled (pregled fakture, Nova faktura, Pošalji ponovo) i za PDF (src/lib/pdf.ts renderuje stranicu koja
-// prikazuje SAMO ovu komponentu) - "mora da izgleda isto" je zato doslovno ispunjeno (isti kod).
+// pregled (pregled fakture, Nova faktura, Pošalji ponovo), za PDF (src/lib/pdf.ts renderuje stranicu koja
+// prikazuje SAMO ovu komponentu) i za platno editora šablona (Korak 8d-4, opcioni prop "izmeni" - isti kod,
+// bez odvojene logike, isto kao editMode u prototipu).
 // Sadržaj svakog bloka (koji tekst, bold, prelomi reda) je NEPROMENJEN od pre Koraka 8d-2 - samo je sada
 // uslovljen time da li je blok uključen, i stilizovan prema blockProps umesto fiksnim CSS vrednostima.
 // Papir je UVEK svetao (bg #fff/#111), bez obzira na temu aplikacije (potvrđeno: Dk_Fak15 crta isti beli
 // papir u tamnoj temi).
+import type { CSSProperties, MouseEvent } from "react";
 import {
   bojaZaglavljaTabele,
   definicijeKolonaTabele,
@@ -20,6 +22,7 @@ import {
   stilBloka,
   velicinaLoga,
   vidljiviBlokovi,
+  type BlokKljuc,
   type PodaciSablona,
 } from "@/lib/invoice-templates";
 import { formatNovacKompaktno, formatNovacPuno } from "@/lib/money";
@@ -44,6 +47,7 @@ const LABELS = {
     vat: "VAT (0%)",
     total: "TOTAL AMOUNT",
     payWithin: (d: number) => `Pay within ${d} days`,
+    signature: "Signature and stamp",
   },
   sr: {
     date: "DATUM",
@@ -62,10 +66,18 @@ const LABELS = {
     vat: "PDV (0%)",
     total: "UKUPNO",
     payWithin: (d: number) => `Rok plaćanja: ${d} dana.`,
+    signature: "Potpis i pečat",
   },
 } as const;
 
 export type StavkaDoc = { desc: string; qty: number; price: number };
+
+// Editor šablona (Korak 8d-4): klik na blok na platnu ga bira, isto kao klik u levoj listi - opciono,
+// niko drugi (pregled, PDF, Nova faktura) ovo ne prosleđuje.
+export type IzmenaNaPlatnu = {
+  izabran: BlokKljuc | null;
+  onOdaberi: (blok: BlokKljuc) => void;
+};
 
 export type InvoiceDocProps = {
   broj: string;
@@ -94,6 +106,7 @@ export type InvoiceDocProps = {
   // Polje "Napomena" sa forme fakture (Invoice.note) - blok "napomena" ga prikazuje SAMO ako je popunjeno
   // (Korak 8d-2, pravilo 3). Fiksna linija "Nisam u sistemu PDV." ostaje nezavisna od ovog bloka.
   napomena?: string | null;
+  izmeni?: IzmenaNaPlatnu;
 };
 
 function formatDatumZaFakturu(datum: Date): string {
@@ -114,6 +127,7 @@ export function InvoiceDoc({
   racun,
   sablon,
   napomena,
+  izmeni,
 }: InvoiceDocProps) {
   const L = LABELS[jezik];
   const jeRsd = valuta === "RSD";
@@ -134,9 +148,27 @@ export function InvoiceDoc({
   const pozivNaBroj = jeRsd && jezik === "sr" ? ` Poziv na broj: 97 ${broj}.` : "";
   const prikazujRok = prikazi("rok");
   const prikazujNapomenu = prikazi("napomena") && !!napomena;
+  const prikazujPotpis = prikazi("potpis");
   const prikazujFooter = prikazujRok || prikazujNapomenu || jezik === "sr";
 
   const velLoga = velicinaLoga(sablon);
+
+  // Editor šablona (Korak 8d-4): klik na bilo koji vidljivi blok ga bira. Van editora (izmeni nije
+  // prosleđeno) ništa od ovoga ne menja ni izgled ni ponašanje.
+  function klasaKlika(blok: BlokKljuc): string {
+    if (!izmeni) return "";
+    return `${styles.izaberivBlok} ${izmeni.izabran === blok ? styles.izabranBlok : ""}`;
+  }
+  function stilKlika(): CSSProperties {
+    return izmeni ? { cursor: "pointer" } : {};
+  }
+  function naKlik(blok: BlokKljuc) {
+    if (!izmeni) return undefined;
+    return (e: MouseEvent) => {
+      e.stopPropagation();
+      izmeni.onOdaberi(blok);
+    };
+  }
 
   return (
     <div
@@ -153,14 +185,19 @@ export function InvoiceDoc({
         <div className={styles.zaglavljeRed}>
           {prikazi("logo") && (
             <span
-              className={styles.logo}
-              style={{ width: velLoga, height: velLoga, borderRadius: oblikLoga(sablon) }}
+              className={`${styles.logo} ${klasaKlika("logo")}`}
+              style={{ width: velLoga, height: velLoga, borderRadius: oblikLoga(sablon), ...stilKlika() }}
+              onClick={naKlik("logo")}
             >
               <IkonaFakture size={Math.round(velLoga * 0.55)} />
             </span>
           )}
           {prikazi("datum") && (
-            <b style={stilBloka(sablon, "datum")}>
+            <b
+              className={klasaKlika("datum")}
+              style={{ ...stilBloka(sablon, "datum"), ...stilKlika() }}
+              onClick={naKlik("datum")}
+            >
               {L.date}: {formatDatumZaFakturu(datumIzdavanja)}
             </b>
           )}
@@ -173,13 +210,23 @@ export function InvoiceDoc({
             <div className={styles.levo}>
               {levoBlokovi.map((b) =>
                 b === "broj" ? (
-                  <span key="broj" className={styles.brojFakture} style={stilBloka(sablon, "broj")}>
+                  <span
+                    key="broj"
+                    className={`${styles.brojFakture} ${klasaKlika("broj")}`}
+                    style={{ ...stilBloka(sablon, "broj"), ...stilKlika() }}
+                    onClick={naKlik("broj")}
+                  >
                     {L.invoiceNo}
                     {jezik === "sr" ? " " : ": "}
                     {broj}
                   </span>
                 ) : (
-                  <div key="klijent" style={stilBloka(sablon, "klijent")}>
+                  <div
+                    key="klijent"
+                    className={klasaKlika("klijent")}
+                    style={{ ...stilBloka(sablon, "klijent"), ...stilKlika() }}
+                    onClick={naKlik("klijent")}
+                  >
                     <b>
                       {L.to} {klijent?.name ?? "–"}
                     </b>
@@ -204,7 +251,12 @@ export function InvoiceDoc({
             <div className={styles.desno} style={{ width: sablon.blockProps.firma.w }}>
               {desnoBlokovi.map((b) =>
                 b === "firma" ? (
-                  <div key="firma" style={stilBloka(sablon, "firma")}>
+                  <div
+                    key="firma"
+                    className={klasaKlika("firma")}
+                    style={{ ...stilBloka(sablon, "firma"), ...stilKlika() }}
+                    onClick={naKlik("firma")}
+                  >
                     <b>
                       {L.from} {imeFirme}
                     </b>
@@ -217,7 +269,12 @@ export function InvoiceDoc({
                     {firma.city ?? ""}, {drzava}
                   </div>
                 ) : (
-                  <div key="banka" style={stilBloka(sablon, "banka")}>
+                  <div
+                    key="banka"
+                    className={klasaKlika("banka")}
+                    style={{ ...stilBloka(sablon, "banka"), ...stilKlika() }}
+                    onClick={naKlik("banka")}
+                  >
                     {/* Samo JEDAN <br/> (ne dva kao kod "firma" koja je i dalje jedan flat blok): originalni
                         kod je imao "adresa<br/><br/>Podaci za uplatu" (1 prazan red) u JEDNOM div-u; otkad
                         su firma/banka razdvojeni u dva <div>-a, granica div-ova već daje taj PRVI prelom
@@ -251,7 +308,11 @@ export function InvoiceDoc({
       {(prikazujStavke || prikazujUkupno) && (
         <div className={`${styles.tabela} ${imaOkvirTabele(sablon) ? styles.tabelaOkvir : ""}`}>
           {prikazujStavke && (
-            <div style={stilBloka(sablon, "stavke")}>
+            <div
+              className={klasaKlika("stavke")}
+              style={{ ...stilBloka(sablon, "stavke"), ...stilKlika() }}
+              onClick={naKlik("stavke")}
+            >
               <div
                 className={styles.tabelaRedZaglavlje}
                 style={{ padding: razmakRedovaTabele(sablon), background: bojaZaglavljaTabele(sablon) }}
@@ -278,7 +339,11 @@ export function InvoiceDoc({
             </div>
           )}
           {prikazujUkupno && (
-            <div style={stilBloka(sablon, "ukupno")}>
+            <div
+              className={klasaKlika("ukupno")}
+              style={{ ...stilBloka(sablon, "ukupno"), ...stilKlika() }}
+              onClick={naKlik("ukupno")}
+            >
               <div
                 className={`${styles.tabelaRed} ${imaLinijeRedovaTabele(sablon) ? styles.linijaReda : ""}`}
                 style={{ padding: razmakRedovaTabele(sablon) }}
@@ -301,13 +366,21 @@ export function InvoiceDoc({
       {prikazujFooter && (
         <div className={styles.footer}>
           {prikazujRok && (
-            <span style={stilBloka(sablon, "rok")}>
+            <span
+              className={klasaKlika("rok")}
+              style={{ ...stilBloka(sablon, "rok"), ...stilKlika() }}
+              onClick={naKlik("rok")}
+            >
               {L.payWithin(dueDays)}
               {pozivNaBroj}
             </span>
           )}
           {prikazujNapomenu && (
-            <span style={stilBloka(sablon, "napomena")}>
+            <span
+              className={klasaKlika("napomena")}
+              style={{ ...stilBloka(sablon, "napomena"), ...stilKlika() }}
+              onClick={naKlik("napomena")}
+            >
               {prikazujRok && <br />}
               {napomena}
             </span>
@@ -318,6 +391,16 @@ export function InvoiceDoc({
               Nisam u sistemu PDV.
             </>
           )}
+        </div>
+      )}
+
+      {prikazujPotpis && (
+        <div
+          className={`${styles.potpis} ${klasaKlika("potpis")}`}
+          style={{ ...stilBloka(sablon, "potpis"), ...stilKlika() }}
+          onClick={naKlik("potpis")}
+        >
+          {L.signature}
         </div>
       )}
 

@@ -109,3 +109,21 @@
   font-size: 0.6875rem;
   color: #6b706c;
 }
+
+.potpis {
+  border-top: 1px solid #ccc;
+  padding-top: 4px;
+}
+
+/* Editor šablona (Korak 8d-4): klik na blok na platnu ga bira - primenjeno SAMO kad je prop "izmeni"
+   prosleđen (pregled/PDF/Nova faktura ga ne prosleđuju, pa ovde ništa ne menjaju). */
+.izaberivBlok:hover {
+  outline: 1px dashed rgba(15, 42, 34, 0.4);
+  outline-offset: 2px;
+}
+
+.izabranBlok {
+  outline: 2px solid #0f2a22 !important;
+  outline-offset: 2px;
+  border-radius: 2px;
+}

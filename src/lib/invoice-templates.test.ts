@@ -15,9 +15,17 @@ import {
   imaOkvirTabele,
   imaLinijeRedovaTabele,
   definicijeKolonaTabele,
+  prebaciUkljucenostBloka,
+  azurirajSvojstvaBloka,
+  validirajSvojstvaBloka,
   type PodaciSablona,
 } from "./invoice-templates";
-import { osigurajPodrazumevaniSablon, ucitajSablonZaFakturu } from "./invoice-templates-db";
+import {
+  osigurajPodrazumevaniSablon,
+  ucitajSablonZaFakturu,
+  sacuvajSablon,
+  vratiSablonNaPodrazumevano,
+} from "./invoice-templates-db";
 
 // Integracioni testovi (aik_test), isti obrazac kao src/lib/invoices.test.ts: svaki test pravi sopstvenog
 // korisnika/firmu sa nasumičnim podacima, sve se briše na kraju (Business ima onDelete:Cascade na
@@ -291,5 +299,143 @@ describe("napraviPodrazumevaniSablonPodatke - pikselska vernost (Korak 8d-2)", (
     for (const blok of Object.keys(sablon.blockProps) as (keyof typeof sablon.blockProps)[]) {
       expect(sablon.blockProps[blok].color).toBe("#111");
     }
+  });
+});
+
+describe("prebaciUkljucenostBloka - čista funkcija (Korak 8d-4)", () => {
+  it("isključuje blok koji je bio uključen", () => {
+    const sablon = napraviPodrazumevaniSablonPodatke();
+    const novi = prebaciUkljucenostBloka(sablon, "napomena");
+    expect(novi.blocksOff).toContain("napomena");
+    expect(sablon.blocksOff).not.toContain("napomena"); // originalni objekat nepromenjen
+  });
+
+  it("uključuje blok koji je bio isključen ('potpis' je isključen po podrazumevanom)", () => {
+    const sablon = napraviPodrazumevaniSablonPodatke();
+    const novi = prebaciUkljucenostBloka(sablon, "potpis");
+    expect(novi.blocksOff).not.toContain("potpis");
+  });
+
+  it("ne menja redosled u 'blocks'", () => {
+    const sablon = napraviPodrazumevaniSablonPodatke();
+    const novi = prebaciUkljucenostBloka(sablon, "banka");
+    expect(novi.blocks).toEqual(sablon.blocks);
+  });
+});
+
+describe("azurirajSvojstvaBloka - čista funkcija (Korak 8d-4)", () => {
+  it("menja SAMO navedena polja jednog bloka, ostale blokove ostavlja netaknute", () => {
+    const sablon = napraviPodrazumevaniSablonPodatke();
+    const novi = azurirajSvojstvaBloka(sablon, "firma", { color: "#B4281E", align: "center" });
+    expect(novi.blockProps.firma.color).toBe("#B4281E");
+    expect(novi.blockProps.firma.align).toBe("center");
+    expect(novi.blockProps.firma.x).toBe(sablon.blockProps.firma.x); // ostala polja nepromenjena
+    expect(novi.blockProps.banka).toEqual(sablon.blockProps.banka); // drugi blok netaknut
+    expect(sablon.blockProps.firma.color).toBe("#111"); // originalni objekat nepromenjen
+  });
+});
+
+describe("validirajSvojstvaBloka - čista funkcija (Korak 8d-4)", () => {
+  it("prihvata ispravnu izmenu bez grešaka", () => {
+    expect(validirajSvojstvaBloka({ x: 10, y: -5, w: 100, h: 20 })).toEqual({});
+  });
+
+  it("Širina/Visina moraju biti veće od 0", () => {
+    const greske = validirajSvojstvaBloka({ w: 0, h: -10 });
+    expect(greske.w).toBeTruthy();
+    expect(greske.h).toBeTruthy();
+  });
+
+  it("Pozicija X/Y sme da bude i negativna (blok sme van papira, kao u prototipu)", () => {
+    expect(validirajSvojstvaBloka({ x: -50, y: -20 })).toEqual({});
+  });
+
+  it("ne javlja grešku za polja koja nisu deo izmene", () => {
+    expect(validirajSvojstvaBloka({ color: "#000" })).toEqual({});
+  });
+});
+
+describe("sacuvajSablon / vratiSablonNaPodrazumevano (Korak 8d-4, server akcija)", () => {
+  it("upisuje izmenu bloka u bazu i vraća ažurirane podatke", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const podaci = napraviPodrazumevaniSablonPodatke();
+    podaci.blockProps.napomena.color = "#1F4FBF";
+
+    const rezultat = await sacuvajSablon(biznis.id, {
+      blocks: podaci.blocks,
+      blocksOff: podaci.blocksOff,
+      blockProps: podaci.blockProps,
+    });
+    expect(rezultat.ok).toBe(true);
+    if (!rezultat.ok) return;
+    expect(rezultat.sablon.blockProps.napomena.color).toBe("#1F4FBF");
+
+    const ucitan = await ucitajSablonZaFakturu({ businessId: biznis.id, templateSnapshot: null });
+    expect(ucitan.blockProps.napomena.color).toBe("#1F4FBF");
+  });
+
+  it("odbija upis sa neispravnom vrednošću (Širina 0)", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const podaci = napraviPodrazumevaniSablonPodatke();
+    podaci.blockProps.firma.w = 0;
+
+    const rezultat = await sacuvajSablon(biznis.id, {
+      blocks: podaci.blocks,
+      blocksOff: podaci.blocksOff,
+      blockProps: podaci.blockProps,
+    });
+    expect(rezultat.ok).toBe(false);
+
+    // Baza ostaje nepromenjena (ništa nije upisano) kad validacija ne prođe.
+    const ucitan = await ucitajSablonZaFakturu({ businessId: biznis.id, templateSnapshot: null });
+    expect(ucitan.blockProps.firma.w).toBe(210);
+  });
+
+  it("'Vrati na podrazumevano' vraća sve vrednosti na fabrička podešavanja", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const podaci = napraviPodrazumevaniSablonPodatke();
+    podaci.blockProps.napomena.color = "#1F4FBF";
+    await sacuvajSablon(biznis.id, { blocks: podaci.blocks, blocksOff: podaci.blocksOff, blockProps: podaci.blockProps });
+
+    const vraceno = await vratiSablonNaPodrazumevano(biznis.id);
+    expect(vraceno).toEqual(napraviPodrazumevaniSablonPodatke());
+
+    const ucitan = await ucitajSablonZaFakturu({ businessId: biznis.id, templateSnapshot: null });
+    expect(ucitan.blockProps.napomena.color).toBe("#111");
+  });
+
+  it("već poslata faktura (sa zamrznutom kopijom) ostaje nepromenjena nakon čuvanja novog šablona", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const klijent = await prisma.client.create({
+      data: { businessId: biznis.id, name: "Test klijent", billingEmail: "klijent@primer.rs", address: "Adresa 1" },
+    });
+    const zamrznutSablon = napraviPodrazumevaniSablonPodatke();
+    zamrznutSablon.blockProps.napomena.color = "#8A5A00";
+    const faktura = await prisma.invoice.create({
+      data: {
+        businessId: biznis.id,
+        clientId: klijent.id,
+        number: "1/26-1",
+        currency: "EUR",
+        lang: "sr",
+        issueDate: new Date("2026-01-01T00:00:00.000Z"),
+        dueDays: 7,
+        status: "poslata",
+        sentAt: new Date("2026-01-01T00:00:00.000Z"),
+        templateSnapshot: zamrznutSablon,
+      },
+    });
+
+    // Sačuvaj SASVIM drugačiji šablon za firmu (simulira korisnika koji menja izgled posle slanja).
+    const noviPodaci = napraviPodrazumevaniSablonPodatke();
+    noviPodaci.blockProps.napomena.color = "#1F4FBF";
+    await sacuvajSablon(biznis.id, {
+      blocks: noviPodaci.blocks,
+      blocksOff: noviPodaci.blocksOff,
+      blockProps: noviPodaci.blockProps,
+    });
+
+    const ucitanZaFakturu = await ucitajSablonZaFakturu(faktura);
+    expect(ucitanZaFakturu.blockProps.napomena.color).toBe("#8A5A00"); // i dalje zamrznuta boja, ne nova
   });
 });

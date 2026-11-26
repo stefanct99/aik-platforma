@@ -135,6 +135,22 @@ type InvoiceTemplateRed = {
   assignRule: unknown;
 };
 
+// Nazivi blokova za levu listu u editoru (Korak 8d-4, frejm Fak18) - tačno isti tekst i redosled kao
+// BLOCK_LABELS u prototipu.
+export const NAZIVI_BLOKOVA: Record<BlokKljuc, string> = {
+  logo: "Logo",
+  datum: "Datum",
+  broj: "Broj fakture",
+  klijent: "Podaci o klijentu",
+  firma: "Podaci o tvojoj firmi",
+  banka: "Bankovni podaci",
+  stavke: "Tabela stavki",
+  ukupno: "Ukupno",
+  rok: "Rok plaćanja",
+  napomena: "Napomena",
+  potpis: "Potpis i pečat",
+};
+
 export function sablonRedUPodatke(red: InvoiceTemplateRed): PodaciSablona {
   return {
     name: red.name,
@@ -284,4 +300,50 @@ export function definicijeKolonaTabele(
       poravnanje: "right",
     },
   };
+}
+
+// ===================== Uređivanje šablona (Korak 8d-4) =====================
+// Čiste funkcije koje iz TRENUTNIH podataka šablona i jedne izmene računaju NOVE podatke - ni jedna ne
+// dotiče bazu (to radi src/lib/invoice-templates-db.ts, koji ih poziva pre upisa).
+
+// Uključi/isključi blok (prekidač u levoj listi, Korak 8d-4 tačka 3) - redosled u "blocks" se NE menja
+// (prevlačenje mišem za promenu redosleda dolazi u kasnijem koraku).
+export function prebaciUkljucenostBloka(sablon: PodaciSablona, blok: BlokKljuc): PodaciSablona {
+  const isključen = sablon.blocksOff.includes(blok);
+  return {
+    ...sablon,
+    blocksOff: isključen ? sablon.blocksOff.filter((b) => b !== blok) : [...sablon.blocksOff, blok],
+  };
+}
+
+export type IzmenaSvojstavaBloka = Partial<SvojstvaBloka>;
+
+// Primeni izmenu na JEDAN blok (desni panel, Korak 8d-4 tačka 5) - ne proverava ispravnost, to radi
+// validirajSvojstvaBloka (poziva se pre ovoga, i ponovo na serveru pre upisa).
+export function azurirajSvojstvaBloka(
+  sablon: PodaciSablona,
+  blok: BlokKljuc,
+  izmena: IzmenaSvojstavaBloka,
+): PodaciSablona {
+  return {
+    ...sablon,
+    blockProps: { ...sablon.blockProps, [blok]: { ...sablon.blockProps[blok], ...izmena } },
+  };
+}
+
+export type GreskaSvojstavaBloka = Partial<Record<"x" | "y" | "w" | "h", string>>;
+
+// Validacija brojčanih polja (Pozicija X/Y, Širina/Visina) - Pozicija sme da bude bilo koji ceo broj
+// (blok sme da ide i van papira, isto kao u prototipu), Širina/Visina moraju biti veće od 0.
+export function validirajSvojstvaBloka(izmena: IzmenaSvojstavaBloka): GreskaSvojstavaBloka {
+  const greske: GreskaSvojstavaBloka = {};
+  for (const polje of ["x", "y"] as const) {
+    const v = izmena[polje];
+    if (v !== undefined && !Number.isFinite(v)) greske[polje] = "Mora biti ceo broj.";
+  }
+  for (const polje of ["w", "h"] as const) {
+    const v = izmena[polje];
+    if (v !== undefined && (!Number.isFinite(v) || v <= 0)) greske[polje] = "Mora biti broj veći od 0.";
+  }
+  return greske;
 }

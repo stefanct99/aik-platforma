@@ -1,0 +1,504 @@
+/* Editor šablona fakture (Korak 8d-4, frejm Fak18, desktop, nivo "Blok"). Širine kolona (300/320px) su iz
+   SAMOG frejma, ne iz prototipa (koji u base.css ima 260/300px) - frejm je ovde pobedio (izveštaj). */
+.shell {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+}
+
+.topbar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  padding: 0 var(--space-5);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.topbarLevo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.zatvoriPilula {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 40px;
+  padding: 0 14px 0 10px;
+  border-radius: 9999px;
+  border: 1px solid var(--color-border-input);
+  background: var(--color-surface);
+  font-size: 1rem;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.sablonPilula {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-input);
+  background: var(--color-surface);
+  font-size: 1rem;
+  color: var(--color-text);
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.znacka {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 9999px;
+  background: var(--color-badge-warning-bg);
+  color: var(--color-badge-warning-text);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.topbarDesno {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.dugmeMalo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  cursor: pointer;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border-input);
+}
+
+.dugmeMalo:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.dugmePrimarno {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: 0;
+}
+
+.greskaTraka {
+  flex: none;
+  padding: var(--space-2) var(--space-5);
+  background: var(--color-alert-danger-bg);
+  color: var(--color-alert-danger-text);
+  font-size: 0.875rem;
+}
+
+.telo {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+/* ===================== Leva kolona: Blokovi ===================== */
+.blokoviKolona {
+  width: 300px;
+  flex: none;
+  box-sizing: border-box;
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  overflow-y: auto;
+}
+
+.blokoviNaslov {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.blokoviNaslov > span:first-child {
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.hint {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.blokoviLista {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.blokRed {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 10px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  color: var(--color-text);
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.blokRedIskljucen {
+  color: var(--color-text-muted);
+}
+
+.blokRedIzabran {
+  background: var(--color-subnav-bg-active);
+  border-color: #c8f169;
+}
+
+.rucka {
+  display: flex;
+  flex: none;
+  color: var(--color-text-muted);
+}
+
+.blokIme {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dodajPadajuci {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+  border-radius: 8px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card-lg);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.dodajPadajuci button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  font-size: 0.9375rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.dodajPadajuci button:hover {
+  background: var(--color-bg);
+}
+
+/* ===================== Sredina: platno ===================== */
+.canvasKolona {
+  flex: 1;
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  overflow: auto;
+  padding: var(--space-6);
+  min-width: 0;
+}
+
+.zumRed {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: 6px;
+  border-radius: 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card-lg);
+  flex: none;
+}
+
+.zumDugme {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  min-width: 36px;
+  padding: 0 10px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.zumVrednost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 10px;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.razdvajac {
+  width: 1px;
+  height: 20px;
+  background: var(--color-border-input);
+}
+
+/* "Mreža"/"Vodilice"/"Primer podataka" - samo prikaz, bez dejstva (isto kao u prototipu). */
+.oznakaInertna {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.platnoOmot {
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card-lg);
+  overflow: hidden;
+  background: #fff;
+}
+
+/* ===================== Desna kolona: panel bloka ===================== */
+.panelKolona {
+  width: 320px;
+  flex: none;
+  box-sizing: border-box;
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border-left: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  overflow-y: auto;
+}
+
+.nivoPrekidac {
+  display: flex;
+  gap: 6px;
+  padding: 4px;
+  border-radius: 9999px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-input);
+  flex: none;
+}
+
+.nivoAktivan,
+.nivoOnemogucen {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.nivoAktivan {
+  background: var(--color-text);
+  color: var(--color-surface);
+}
+
+.nivoOnemogucen {
+  color: var(--color-text-faint);
+  cursor: default;
+}
+
+.izabraniNaslov {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.izabraniIme {
+  font-size: 1rem;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.izabraniPodnaslov {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.kontrola {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.labela {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.segment {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 9px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-input);
+  height: 44px;
+  box-sizing: border-box;
+}
+
+.segment button {
+  flex: 1;
+  height: 36px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.segmentAktivan {
+  background: var(--color-text) !important;
+  color: var(--color-surface) !important;
+}
+
+.svatchRed {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.svatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  box-sizing: border-box;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+}
+
+.svatchAktivan {
+  outline: 2px solid var(--color-mark-bg);
+  outline-offset: 3px;
+}
+
+.fontPrikaz {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  height: 44px;
+  padding: 0 14px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-input);
+  background: var(--color-surface);
+  font-size: 1rem;
+  color: var(--color-text-muted);
+}
+
+.dvaPolja {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.polje {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+.poljeKutija {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 44px;
+  padding: 0 14px;
+  box-sizing: border-box;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-input);
+  background: var(--color-surface);
+  font-size: 1rem;
+}
+
+.poljeUnos {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  font-size: 1rem;
+  font-family: inherit;
+  padding: 0;
+  /* Sakriva strelice za gore/dole - frejm ih ne pokazuje, polje je obično "238 px", ne stepper. */
+  -moz-appearance: textfield;
+}
+
+.poljeUnos::-webkit-outer-spin-button,
+.poljeUnos::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.poljeJedinica {
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.prekidacRed {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  font-size: 1rem;
+  color: var(--color-text);
+}

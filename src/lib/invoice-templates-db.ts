@@ -5,7 +5,15 @@
 // (page.tsx fajlovi) i drugi server-side moduli (src/lib/business.ts, src/lib/invoices.ts).
 import { Prisma } from "../../generated/prisma/client";
 import { prisma } from "./prisma";
-import { napraviPodrazumevaniSablonPodatke, sablonRedUPodatke, type PodaciSablona } from "./invoice-templates";
+import {
+  napraviPodrazumevaniSablonPodatke,
+  sablonRedUPodatke,
+  validirajSvojstvaBloka,
+  NAZIVI_BLOKOVA,
+  type BlokKljuc,
+  type SvojstvaBloka,
+  type PodaciSablona,
+} from "./invoice-templates";
 
 // Idempotentno: ako firma već ima podrazumevani šablon, vraća njega (ne pravi drugi). Ovim se - isto kao
 // kod BankAccount.isDefault (vidi komentar u schema.prisma) - na nivou aplikacije obezbeđuje da firma
@@ -36,4 +44,54 @@ export async function ucitajSablonZaFakturu(faktura: {
 }): Promise<PodaciSablona> {
   if (faktura.templateSnapshot) return faktura.templateSnapshot as PodaciSablona;
   return ucitajPodrazumevaniSablon(faktura.businessId);
+}
+
+// ===================== Editor šablona (Korak 8d-4) =====================
+
+export type IzmenaSablona = {
+  blocks: BlokKljuc[];
+  blocksOff: BlokKljuc[];
+  blockProps: Record<BlokKljuc, SvojstvaBloka>;
+};
+
+export type SacuvajSablonRezultat = { ok: true; sablon: PodaciSablona } | { ok: false; razlog: string };
+
+// Upisuje izmene u PODRAZUMEVANI šablon firme (za sada postoji samo jedan šablon po firmi - izbor između
+// više šablona dolazi u 8d-7). Menja SAMO blocks/blocksOff/blockProps (jedino što editor u ovom koraku
+// uređuje) - table/doc/accentColor/layout ostaju netaknuti dok ne postoje nivoi Tabela/Cela faktura (8d-4b).
+// Već poslate fakture ovo ne dotiče - one crtaju iz svoje zamrznute kopije (Invoice.templateSnapshot),
+// ne iz ovog reda (videti ucitajSablonZaFakturu).
+export async function sacuvajSablon(businessId: string, izmena: IzmenaSablona): Promise<SacuvajSablonRezultat> {
+  for (const blok of Object.keys(izmena.blockProps) as BlokKljuc[]) {
+    const greske = validirajSvojstvaBloka(izmena.blockProps[blok]);
+    if (Object.keys(greske).length > 0) {
+      return { ok: false, razlog: `Neispravna vrednost za blok "${NAZIVI_BLOKOVA[blok]}".` };
+    }
+  }
+
+  const postojeci = await prisma.invoiceTemplate.findFirst({ where: { businessId, isDefault: true } });
+  if (!postojeci) return { ok: false, razlog: "Šablon ne postoji." };
+
+  const azuriran = await prisma.invoiceTemplate.update({
+    where: { id: postojeci.id },
+    data: { blocks: izmena.blocks, blocksOff: izmena.blocksOff, blockProps: izmena.blockProps },
+  });
+  return { ok: true, sablon: sablonRedUPodatke(azuriran) };
+}
+
+// "Vrati na podrazumevano" (Korak 8d-4 tačka 6) - vraća CEO red na fabrička podešavanja iz Koraka 8d-1,
+// ne samo blockProps (tako da kasniji nivoi Tabela/Cela faktura zateknu čiste podatke ako je korisnik
+// prethodno nešto menjao u njima kroz buduće korake).
+export async function vratiSablonNaPodrazumevano(businessId: string): Promise<PodaciSablona> {
+  const postojeci = await prisma.invoiceTemplate.findFirst({ where: { businessId, isDefault: true } });
+  const podaci = napraviPodrazumevaniSablonPodatke();
+  if (!postojeci) {
+    const novi = await osigurajPodrazumevaniSablon(businessId);
+    return sablonRedUPodatke(novi);
+  }
+  await prisma.invoiceTemplate.update({
+    where: { id: postojeci.id },
+    data: { ...podaci, assignRule: podaci.assignRule ?? Prisma.JsonNull },
+  });
+  return podaci;
 }

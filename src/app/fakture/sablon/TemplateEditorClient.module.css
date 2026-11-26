@@ -306,7 +306,11 @@
   width: 320px;
   flex: none;
   box-sizing: border-box;
-  padding: var(--space-5);
+  /* Dno je veće (ne var(--space-5) kao ostale strane) da poslednji red (Okvir oko bloka) uvek može da se
+     skroluje IZNAD plutajuće pilule svetle/tamne teme (position:fixed, bottom:24px, visina 40px - vidi
+     FixedThemeTogglePill) - frejm Fak18 TU pilulu ima (isto mesto kao svuda u aplikaciji), pa je ostavljena,
+     samo je panelu dat prostor da se ne sudari sa njom (ispravka, 26.11.2026). */
+  padding: var(--space-5) var(--space-5) 88px var(--space-5);
   background: var(--color-surface);
   border-left: 1px solid var(--color-border);
   display: flex;

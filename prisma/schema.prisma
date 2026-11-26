@@ -146,6 +146,7 @@ model Business {
   invoices          Invoice[]
   incomes           Income[]
   recurringInvoices RecurringInvoice[]
+  invoiceTemplates  InvoiceTemplate[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -338,6 +339,13 @@ model Invoice {
   // Da li je kvačica "Obavesti klijenta mejlom" bila čekirana pri storniranju (Fak17) - istorijski zapis.
   voidNotifyClient Boolean?
 
+  // Zamrznut izgled (Korak 8d-1, odluka 1): kopija podataka šablona (isti oblik kao InvoiceTemplate
+  // ispod: blocks/blocksOff/layout/accentColor/blockProps/table/doc) u trenutku slanja. null za nacrte
+  // (koji prate TRENUTNI šablon firme, bez kopije) i za fakture poslate pre ovog koraka (crtaju se iz
+  // podrazumevanog šablona firme - vidi izveštaj). Popunjavanje ovog polja pri slanju dolazi u kasnijem
+  // koraku (8d-2/8d-3, kad postoji funkcija koja bira pravi šablon za fakturu) - ovde postoji samo mesto.
+  templateSnapshot Json?
+
   items   InvoiceItem[]
   events  InvoiceEvent[]
   incomes Income[]
@@ -349,6 +357,46 @@ model Invoice {
   @@index([businessId])
   @@index([clientId])
   @@map("invoice")
+}
+
+// Šablon izgleda fakture (Korak 8d-1, spec 7.6, frejmovi Fak18/Fak24-27). Oblik podataka je preuzet
+// DIREKTNO iz prototipa (referenca/prototip/js/store.js, window.AIK.DEFAULT_TEMPLATE i
+// invoiceTemplates), ne izmišljen ovde - isti nazivi polja (blocks/blocksOff/blockProps/table/doc/
+// assignRule), da bi 8d-2 (crtanje) mogao da prepiše prototipovu logiku umesto da je ponovo smišlja.
+// "Tačno jedan podrazumevani po firmi" je, kao i kod BankAccount.isDefault (vidi komentar tamo), pravilo
+// APLIKACIJE (src/lib/invoice-templates.ts, osigurajPodrazumevaniSablon), ne šeme.
+model InvoiceTemplate {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  name        String
+  isDefault   Boolean @default(false)
+  layout      String  @default("klasican") // "klasican" | "moderan" | "minimalan" | "kompaktan"
+  accentColor String  @default("#0F2A22")
+
+  // Redosled blokova i koji su isključeni - oba String[] sa istim ključevima kao BLOCK_LABELS u
+  // prototipu (logo/datum/broj/klijent/firma/banka/stavke/ukupno/rok/napomena/potpis).
+  blocks    Json
+  blocksOff Json
+
+  // { [blokKljuc]: {x,y,w,h,align,size,color,font,bg,border} } - pozicija/stil svakog bloka na platnu.
+  blockProps Json
+
+  // Podešavanja tabele stavki (kolone, linije, razmak, boja zaglavlja) - vidi Fak25.
+  table Json
+
+  // Podešavanja cele fakture (fontovi, margine, traka, žig, podnožje, logo) - vidi Fak26.
+  doc Json
+
+  // null (bez pravila, uvek za podrazumevani) | {domestic:bool} | {currency:string} | {lang:"sr"|"en"}.
+  assignRule Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([businessId])
+  @@map("invoice_template")
 }
 
 model InvoiceItem {

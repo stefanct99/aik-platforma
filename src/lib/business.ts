@@ -1,6 +1,7 @@
 import { randomBytes } from "node:crypto";
 import { prisma } from "./prisma";
 import { generateInboundCode, slugifyBusinessName } from "./inbound-mail";
+import { osigurajPodrazumevaniSablon } from "./invoice-templates";
 
 // Korak 7, spec 7.13 (Povezivanje): privatan token za pretplatu na kalendar. Nasumičan heksadecimalni
 // string, nezavisan od inboundCode (taj se ne menja, ovaj menja korisnik klikom na "Generiši novi").
@@ -86,7 +87,7 @@ export async function saveOnboardingStep1(userId: string, podaci: Step1Podaci) {
   }
 
   const { inboundSlug, inboundCode } = await generateUniqueInbound(podaci.name);
-  return prisma.business.create({
+  const novaFirma = await prisma.business.create({
     data: {
       ownerId: userId,
       ...podaci,
@@ -96,6 +97,10 @@ export async function saveOnboardingStep1(userId: string, podaci: Step1Podaci) {
       onboardingStep: 2,
     },
   });
+  // Korak 8d-1: svaka firma dobija svoj podrazumevani šablon fakture čim nastane, da ga pregled i PDF
+  // (budući korak) uvek imaju spreman, bez posebnog "prvog podešavanja" ekrana.
+  await osigurajPodrazumevaniSablon(novaFirma.id);
+  return novaFirma;
 }
 
 export async function saveOnboardingStep2(userId: string, podaci: Step2Podaci) {

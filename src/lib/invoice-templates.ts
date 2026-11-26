@@ -82,6 +82,12 @@ export type PodaciSablona = {
 // "potpis" (Potpis i pečat) je u prototipu UKLJUČEN po podrazumevanom šablonu, ali današnji InvoiceDoc
 // ne crta nikakav red za potpis - zato je ovde stavljen u blocksOff (isključen), da podrazumevani šablon
 // ne uvede novi, do sada nepostojeći red na fakturi.
+//
+// table.lines: "okvir" (Korak 8d-4b, ISPRAVLJENO sa "horizontalne" iz Koraka 8d-1/8d-2) - "okvir" i
+// "horizontalne" su u 8d-2 greškom crtali IDENTIČNO (oba = spoljašnji okvir + linije), pa promena ovde NE
+// menja izgled (potvrđeno pikselskim poređenjem) - sad "okvir" ispravno znači i jedno i drugo (današnja
+// slika), "horizontalne" samo linije bez spoljašnjeg okvira, "bez" ništa. Frejm Fak25 i pokazuje "Okvir"
+// kao izabran za "Moj izgled" - ovo je ujedno i usklađivanje sa frejmom.
 export function napraviPodrazumevaniSablonPodatke(): PodaciSablona {
   return {
     name: "Moj izgled",
@@ -103,7 +109,7 @@ export function napraviPodrazumevaniSablonPodatke(): PodaciSablona {
       napomena: { x: 32, y: 648, w: 300, h: 16, align: "left", size: "normal", color: "#111", font: "Arial", bg: false, border: false },
       potpis: { x: 332, y: 658, w: 84, h: 18, align: "right", size: "manji", color: "#111", font: "Arial", bg: false, border: false },
     },
-    table: { cols: ["opis", "iznos"], lines: "horizontalne", density: "normalno", zebra: false, headerColor: "#ffffff" },
+    table: { cols: ["opis", "iznos"], lines: "okvir", density: "normalno", zebra: false, headerColor: "#ffffff" },
     doc: {
       titleFont: "Inter",
       textFont: "Arial",
@@ -261,15 +267,16 @@ export function razmakRedovaTabele(sablon: PodaciSablona): string {
   return RAZMAK_REDOVA[sablon.table.density];
 }
 
-// Spoljašnji okvir tabele (danas uvek postoji) - samo "bez" ga uklanja.
+// Spoljašnji okvir tabele - SAMO "okvir" ga ima (Korak 8d-4b: "okvir" i "horizontalne" su ispravljeni da
+// budu stvarno različiti, umesto oba isto kao u Koraku 8d-2 - "okvir" sad znači i spoljašnji okvir I
+// linije između redova, tačna današnja slika; "horizontalne" samo linije, bez spoljašnjeg okvira).
 export function imaOkvirTabele(sablon: PodaciSablona): boolean {
-  return sablon.table.lines !== "bez";
+  return sablon.table.lines === "okvir";
 }
 
-// Linija između redova (danas uvek postoji, .tabelaRed{border-top}) - "okvir" i "horizontalne" je imaju,
-// "bez" nema ni to ni spoljašnji okvir.
+// Linija između redova - "okvir" i "horizontalne" je imaju, "bez" nema ni to ni spoljašnji okvir.
 export function imaLinijeRedovaTabele(sablon: PodaciSablona): boolean {
-  return sablon.table.lines !== "bez";
+  return sablon.table.lines === "okvir" || sablon.table.lines === "horizontalne";
 }
 
 export type DefinicijaKoloneTabele = {
@@ -287,13 +294,16 @@ export function definicijeKolonaTabele(
   return {
     opis: { label: jezik === "sr" ? "OPIS" : "DESCRIPTION", get: (st) => st.desc || "–", poravnanje: "left" },
     kolicina: { label: jezik === "sr" ? "KOL." : "QTY", get: (st) => String(st.qty || 1), poravnanje: "right" },
-    jm: { label: "JM", get: () => "kom", poravnanje: "right" },
+    // "Jedinica mere" i "Popust" (Korak 8d-4b, tačka 5): InvoiceItem u bazi NEMA ova dva polja (samo
+    // desc/qty/price) - NE izmišlja se vrednost (npr. uvek "kom" ili uvek "0%"), kolona ostaje izborljiva
+    // (kao u okviru) ali prikazuje "–" dok stvarno polje ne postoji u bazi. Videti izveštaj.
+    jm: { label: jezik === "sr" ? "JM" : "UNIT", get: () => "–", poravnanje: "right" },
     cena: {
       label: jezik === "sr" ? "CENA" : "PRICE",
       get: (st) => formatNovacPuno(st.price || 0, valuta),
       poravnanje: "right",
     },
-    popust: { label: jezik === "sr" ? "POPUST" : "DISCOUNT", get: () => "0%", poravnanje: "right" },
+    popust: { label: jezik === "sr" ? "POPUST" : "DISCOUNT", get: () => "–", poravnanje: "right" },
     iznos: {
       label: (jezik === "sr" ? "IZNOS " : "AMOUNT ") + valuta,
       get: (st) => formatNovacPuno((st.qty || 1) * (st.price || 0), valuta),
@@ -346,4 +356,53 @@ export function validirajSvojstvaBloka(izmena: IzmenaSvojstavaBloka): GreskaSvoj
     if (v !== undefined && (!Number.isFinite(v) || v <= 0)) greske[polje] = "Mora biti broj veći od 0.";
   }
   return greske;
+}
+
+// ===================== Uređivanje šablona - Tabela i Cela faktura (Korak 8d-4b) =====================
+
+// Nazivi kolona za "Kolone" listu u editoru (Fak25) - isti redosled kao u okviru.
+export const NAZIVI_KOLONA_TABELE: Record<KolonaTabele, string> = {
+  opis: "Opis",
+  kolicina: "Količina",
+  jm: "Jedinica mere",
+  cena: "Cena",
+  popust: "Popust",
+  iznos: "Iznos",
+};
+
+// Redosled SVIH kolona za prikaz u "Kolone" listi (Fak25: Opis/Količina/Jedinica mere/Cena/Popust/Iznos) -
+// fiksan, za razliku od blokova kolone se ne prevlače (ni u okviru ni u prototipu nema te opcije).
+export const SVE_KOLONE_TABELE: KolonaTabele[] = ["opis", "kolicina", "jm", "cena", "popust", "iznos"];
+
+// Uključi/isključi jednu kolonu tabele stavki (Fak25 "Kolone").
+// Nove kolone se uvek ubacuju na SVOJE mesto u redosledu Opis/Količina/JM/Cena/Popust/Iznos (ne na kraj
+// liste, po redosledu klika) - inače bi npr. ponovno uključivanje "Opis" posle "Iznos" prikazalo opis
+// POSLE iznosa na fakturi, što izgleda pokvareno.
+export function prebaciKolonuTabele(sablon: PodaciSablona, kolona: KolonaTabele): PodaciSablona {
+  const ukljucena = sablon.table.cols.includes(kolona);
+  return {
+    ...sablon,
+    table: {
+      ...sablon.table,
+      cols: ukljucena
+        ? sablon.table.cols.filter((c) => c !== kolona)
+        : SVE_KOLONE_TABELE.filter((k) => sablon.table.cols.includes(k) || k === kolona),
+    },
+  };
+}
+
+// Izmena ostalih podešavanja tabele stavki (Linije, Razmak redova, Naizmenična boja, Boja zaglavlja).
+export function azurirajTabelu(sablon: PodaciSablona, izmena: Partial<PodesavanjaTabele>): PodaciSablona {
+  return { ...sablon, table: { ...sablon.table, ...izmena } };
+}
+
+// Izmena podešavanja cele fakture (Fak26: fontovi, margine, traka, žig, podnožje, logo).
+export function azurirajDokument(sablon: PodaciSablona, izmena: Partial<PodesavanjaDokumenta>): PodaciSablona {
+  return { ...sablon, doc: { ...sablon.doc, ...izmena } };
+}
+
+// "Boja akcenta" (Fak26) - jedino polje nivoa "Cela faktura" koje NIJE unutar sablon.doc (živi direktno
+// na PodaciSablona, isto kao u prototipu).
+export function azurirajAkcentBoju(sablon: PodaciSablona, boja: string): PodaciSablona {
+  return { ...sablon, accentColor: boja };
 }

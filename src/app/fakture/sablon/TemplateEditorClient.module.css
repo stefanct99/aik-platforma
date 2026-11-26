@@ -330,7 +330,7 @@
 }
 
 .nivoAktivan,
-.nivoOnemogucen {
+.nivoNeaktivan {
   flex: 1;
   display: inline-flex;
   align-items: center;
@@ -339,6 +339,9 @@
   border-radius: 9999px;
   font-size: 0.875rem;
   white-space: nowrap;
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
 }
 
 .nivoAktivan {
@@ -346,9 +349,10 @@
   color: var(--color-surface);
 }
 
-.nivoOnemogucen {
-  color: var(--color-text-faint);
-  cursor: default;
+.nivoNeaktivan {
+  background: none;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border-input);
 }
 
 .izabraniNaslov {
@@ -499,6 +503,23 @@
 }
 
 .prekidacRed {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+/* ===================== Panel Tabela (Korak 8d-4b, frejm Fak25) ===================== */
+/* Redovi kolona - PROSTIJI od .blokRed (bez ručke, bez pozadine/okvira pri izboru) - frejm ih crta kao
+   obične redove, ne kao čip-dugmiće (zadatak je rekao "čipovi", frejm je ovde pobedio, izveštaj). */
+.kolonaLista {
+  display: flex;
+  flex-direction: column;
+}
+
+.kolonaRed {
   display: flex;
   align-items: center;
   justify-content: space-between;

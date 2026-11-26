@@ -18,6 +18,10 @@ import {
   prebaciUkljucenostBloka,
   azurirajSvojstvaBloka,
   validirajSvojstvaBloka,
+  prebaciKolonuTabele,
+  azurirajTabelu,
+  azurirajDokument,
+  azurirajAkcentBoju,
   type PodaciSablona,
 } from "./invoice-templates";
 import {
@@ -26,7 +30,21 @@ import {
   ucitajSablonZaFakturu,
   sacuvajSablon,
   vratiSablonNaPodrazumevano,
+  type IzmenaSablona,
 } from "./invoice-templates-db";
+
+// Pretvara PUNE podatke šablona (PodaciSablona) u ono što sacuvajSablon očekuje (IzmenaSablona) - koristi
+// se u testovima da ne ponavljaju sva polja na svakom pozivu.
+function celaIzmena(podaci: PodaciSablona): IzmenaSablona {
+  return {
+    blocks: podaci.blocks,
+    blocksOff: podaci.blocksOff,
+    blockProps: podaci.blockProps,
+    table: podaci.table,
+    doc: podaci.doc,
+    accentColor: podaci.accentColor,
+  };
+}
 
 // Integracioni testovi (aik_test), isti obrazac kao src/lib/invoices.test.ts: svaki test pravi sopstvenog
 // korisnika/firmu sa nasumičnim podacima, sve se briše na kraju (Business ima onDelete:Cascade na
@@ -356,6 +374,94 @@ describe("validirajSvojstvaBloka - čista funkcija (Korak 8d-4)", () => {
   });
 });
 
+describe("imaOkvirTabele / imaLinijeRedovaTabele - 3 odvojena stanja (Korak 8d-4b)", () => {
+  it("'okvir' ima i spoljašnji okvir i linije između redova (podrazumevano, tačna današnja slika)", () => {
+    const sablon = napraviPodrazumevaniSablonPodatke();
+    expect(sablon.table.lines).toBe("okvir");
+    expect(imaOkvirTabele(sablon)).toBe(true);
+    expect(imaLinijeRedovaTabele(sablon)).toBe(true);
+  });
+
+  it("'horizontalne' ima SAMO linije između redova, bez spoljašnjeg okvira", () => {
+    const sablon = napraviPodrazumevaniSablonPodatke();
+    sablon.table.lines = "horizontalne";
+    expect(imaOkvirTabele(sablon)).toBe(false);
+    expect(imaLinijeRedovaTabele(sablon)).toBe(true);
+  });
+
+  it("'bez' nema ni okvir ni linije", () => {
+    const sablon = napraviPodrazumevaniSablonPodatke();
+    sablon.table.lines = "bez";
+    expect(imaOkvirTabele(sablon)).toBe(false);
+    expect(imaLinijeRedovaTabele(sablon)).toBe(false);
+  });
+});
+
+describe("definicijeKolonaTabele - Jedinica mere i Popust (Korak 8d-4b, podaci ne postoje u bazi)", () => {
+  it("JM i Popust prikazuju crticu '–', ne izmišljenu vrednost (nema unit/discount na InvoiceItem)", () => {
+    const def = definicijeKolonaTabele("sr", "EUR");
+    expect(def.jm.get({ desc: "x", qty: 2, price: 50000 })).toBe("–");
+    expect(def.popust.get({ desc: "x", qty: 2, price: 50000 })).toBe("–");
+  });
+});
+
+describe("prebaciKolonuTabele - čista funkcija (Korak 8d-4b)", () => {
+  it("isključuje kolonu koja je bila uključena", () => {
+    const sablon = napraviPodrazumevaniSablonPodatke();
+    const novi = prebaciKolonuTabele(sablon, "opis");
+    expect(novi.table.cols).not.toContain("opis");
+    expect(sablon.table.cols).toContain("opis"); // originalni objekat nepromenjen
+  });
+
+  it("uključuje kolonu koja je bila isključena ('kolicina' je isključena po podrazumevanom)", () => {
+    const sablon = napraviPodrazumevaniSablonPodatke();
+    const novi = prebaciKolonuTabele(sablon, "kolicina");
+    expect(novi.table.cols).toContain("kolicina");
+  });
+
+  it("nova kolona ide na SVOJE mesto u redosledu Opis/Količina/JM/Cena/Popust/Iznos, ne na kraj liste", () => {
+    let sablon = napraviPodrazumevaniSablonPodatke(); // cols: [opis, iznos]
+    sablon = prebaciKolonuTabele(sablon, "cena"); // uključi Cena (ide IZMEĐU jm i popust, posle opis/iznos ostaju ista 2)
+    expect(sablon.table.cols).toEqual(["opis", "cena", "iznos"]);
+    sablon = prebaciKolonuTabele(sablon, "kolicina"); // uključi Količina (ide ISPRED cene)
+    expect(sablon.table.cols).toEqual(["opis", "kolicina", "cena", "iznos"]);
+  });
+});
+
+describe("azurirajTabelu - čista funkcija (Korak 8d-4b)", () => {
+  it("menja samo navedena polja, ostatak šablona netaknut", () => {
+    const sablon = napraviPodrazumevaniSablonPodatke();
+    const novi = azurirajTabelu(sablon, { lines: "bez", zebra: true });
+    expect(novi.table.lines).toBe("bez");
+    expect(novi.table.zebra).toBe(true);
+    expect(novi.table.density).toBe(sablon.table.density);
+    expect(novi.doc).toEqual(sablon.doc);
+    expect(sablon.table.lines).toBe("okvir"); // originalni objekat nepromenjen
+  });
+});
+
+describe("azurirajDokument - čista funkcija (Korak 8d-4b)", () => {
+  it("menja samo navedena polja, ostatak šablona netaknut", () => {
+    const sablon = napraviPodrazumevaniSablonPodatke();
+    const novi = azurirajDokument(sablon, { topBar: true, footerText: "Hvala" });
+    expect(novi.doc.topBar).toBe(true);
+    expect(novi.doc.footerText).toBe("Hvala");
+    expect(novi.doc.margins).toBe(sablon.doc.margins);
+    expect(novi.table).toEqual(sablon.table);
+    expect(sablon.doc.topBar).toBe(false); // originalni objekat nepromenjen
+  });
+});
+
+describe("azurirajAkcentBoju - čista funkcija (Korak 8d-4b)", () => {
+  it("menja accentColor, ostatak šablona netaknut", () => {
+    const sablon = napraviPodrazumevaniSablonPodatke();
+    const novi = azurirajAkcentBoju(sablon, "#1F4FBF");
+    expect(novi.accentColor).toBe("#1F4FBF");
+    expect(novi.table).toEqual(sablon.table);
+    expect(sablon.accentColor).toBe("#0F2A22"); // originalni objekat nepromenjen
+  });
+});
+
 describe("Ispravka posle testa editora: sačuvana izmena se odmah vidi (tačka 1)", () => {
   it("izmena poravnanja/veličine/boje bloka je odmah vidljiva kroz NOV, nezavisan poziv za učitavanje (kao nova stranica)", async () => {
     const { biznis } = await napraviKorisnikaSaFirmom();
@@ -364,11 +470,7 @@ describe("Ispravka posle testa editora: sačuvana izmena se odmah vidi (tačka 1
     podaci.blockProps.rok.align = "center";
     podaci.blockProps.rok.size = "veci";
 
-    const rezultat = await sacuvajSablon(biznis.id, {
-      blocks: podaci.blocks,
-      blocksOff: podaci.blocksOff,
-      blockProps: podaci.blockProps,
-    });
+    const rezultat = await sacuvajSablon(biznis.id, celaIzmena(podaci));
     expect(rezultat.ok).toBe(true);
 
     // Simulira NOVU, nezavisnu posetu stranici (Nova faktura, pregled nacrta, Pošalji ponovo, PDF) - nov
@@ -384,7 +486,7 @@ describe("Ispravka posle testa editora: sačuvana izmena se odmah vidi (tačka 1
     const podaci = napraviPodrazumevaniSablonPodatke();
     const noviBlocksOff = [...podaci.blocksOff, "rok" as const];
 
-    await sacuvajSablon(biznis.id, { blocks: podaci.blocks, blocksOff: noviBlocksOff, blockProps: podaci.blockProps });
+    await sacuvajSablon(biznis.id, { ...celaIzmena(podaci), blocksOff: noviBlocksOff });
 
     const svezeUcitan = await ucitajPodrazumevaniSablon(biznis.id);
     expect(svezeUcitan.blocksOff).toContain("rok");
@@ -397,11 +499,7 @@ describe("sacuvajSablon / vratiSablonNaPodrazumevano (Korak 8d-4, server akcija)
     const podaci = napraviPodrazumevaniSablonPodatke();
     podaci.blockProps.napomena.color = "#1F4FBF";
 
-    const rezultat = await sacuvajSablon(biznis.id, {
-      blocks: podaci.blocks,
-      blocksOff: podaci.blocksOff,
-      blockProps: podaci.blockProps,
-    });
+    const rezultat = await sacuvajSablon(biznis.id, celaIzmena(podaci));
     expect(rezultat.ok).toBe(true);
     if (!rezultat.ok) return;
     expect(rezultat.sablon.blockProps.napomena.color).toBe("#1F4FBF");
@@ -415,11 +513,7 @@ describe("sacuvajSablon / vratiSablonNaPodrazumevano (Korak 8d-4, server akcija)
     const podaci = napraviPodrazumevaniSablonPodatke();
     podaci.blockProps.firma.w = 0;
 
-    const rezultat = await sacuvajSablon(biznis.id, {
-      blocks: podaci.blocks,
-      blocksOff: podaci.blocksOff,
-      blockProps: podaci.blockProps,
-    });
+    const rezultat = await sacuvajSablon(biznis.id, celaIzmena(podaci));
     expect(rezultat.ok).toBe(false);
 
     // Baza ostaje nepromenjena (ništa nije upisano) kad validacija ne prođe.
@@ -431,7 +525,7 @@ describe("sacuvajSablon / vratiSablonNaPodrazumevano (Korak 8d-4, server akcija)
     const { biznis } = await napraviKorisnikaSaFirmom();
     const podaci = napraviPodrazumevaniSablonPodatke();
     podaci.blockProps.napomena.color = "#1F4FBF";
-    await sacuvajSablon(biznis.id, { blocks: podaci.blocks, blocksOff: podaci.blocksOff, blockProps: podaci.blockProps });
+    await sacuvajSablon(biznis.id, celaIzmena(podaci));
 
     const vraceno = await vratiSablonNaPodrazumevano(biznis.id);
     expect(vraceno).toEqual(napraviPodrazumevaniSablonPodatke());
@@ -465,13 +559,72 @@ describe("sacuvajSablon / vratiSablonNaPodrazumevano (Korak 8d-4, server akcija)
     // Sačuvaj SASVIM drugačiji šablon za firmu (simulira korisnika koji menja izgled posle slanja).
     const noviPodaci = napraviPodrazumevaniSablonPodatke();
     noviPodaci.blockProps.napomena.color = "#1F4FBF";
-    await sacuvajSablon(biznis.id, {
-      blocks: noviPodaci.blocks,
-      blocksOff: noviPodaci.blocksOff,
-      blockProps: noviPodaci.blockProps,
-    });
+    await sacuvajSablon(biznis.id, celaIzmena(noviPodaci));
 
     const ucitanZaFakturu = await ucitajSablonZaFakturu(faktura);
     expect(ucitanZaFakturu.blockProps.napomena.color).toBe("#8A5A00"); // i dalje zamrznuta boja, ne nova
+  });
+});
+
+describe("sacuvajSablon - nivoi Tabela i Cela faktura (Korak 8d-4b)", () => {
+  it("upisuje izmene tabele i cele fakture, odmah vidljive kroz nov poziv za učitavanje", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const podaci = napraviPodrazumevaniSablonPodatke();
+    podaci.table.cols = ["opis", "kolicina", "iznos"];
+    podaci.table.zebra = true;
+    podaci.doc.topBar = true;
+    podaci.accentColor = "#1F4FBF";
+
+    const rezultat = await sacuvajSablon(biznis.id, celaIzmena(podaci));
+    expect(rezultat.ok).toBe(true);
+
+    const svezeUcitan = await ucitajPodrazumevaniSablon(biznis.id);
+    expect(svezeUcitan.table.cols).toEqual(["opis", "kolicina", "iznos"]);
+    expect(svezeUcitan.table.zebra).toBe(true);
+    expect(svezeUcitan.doc.topBar).toBe(true);
+    expect(svezeUcitan.accentColor).toBe("#1F4FBF");
+  });
+
+  it("'Vrati na podrazumevano' vraća tabelu, celu fakturu i akcent boju na fabrička podešavanja", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const podaci = napraviPodrazumevaniSablonPodatke();
+    podaci.table.zebra = true;
+    podaci.doc.topBar = true;
+    podaci.accentColor = "#1F4FBF";
+    await sacuvajSablon(biznis.id, celaIzmena(podaci));
+
+    const vraceno = await vratiSablonNaPodrazumevano(biznis.id);
+    expect(vraceno).toEqual(napraviPodrazumevaniSablonPodatke());
+  });
+
+  it("već poslata faktura ostaje nepromenjena nakon izmene tabele/cele fakture", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const klijent = await prisma.client.create({
+      data: { businessId: biznis.id, name: "Test klijent", billingEmail: "klijent@primer.rs", address: "Adresa 1" },
+    });
+    const zamrznutSablon = napraviPodrazumevaniSablonPodatke();
+    const faktura = await prisma.invoice.create({
+      data: {
+        businessId: biznis.id,
+        clientId: klijent.id,
+        number: "1/26-2",
+        currency: "EUR",
+        lang: "sr",
+        issueDate: new Date("2026-01-01T00:00:00.000Z"),
+        dueDays: 7,
+        status: "poslata",
+        sentAt: new Date("2026-01-01T00:00:00.000Z"),
+        templateSnapshot: zamrznutSablon,
+      },
+    });
+
+    const noviPodaci = napraviPodrazumevaniSablonPodatke();
+    noviPodaci.table.zebra = true;
+    noviPodaci.accentColor = "#1F4FBF";
+    await sacuvajSablon(biznis.id, celaIzmena(noviPodaci));
+
+    const ucitanZaFakturu = await ucitajSablonZaFakturu(faktura);
+    expect(ucitanZaFakturu.table.zebra).toBe(false);
+    expect(ucitanZaFakturu.accentColor).toBe("#0F2A22");
   });
 });

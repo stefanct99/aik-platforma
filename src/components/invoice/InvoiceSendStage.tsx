@@ -14,7 +14,7 @@ import { IkonaSpajalica, IkonaKvacicaKrug } from "@/components/ui/icons";
 import { FixedThemeTogglePill } from "@/components/app-shell/FixedThemeTogglePill";
 import { InvoiceDoc } from "./InvoiceDoc";
 import { InvoiceDocPreview } from "./InvoiceDocPreview";
-import { posaljiFakturuAction } from "@/app/(app)/fakture/actions";
+import { posaljiFakturuAction, posaljiPonovoAction } from "@/app/(app)/fakture/actions";
 import { formatNovacPuno } from "@/lib/money";
 import { formatDatumSrpski } from "@/lib/datum";
 import type { KlijentZaFakturu, RacunZaFakturu, StavkaForme } from "./InvoiceEditor";
@@ -44,6 +44,7 @@ export function InvoiceSendStage({
   onPosalji,
   onNazad,
   onZatvoriPoslato,
+  rezim = "prvo",
 }: {
   id: string;
   broj: string;
@@ -60,6 +61,10 @@ export function InvoiceSendStage({
   onPosalji: (p: PotvrdaSlanja) => void;
   onNazad: () => void;
   onZatvoriPoslato: () => void;
+  // "Pošalji ponovo" (Korak 8d ispravka) - VEĆ poslata/plaćena faktura ponovo prolazi kroz ISTI ekran,
+  // ali bez čuvanja nacrta (broj/status/rok/stavke se ne diraju) i sa drugim tekstom na par mesta koja
+  // bi inače lagala (nema "izmena" pre ovoga, uplata se možda već prati ili je već stigla).
+  rezim?: "prvo" | "ponovo";
 }) {
   const router = useRouter();
   const imeFirme = `${(firma.ownerName || "").trim()} ${firma.name}`.trim();
@@ -84,6 +89,20 @@ export function InvoiceSendStage({
     setAdresaGreska(null);
     setUToku(true);
     setGreska(null);
+
+    if (rezim === "ponovo") {
+      const fd = new FormData();
+      fd.set("adresa", trim);
+      const rezultat = await posaljiPonovoAction(id, { errors: {}, posalji: null }, fd);
+      setUToku(false);
+      if (rezultat.errors.email) {
+        setAdresaGreska(rezultat.errors.email);
+        return;
+      }
+      if (rezultat.posalji) onPosalji(rezultat.posalji);
+      return;
+    }
+
     const fd = new FormData();
     fd.set("clientId", klijent?.id ?? "");
     fd.set("currency", valuta);
@@ -116,9 +135,13 @@ export function InvoiceSendStage({
             <IkonaKvacicaKrug size={32} />
           </span>
           <div className={styles.tekstStog}>
-            <span className={styles.naslovPotvrde}>Faktura {posalji.broj} je poslata</span>
+            <span className={styles.naslovPotvrde}>
+              Faktura {posalji.broj} je {rezim === "ponovo" ? "ponovo poslata" : "poslata"}
+            </span>
             <span className={styles.opisPotvrde}>
-              {posalji.klijentIme} je dobio mejl. Sad pratim uplatu: čim banka pošalje mejl, sam knjižim da je plaćena.
+              {rezim === "ponovo"
+                ? `${posalji.klijentIme} je ponovo dobio mejl sa fakturom.`
+                : `${posalji.klijentIme} je dobio mejl. Sad pratim uplatu: čim banka pošalje mejl, sam knjižim da je plaćena.`}
             </span>
           </div>
           <div className={styles.kv}>
@@ -173,9 +196,9 @@ export function InvoiceSendStage({
         <div className={styles.formaKolona}>
           <div className={styles.gornjaTraka}>
             <button type="button" className={styles.nazadPilula} onClick={onNazad}>
-              <IkonaStrelicaLevo size={18} /> Nazad na izmene
+              <IkonaStrelicaLevo size={18} /> {rezim === "ponovo" ? "Nazad na fakturu" : "Nazad na izmene"}
             </button>
-            <span className={styles.statusPilulaDesktop}>Nacrt, još nije poslato</span>
+            {rezim === "prvo" && <span className={styles.statusPilulaDesktop}>Nacrt, još nije poslato</span>}
           </div>
 
           <div className={styles.telo}>
@@ -219,8 +242,13 @@ export function InvoiceSendStage({
             </label>
 
             <div className={styles.dugmad}>
-              <Button type="button" varijanta="sekundarno" disabled={uToku} onClick={() => router.push("/fakture")}>
-                Sačuvaj nacrt
+              <Button
+                type="button"
+                varijanta="sekundarno"
+                disabled={uToku}
+                onClick={rezim === "ponovo" ? onNazad : () => router.push("/fakture")}
+              >
+                {rezim === "ponovo" ? "Odustani" : "Sačuvaj nacrt"}
               </Button>
               <Button type="button" varijanta="primarno" disabled={uToku} onClick={posaljiKlik}>
                 {uToku ? "Šaljem..." : "Pošalji fakturu"}

@@ -8,6 +8,7 @@ import {
   markInvoicePaid,
   promeniBrojFakture,
   removeDraftInvoice,
+  resendInvoice,
   sacuvajNacrt,
   sendInvoice,
   sendReminder,
@@ -277,6 +278,46 @@ export async function posaljiFakturuAction(
   revalidatePath(`/fakture/${sacuvano.id}`);
   return {
     id: sacuvano.id,
+    errors: {},
+    posalji: {
+      broj: rezultat.podaci.broj,
+      klijentIme: rezultat.podaci.klijentIme,
+      billingEmail: rezultat.podaci.billingEmail,
+      ukupno: rezultat.podaci.ukupno,
+      valuta: rezultat.podaci.valuta,
+      rokIso: rezultat.podaci.rok.toISOString(),
+    },
+  };
+}
+
+export type PonovnoSlanjeStanje = {
+  errors: Partial<Record<"email", string>>;
+  posalji: {
+    broj: string;
+    klijentIme: string;
+    billingEmail: string;
+    ukupno: number;
+    valuta: string;
+    rokIso: string;
+  } | null;
+};
+
+// "Pošalji ponovo" (zadatak tačka 3) - za VEĆ poslatu/plaćenu fakturu: isti ekran (InvoiceSendStage,
+// rezim="ponovo"), ali drugačija server akcija od prvog slanja - ne čuva nikakve izmene (broj/status/
+// rok/stavke ostaju netaknuti), samo upisuje novi događaj u Istoriju i šalje razvojni mejl ponovo.
+export async function posaljiPonovoAction(
+  invoiceId: string,
+  _prethodnoStanje: PonovnoSlanjeStanje,
+  formData: FormData,
+): Promise<PonovnoSlanjeStanje> {
+  const korisnik = await trenutniKorisnik();
+  const adresa = String(formData.get("adresa") || "").trim();
+
+  const rezultat = await resendInvoice(korisnik.id, invoiceId, adresa);
+  if (!rezultat.ok) return { errors: { email: rezultat.razlog }, posalji: null };
+
+  revalidatePath(`/fakture/${invoiceId}`);
+  return {
     errors: {},
     posalji: {
       broj: rezultat.podaci.broj,

@@ -438,6 +438,56 @@ export async function sendInvoice(
   };
 }
 
+// "Pošalji ponovo" (Korak 8d ispravka, zadatak tačka 3) - za VEĆ poslatu ili plaćenu fakturu: isti ekran
+// slanja (ista komponenta InvoiceSendStage, rezim="ponovo"), ali ovo NIJE prvo slanje (sendInvoice) - broj,
+// status, rok i stavke se uopšte ne diraju (nema sacuvajNacrt/updateMany prelaza statusa), samo se upiše
+// NOVI događaj u Istoriju i ponovo pošalje razvojni mejl. Prototip/okviri Fak11/Fak12 ne definišu ponašanje
+// za ponovno slanje (prototip "Pošalji ponovo" je samo toast bez stvarnog toka) - ovo je napravljeno tačno
+// po opisu iz zadatka.
+export async function resendInvoice(
+  userId: string,
+  invoiceId: string,
+  prijemnaAdresa?: string,
+): Promise<SlanjeFaktureRezultat> {
+  const faktura = await nadjiFakturuKorisnika(userId, invoiceId);
+  if (!faktura) return { ok: false, razlog: "Faktura ne postoji." };
+  if (faktura.status !== "poslata" && faktura.status !== "placena") {
+    return { ok: false, razlog: "Faktura mora prvo da bude poslata." };
+  }
+
+  const puna = await prisma.invoice.findUniqueOrThrow({
+    where: { id: invoiceId },
+    include: { client: true, items: true, business: true },
+  });
+  const adresaZaSlanje = puna.client.billingEmail?.trim() || prijemnaAdresa?.trim();
+  if (!adresaZaSlanje || !adresaZaSlanje.includes("@")) {
+    return { ok: false, razlog: "Klijent nema sačuvan mejl - upiši ispravnu adresu pre slanja." };
+  }
+
+  const sad = new Date();
+  await prisma.invoiceEvent.create({ data: { invoiceId, tip: "ponovo_poslata", datum: sad } });
+
+  const imeFirme = `${(puna.business.ownerName || "").trim()} ${puna.business.name}`.trim();
+  await posaljiRazvojniMejl(
+    adresaZaSlanje,
+    `Invoice ${puna.number} from ${imeFirme}`,
+    `Faktura ${puna.number} je ponovo poslata. PDF: /api/fakture/${puna.id}/pdf (razvojni režim: prilog se ne šalje stvarno).`,
+  );
+
+  return {
+    ok: true,
+    podaci: {
+      id: puna.id,
+      broj: puna.number,
+      klijentIme: puna.client.name,
+      billingEmail: adresaZaSlanje,
+      ukupno: izracunajUkupno(puna.items),
+      valuta: puna.currency,
+      rok: rokFakture(puna.issueDate, puna.dueDays),
+    },
+  };
+}
+
 export type PromenaBrojaRezultat = { ok: true } | { ok: false; razlog: string };
 
 // Ručna promena broja (spec 8.2, zadatak tačka 5): format + jedinstvenost unutar firme. Godina i mesec u

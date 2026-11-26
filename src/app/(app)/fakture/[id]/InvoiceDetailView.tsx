@@ -136,7 +136,7 @@ export function InvoiceDetailView({
           )}
           {efektivni === "poslata" && (
             <>
-              <Button varijanta="sekundarno" onClick={() => router.push("/fakture/nova")}>
+              <Button varijanta="sekundarno" onClick={() => router.push(`/fakture/posalji-ponovo/${invoice.id}`)}>
                 Pošalji ponovo
               </Button>
               <Button varijanta="primarno" onClick={() => setModal("placeno")}>
@@ -161,7 +161,7 @@ export function InvoiceDetailView({
               <Button varijanta="sekundarno" onClick={() => router.push(`/api/fakture/${invoice.id}/pdf`)}>
                 Preuzmi PDF
               </Button>
-              <Button varijanta="primarno" onClick={() => router.push("/fakture/nova")}>
+              <Button varijanta="primarno" onClick={() => router.push(`/fakture/posalji-ponovo/${invoice.id}`)}>
                 Pošalji ponovo
               </Button>
             </>
@@ -218,10 +218,12 @@ export function InvoiceDetailView({
               {invoice.events.map((d, i) => (
                 <div className={styles.linijaStavka} key={i}>
                   <span className={styles.t1}>
-                    {d.tip === "poslata"
+                    {d.tip === "poslata" || d.tip === "ponovo_poslata"
                       ? invoice.client.billingEmail
-                        ? `Poslata na ${invoice.client.billingEmail}`
-                        : "Poslata"
+                        ? `${d.tip === "ponovo_poslata" ? "Ponovo poslata" : "Poslata"} na ${invoice.client.billingEmail}`
+                        : d.tip === "ponovo_poslata"
+                          ? "Ponovo poslata"
+                          : "Poslata"
                       : (NAZIV_DOGADJAJA[d.tip] ?? d.tip)}
                   </span>
                   <span>{formatDatumSrpski(new Date(d.datum))}</span>

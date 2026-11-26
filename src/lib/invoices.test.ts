@@ -10,6 +10,7 @@ import {
   promeniBrojFakture,
   proveriJedinstvenostBroja,
   removeDraftInvoice,
+  resendInvoice,
   sacuvajNacrt,
   sendInvoice,
   sendReminder,
@@ -663,6 +664,111 @@ describe("sendInvoice - klijent bez sačuvanog mejla (Korak 8b ispravka, 2026-11
 
     const ucitana = await getInvoiceForUser(korisnik.id, f.id);
     expect(ucitana?.status).toBe("poslata");
+  });
+});
+
+describe("resendInvoice - 'Pošalji ponovo' (zadatak tačka 3, Korak 8d ispravka)", () => {
+  it("odbija nacrt - mora prvo da bude poslata", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-09-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "Usluga", qty: 1, price: 1000 }],
+      status: "nacrt",
+    });
+    const rezultat = await resendInvoice(korisnik.id, f.id);
+    expect(rezultat.ok).toBe(false);
+  });
+
+  it("poslata faktura: dodaje 'ponovo_poslata' u Istoriju, ne menja broj/status/rok/stavke", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-09-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "Usluga", qty: 2, price: 1000 }],
+      status: "poslata",
+      sentAt: new Date("2026-09-01T00:00:00.000Z"),
+    });
+    const pre = await getInvoiceForUser(korisnik.id, f.id);
+
+    const rezultat = await resendInvoice(korisnik.id, f.id);
+    expect(rezultat.ok).toBe(true);
+    if (!rezultat.ok) return;
+    expect(rezultat.podaci.ukupno).toBe(2000);
+    expect(rezultat.podaci.billingEmail).toBe(klijent.billingEmail);
+
+    const posle = await getInvoiceForUser(korisnik.id, f.id);
+    expect(posle?.number).toBe(pre?.number);
+    expect(posle?.status).toBe("poslata");
+    expect(posle?.dueDays).toBe(pre?.dueDays);
+    expect(posle?.items.map((s) => s.price)).toEqual(pre?.items.map((s) => s.price));
+
+    const dogadjaji = await prisma.invoiceEvent.findMany({ where: { invoiceId: f.id, tip: "ponovo_poslata" } });
+    expect(dogadjaji).toHaveLength(1);
+  });
+
+  it("plaćena faktura: i dalje može da se pošalje ponovo, status ostaje placena", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-09-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "Usluga", qty: 1, price: 1000 }],
+      status: "placena",
+      sentAt: new Date("2026-09-01T00:00:00.000Z"),
+      paidDate: new Date("2026-09-10T00:00:00.000Z"),
+    });
+    const rezultat = await resendInvoice(korisnik.id, f.id);
+    expect(rezultat.ok).toBe(true);
+
+    const posle = await getInvoiceForUser(korisnik.id, f.id);
+    expect(posle?.status).toBe("placena");
+  });
+
+  it("dva uzastopna poziva dodaju DVE odvojene stavke u Istoriju (svako ponovno slanje se beleži)", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-09-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "Usluga", qty: 1, price: 1000 }],
+      status: "poslata",
+      sentAt: new Date("2026-09-01T00:00:00.000Z"),
+    });
+    await resendInvoice(korisnik.id, f.id);
+    await resendInvoice(korisnik.id, f.id);
+
+    const dogadjaji = await prisma.invoiceEvent.findMany({ where: { invoiceId: f.id, tip: "ponovo_poslata" } });
+    expect(dogadjaji).toHaveLength(2);
+  });
+
+  it("odbija kad klijent nema mejl i nije ručno uneta adresa", async () => {
+    const { korisnik, biznis } = await napraviKorisnikaSaFirmomIKlijentom();
+    const klijentBezMejla = await prisma.client.create({
+      data: { businessId: biznis.id, name: "Bez mejla", billingEmail: null, address: "Adresa 1" },
+    });
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijentBezMejla.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-09-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "Usluga", qty: 1, price: 1000 }],
+      status: "poslata",
+      sentAt: new Date("2026-09-01T00:00:00.000Z"),
+    });
+    const rezultat = await resendInvoice(korisnik.id, f.id);
+    expect(rezultat.ok).toBe(false);
   });
 });
 

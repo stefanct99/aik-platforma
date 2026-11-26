@@ -6,6 +6,7 @@ import { jeDozvoljenaAdminPrijava } from "@/lib/admin-dev-gate";
 import { trebaPreusmeravanjeNaOnboarding } from "@/lib/onboarding-guard";
 import { getBusinessForUser } from "@/lib/business";
 import { getInvoiceForUser } from "@/lib/invoices";
+import { ucitajSablonZaFakturu } from "@/lib/invoice-templates-db";
 import { izracunajUkupno } from "@/lib/invoice-status";
 import { isValidTema } from "@/lib/theme";
 import { PosaljiPonovoClient } from "./PosaljiPonovoClient";
@@ -28,6 +29,7 @@ export default async function PosaljiPonovoPage({ params }: { params: Promise<{ 
   const faktura = await getInvoiceForUser(session!.user.id, id);
   if (!faktura) notFound();
   if (faktura.status !== "poslata" && faktura.status !== "placena") redirect(`/fakture/${id}`);
+  const sablon = await ucitajSablonZaFakturu(faktura);
 
   return (
     <PosaljiPonovoClient
@@ -75,6 +77,8 @@ export default async function PosaljiPonovoPage({ params }: { params: Promise<{ 
       stavke={faktura.items.map((st) => ({ desc: st.desc, qty: st.qty, price: st.price }))}
       datumIzdavanja={faktura.issueDate}
       tema={isValidTema(session!.user.theme) ? session!.user.theme : "sistem"}
+      sablon={sablon}
+      napomena={faktura.note}
     />
   );
 }

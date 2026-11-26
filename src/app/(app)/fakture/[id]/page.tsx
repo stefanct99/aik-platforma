@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { getBusinessForUser } from "@/lib/business";
 import { getInvoiceForUser } from "@/lib/invoices";
+import { ucitajSablonZaFakturu } from "@/lib/invoice-templates-db";
 import { pocetakDanaUtc } from "@/lib/datum";
 import { InvoiceDetailView } from "./InvoiceDetailView";
 
@@ -17,6 +18,7 @@ export default async function FakturaDetaljPage({ params }: { params: Promise<{ 
   if (!faktura) notFound();
   const biznis = await getBusinessForUser(session.user.id);
   if (!biznis) notFound();
+  const sablon = await ucitajSablonZaFakturu(faktura);
 
   return (
     <InvoiceDetailView
@@ -60,6 +62,7 @@ export default async function FakturaDetaljPage({ params }: { params: Promise<{ 
         city: biznis.city,
       }}
       danasIso={pocetakDanaUtc().toISOString()}
+      sablon={sablon}
     />
   );
 }

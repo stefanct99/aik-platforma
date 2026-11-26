@@ -1,7 +1,7 @@
 import { randomBytes } from "node:crypto";
 import { prisma } from "./prisma";
 import { generateInboundCode, slugifyBusinessName } from "./inbound-mail";
-import { osigurajPodrazumevaniSablon } from "./invoice-templates";
+import { osigurajPodrazumevaniSablon } from "./invoice-templates-db";
 
 // Korak 7, spec 7.13 (Povezivanje): privatan token za pretplatu na kalendar. Nasumičan heksadecimalni
 // string, nezavisan od inboundCode (taj se ne menja, ovaj menja korisnik klikom na "Generiši novi").

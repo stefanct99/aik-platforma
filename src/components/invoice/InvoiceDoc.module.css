@@ -1,11 +1,12 @@
-/* Papir je uvek 480x680, uvek svetao, nezavisno od teme aplikacije (frejmovi Fak3/Fak20/Dk_Fak15). */
+/* Papir je uvek 480x680, uvek svetao, nezavisno od teme aplikacije (frejmovi Fak3/Fak20/Dk_Fak15).
+   padding (margine) i font-family sada dolaze iz šablona (Korak 8d-2, inline style) - "srednje"/"Arial"
+   su podrazumevane vrednosti i MORAJU da ostanu 32px/Arial da bi izgled ostao isti kao pre. */
 .papir {
+  position: relative;
   width: 480px;
   height: 680px;
   box-sizing: border-box;
-  padding: 32px;
   background: #fff;
-  font-family: Arial, Inter, sans-serif;
   color: #111;
   display: flex;
   flex-direction: column;
@@ -14,16 +15,30 @@
   line-height: 1.5;
 }
 
+.trakaVrh {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+}
+
+.trakaStrana {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 10px;
+}
+
 .zaglavljeRed {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
 }
 
+/* Veličina/oblik loga sada dolaze iz šablona (inline style) - boja i centriranje ikonice ostaju fiksni. */
 .logo {
-  width: 44px;
-  height: 44px;
-  border-radius: 8px;
   background: #0f2a22;
   color: #c8f169;
   display: flex;
@@ -46,34 +61,51 @@
 
 .brojFakture {
   font-weight: 700;
-  font-size: 0.875rem;
 }
 
+/* Širina desne kolone dolazi iz šablona (blockProps.firma.w, inline style). */
 .desno {
-  width: 210px;
   flex: none;
 }
 
 .tabela {
-  border: 1px solid #161a17;
   margin-top: 16px;
+}
+
+.tabelaOkvir {
+  border: 1px solid #161a17;
 }
 
 .tabelaRedZaglavlje,
 .tabelaRed {
   display: flex;
   justify-content: space-between;
-  padding: 8px 10px;
 }
 
 .tabelaRedZaglavlje {
   font-weight: 700;
 }
 
-.tabelaRed {
+.linijaReda {
   border-top: 1px solid #161a17;
+}
+
+.zebra {
+  background: #f7f7f5;
+}
+
+.desnoPoravnato {
+  text-align: right;
 }
 
 .ukupnoRed {
   font-weight: 700;
+}
+
+.footer {
+}
+
+.footerText {
+  font-size: 0.6875rem;
+  color: #6b706c;
 }

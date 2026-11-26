@@ -18,6 +18,7 @@ import { posaljiFakturuAction, posaljiPonovoAction } from "@/app/(app)/fakture/a
 import { formatNovacPuno } from "@/lib/money";
 import { formatDatumSrpski } from "@/lib/datum";
 import type { KlijentZaFakturu, RacunZaFakturu, StavkaForme } from "./InvoiceEditor";
+import type { PodaciSablona } from "@/lib/invoice-templates";
 import styles from "./InvoiceSendStage.module.css";
 
 export type PotvrdaSlanja = {
@@ -40,6 +41,8 @@ export function InvoiceSendStage({
   account,
   stavke,
   datumIzdavanja,
+  sablon,
+  napomena,
   posalji,
   onPosalji,
   onNazad,
@@ -57,6 +60,8 @@ export function InvoiceSendStage({
   account: RacunZaFakturu | null;
   stavke: StavkaForme[];
   datumIzdavanja: Date;
+  sablon: PodaciSablona;
+  napomena?: string | null;
   posalji: PotvrdaSlanja | null;
   onPosalji: (p: PotvrdaSlanja) => void;
   onNazad: () => void;
@@ -274,6 +279,8 @@ export function InvoiceSendStage({
                 klijent={klijent}
                 firma={firma}
                 racun={account}
+                sablon={sablon}
+                napomena={napomena}
               />
             </InvoiceDocPreview>
           </div>
@@ -293,6 +300,8 @@ export function InvoiceSendStage({
                 klijent={klijent}
                 firma={firma}
                 racun={account}
+                sablon={sablon}
+                napomena={napomena}
               />
             </div>
           </div>

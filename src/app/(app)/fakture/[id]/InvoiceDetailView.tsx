@@ -12,6 +12,7 @@ import { StornoDialog } from "@/components/fakture/StornoDialog";
 import { PodsetnikDialog } from "@/components/fakture/PodsetnikDialog";
 import { InvoiceDoc } from "@/components/invoice/InvoiceDoc";
 import { InvoiceDocPreview } from "@/components/invoice/InvoiceDocPreview";
+import type { PodaciSablona } from "@/lib/invoice-templates";
 import { efektivniStatus, izracunajUkupno, rokFakture } from "@/lib/invoice-status";
 import { labelaStatusa } from "@/lib/invoice-display";
 import { formatNovacPuno } from "@/lib/money";
@@ -57,10 +58,12 @@ export function InvoiceDetailView({
   invoice,
   business,
   danasIso,
+  sablon,
 }: {
   invoice: Faktura;
   business: Business;
   danasIso: string;
+  sablon: PodaciSablona;
 }) {
   const router = useRouter();
   const danas = new Date(danasIso);
@@ -271,6 +274,8 @@ export function InvoiceDetailView({
                 klijent={invoice.client}
                 firma={business}
                 racun={invoice.account}
+                sablon={sablon}
+                napomena={invoice.note}
               />
             </InvoiceDocPreview>
           </div>

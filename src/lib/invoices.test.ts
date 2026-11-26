@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { afterAll, describe, expect, it } from "vitest";
 import { prisma } from "./prisma";
 import { saveOnboardingStep1 } from "./business";
+import { napraviPodrazumevaniSablonPodatke } from "./invoice-templates";
 import {
   createInvoiceWithHistory,
   getInvoiceForUser,
@@ -622,6 +623,73 @@ describe("sendInvoice (Korak 8b, spec 8.1/6.4)", () => {
     });
     const rezultat = await sendInvoice(korisnik.id, f.id);
     expect(rezultat.ok).toBe(false);
+  });
+});
+
+describe("sendInvoice - zamrzavanje šablona (Korak 8d-2, odluka 1)", () => {
+  it("pri prvom slanju upisuje kopiju podrazumevanog šablona firme u templateSnapshot", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-09-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "Usluga", qty: 1, price: 1000 }],
+      status: "nacrt",
+    });
+    const pre = await prisma.invoice.findUniqueOrThrow({ where: { id: f.id } });
+    expect(pre.templateSnapshot).toBeNull();
+
+    await sendInvoice(korisnik.id, f.id);
+
+    const posle = await prisma.invoice.findUniqueOrThrow({ where: { id: f.id } });
+    expect(posle.templateSnapshot).toEqual(napraviPodrazumevaniSablonPodatke());
+  });
+
+  it("nacrt (pre slanja) nema templateSnapshot - prati trenutni šablon firme", async () => {
+    const { biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-09-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "Usluga", qty: 1, price: 1000 }],
+      status: "nacrt",
+    });
+    expect(f.templateSnapshot).toBeNull();
+  });
+});
+
+describe("resendInvoice - ne dira templateSnapshot (Korak 8d-2, odluka 2)", () => {
+  it("'Pošalji ponovo' ne menja postojeću zamrznutu kopiju šablona", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      issueDate: new Date("2026-09-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "Usluga", qty: 1, price: 1000 }],
+      status: "nacrt",
+    });
+    await sendInvoice(korisnik.id, f.id);
+    const posleSlanja = await prisma.invoice.findUniqueOrThrow({ where: { id: f.id } });
+    const snimak = posleSlanja.templateSnapshot;
+    expect(snimak).not.toBeNull();
+
+    // Namerno izmeni šablon firme POSLE prvog slanja - ako bi "Pošalji ponovo" ponovo čitao trenutni
+    // šablon, ova nova vrednost bi "procurila" u fakturu koja je već poslata.
+    await prisma.invoiceTemplate.updateMany({
+      where: { businessId: biznis.id, isDefault: true },
+      data: { accentColor: "#B4281E" },
+    });
+
+    await resendInvoice(korisnik.id, f.id);
+
+    const posleResenda = await prisma.invoice.findUniqueOrThrow({ where: { id: f.id } });
+    expect(posleResenda.templateSnapshot).toEqual(snimak);
   });
 });
 

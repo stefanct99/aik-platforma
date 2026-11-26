@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { getBusinessForUser } from "@/lib/business";
 import { getInvoiceForUser } from "@/lib/invoices";
+import { ucitajSablonZaFakturu } from "@/lib/invoice-templates-db";
 import { InvoiceDoc } from "@/components/invoice/InvoiceDoc";
 
 // Standalone ruta (NAMERNO van (app) grupe - bez AppShell-a): ovo je stranica koju otvara headless Chrome
@@ -19,6 +20,7 @@ export default async function DokumentFakturePage({ params }: { params: Promise<
   if (!faktura) notFound();
   const biznis = await getBusinessForUser(session.user.id);
   if (!biznis) notFound();
+  const sablon = await ucitajSablonZaFakturu(faktura);
 
   return (
     <div style={{ margin: 0, background: "#fff" }}>
@@ -39,6 +41,8 @@ export default async function DokumentFakturePage({ params }: { params: Promise<
           city: biznis.city,
         }}
         racun={faktura.account}
+        sablon={sablon}
+        napomena={faktura.note}
       />
     </div>
   );

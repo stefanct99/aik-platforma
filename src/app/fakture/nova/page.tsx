@@ -8,6 +8,7 @@ import { getBusinessForUser } from "@/lib/business";
 import { getClientsForUser } from "@/lib/clients";
 import { getAccountsForUser } from "@/lib/bank-accounts";
 import { getInvoiceForUser, pogledajSledeciBroj } from "@/lib/invoices";
+import { ucitajPodrazumevaniSablon } from "@/lib/invoice-templates-db";
 import { pocetakDanaUtc } from "@/lib/datum";
 import { isValidTema } from "@/lib/theme";
 import { InvoiceEditor } from "@/components/invoice/InvoiceEditor";
@@ -51,6 +52,7 @@ export default async function NovaFakturaPage({
   }
 
   const sledeciBroj = await pogledajSledeciBroj(biznis!.id, pocetakDanaUtc());
+  const sablon = await ucitajPodrazumevaniSablon(biznis!.id);
 
   return (
     <InvoiceEditor
@@ -95,6 +97,7 @@ export default async function NovaFakturaPage({
       }}
       sledeciBroj={sledeciBroj}
       tema={isValidTema(session!.user.theme) ? session!.user.theme : "sistem"}
+      sablon={sablon}
     />
   );
 }

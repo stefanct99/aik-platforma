@@ -3,7 +3,7 @@
 // idempotentno - firma koja već ima podrazumevani šablon se preskače, ništa se ne duplira).
 // Pokreni sa: npx tsx --env-file=.env.local scripts/backfill-invoice-templates.ts
 import { prisma } from "../src/lib/prisma";
-import { osigurajPodrazumevaniSablon } from "../src/lib/invoice-templates";
+import { osigurajPodrazumevaniSablon } from "../src/lib/invoice-templates-db";
 
 async function main() {
   const firme = await prisma.business.findMany({ select: { id: true, name: true } });

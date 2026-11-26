@@ -15,6 +15,7 @@ import { IkonaUpozorenje } from "@/components/auth-shell/auth-icons";
 import { IkonaX, IkonaChevronDole, IkonaKanta, IkonaPretraga, IkonaPlus } from "@/components/ui/icons";
 import { InvoiceDoc } from "./InvoiceDoc";
 import { InvoiceDocPreview } from "./InvoiceDocPreview";
+import type { PodaciSablona } from "@/lib/invoice-templates";
 import { ClientPanel } from "@/app/(app)/fakture/klijenti/ClientPanel";
 import type { NoviKlijent } from "@/app/(app)/fakture/actions";
 import { sacuvajNacrtAction, promeniBrojAction, obrisiNacrtAction } from "@/app/(app)/fakture/actions";
@@ -101,6 +102,7 @@ export function InvoiceEditor({
   firma,
   sledeciBroj,
   tema,
+  sablon,
 }: {
   postojeca: PostojecaFaktura | null;
   pocetniDuplikat: PocetniDuplikat | null;
@@ -109,6 +111,7 @@ export function InvoiceEditor({
   firma: { ownerName: string; name: string; mb: string; pib: string; street: string | null; city: string | null };
   sledeciBroj: string;
   tema: Tema;
+  sablon: PodaciSablona;
 }) {
   const router = useRouter();
   const polazna = postojeca ?? pocetniDuplikat;
@@ -345,6 +348,8 @@ export function InvoiceEditor({
             account={account}
             stavke={items}
             datumIzdavanja={datumIzdavanja}
+            sablon={sablon}
+            napomena={note}
             posalji={potvrda}
             onPosalji={(p) => {
               setPotvrda(p);
@@ -686,6 +691,8 @@ export function InvoiceEditor({
                     klijent={klijent ?? null}
                     firma={firma}
                     racun={account}
+                    sablon={sablon}
+                    napomena={note}
                   />
                 </div>
               </div>
@@ -737,6 +744,8 @@ export function InvoiceEditor({
                 klijent={klijent ?? null}
                 firma={firma}
                 racun={account}
+                sablon={sablon}
+                napomena={note}
               />
             </InvoiceDocPreview>
           </div>

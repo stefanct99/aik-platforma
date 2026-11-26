@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { TemaProvider } from "@/components/app-shell/TemaContext";
 import { InvoiceSendStage, type PotvrdaSlanja } from "@/components/invoice/InvoiceSendStage";
 import type { KlijentZaFakturu, RacunZaFakturu, StavkaForme } from "@/components/invoice/InvoiceEditor";
+import type { PodaciSablona } from "@/lib/invoice-templates";
 import type { Tema } from "@/lib/theme";
 
 export function PosaljiPonovoClient({
@@ -23,6 +24,8 @@ export function PosaljiPonovoClient({
   stavke,
   datumIzdavanja,
   tema,
+  sablon,
+  napomena,
 }: {
   id: string;
   broj: string;
@@ -36,6 +39,8 @@ export function PosaljiPonovoClient({
   stavke: StavkaForme[];
   datumIzdavanja: Date;
   tema: Tema;
+  sablon: PodaciSablona;
+  napomena?: string | null;
 }) {
   const router = useRouter();
   const [potvrda, setPotvrda] = useState<PotvrdaSlanja | null>(null);
@@ -55,6 +60,8 @@ export function PosaljiPonovoClient({
           account={account}
           stavke={stavke}
           datumIzdavanja={datumIzdavanja}
+          sablon={sablon}
+          napomena={napomena}
           posalji={potvrda}
           onPosalji={setPotvrda}
           onNazad={() => router.push(`/fakture/${id}`)}

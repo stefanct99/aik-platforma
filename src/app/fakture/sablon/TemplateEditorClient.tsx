@@ -32,7 +32,9 @@ const BOJE_TEKSTA = ["#0F2A22", "#161A17", "#2F5D12", "#1F4FBF", "#B4281E", "#8A
 
 // "Primer podataka" (frejm Fak18, prototip TemplateEditor sampleInv/sampleClient) - isti izmišljeni
 // klijent i stavke kao u prototipu, firma/račun su STVARNI (prosleđeni odozgo, iz page.tsx).
-const PRIMER_BROJ = "25/26-15";
+// Broj "25/26-15" iz frejma/prototipa je NEISPRAVAN (15 nije mesec - format N/GG-M ima mesec 1-12,
+// vidi src/lib/invoice-numbering.ts) - ispravka, 26.11.2026, zamenjen ispravnim primerom.
+const PRIMER_BROJ = "25/26-11";
 const PRIMER_KLIJENT = { name: "Acme Inc.", address: "100 Market St, Wilmington, DE 19801", country: "United States" };
 const PRIMER_STAVKE = [
   { desc: "Webflow development", qty: 1, price: 90000 },

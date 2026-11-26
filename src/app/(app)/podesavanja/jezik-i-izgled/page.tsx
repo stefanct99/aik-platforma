@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { isValidJezik, isValidFormatDatuma } from "@/lib/theme";
 import { SettingsPageHeader } from "@/components/settings/SettingsPageHeader";
@@ -9,8 +10,10 @@ export const instant = false;
 
 export default async function JezikIIzgledPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  const jezik = session!.user.jezik;
-  const formatDatuma = session!.user.formatDatuma;
+  if (!session) redirect("/prijava");
+
+  const jezik = session.user.jezik;
+  const formatDatuma = session.user.formatDatuma;
 
   return (
     <>

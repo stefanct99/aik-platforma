@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getSessionsForUser } from "@/lib/devices";
@@ -10,9 +11,11 @@ export const instant = false;
 
 export default async function BezbednostINalogPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  const sesije = await getSessionsForUser(session!.user.id);
+  if (!session) redirect("/prijava");
+
+  const sesije = await getSessionsForUser(session.user.id);
   const nalogSaLozinkom = await prisma.account.findFirst({
-    where: { userId: session!.user.id, providerId: "credential" },
+    where: { userId: session.user.id, providerId: "credential" },
   });
 
   const poslednjaPromenaLozinkeOpis = nalogSaLozinkom
@@ -28,7 +31,7 @@ export default async function BezbednostINalogPage() {
           id: s.id,
           userAgent: s.userAgent,
           updatedAt: s.updatedAt,
-          jeTrenutna: s.token === session!.session.token,
+          jeTrenutna: s.token === session.session.token,
         }))}
       />
     </>

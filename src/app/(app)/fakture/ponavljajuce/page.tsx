@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { getInvoicesForUser, getInvoiceForUser } from "@/lib/invoices";
 import { getClientsForUser } from "@/lib/clients";
@@ -18,15 +19,17 @@ export default async function PonavljajucePage({
 }) {
   const { odFakture } = await searchParams;
   const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect("/prijava");
+
   const [fakture, klijenti, ponavljajuce] = await Promise.all([
-    getInvoicesForUser(session!.user.id),
-    getClientsForUser(session!.user.id),
-    getRecurringInvoicesForUser(session!.user.id),
+    getInvoicesForUser(session.user.id),
+    getClientsForUser(session.user.id),
+    getRecurringInvoicesForUser(session.user.id),
   ]);
 
   let prefill: { clientId: string; desc: string | null; amount: number | null } | null = null;
   if (odFakture) {
-    const izvor = await getInvoiceForUser(session!.user.id, odFakture);
+    const izvor = await getInvoiceForUser(session.user.id, odFakture);
     if (izvor) {
       const prvaStavka = izvor.items[0];
       prefill = { clientId: izvor.clientId, desc: prvaStavka?.desc ?? null, amount: prvaStavka?.price ?? null };

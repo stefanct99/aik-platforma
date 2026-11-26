@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { izracunajProbniPeriod, recDan } from "@/lib/subscription";
@@ -10,7 +11,9 @@ export const instant = false;
 
 export default async function PretplataPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  const { danaOstalo } = izracunajProbniPeriod(session!.user.createdAt);
+  if (!session) redirect("/prijava");
+
+  const { danaOstalo } = izracunajProbniPeriod(session.user.createdAt);
   const procenat = Math.round((danaOstalo / 30) * 100);
 
   return (

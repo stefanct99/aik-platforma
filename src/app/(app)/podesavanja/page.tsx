@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { getBusinessForUser } from "@/lib/business";
@@ -13,10 +14,12 @@ export const instant = false;
 
 export default async function PodesavanjaPregledPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  const biznis = await getBusinessForUser(session!.user.id);
-  const ime = session!.user.name || "Korisnik";
+  if (!session) redirect("/prijava");
+
+  const biznis = await getBusinessForUser(session.user.id);
+  const ime = session.user.name || "Korisnik";
   const inicijal = (ime.trim().charAt(0) || "?").toUpperCase();
-  const formatDatuma = isValidFormatDatuma(session!.user.formatDatuma) ? session!.user.formatDatuma : "dmy";
+  const formatDatuma = isValidFormatDatuma(session.user.formatDatuma) ? session.user.formatDatuma : "dmy";
 
   return (
     <>

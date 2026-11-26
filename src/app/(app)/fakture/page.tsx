@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { getInvoicesForUser } from "@/lib/invoices";
 import { getClientsForUser } from "@/lib/clients";
@@ -13,10 +14,12 @@ export const instant = false;
 
 export default async function FakturePage() {
   const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect("/prijava");
+
   const [fakture, klijenti, ponavljajuce] = await Promise.all([
-    getInvoicesForUser(session!.user.id),
-    getClientsForUser(session!.user.id),
-    getRecurringInvoicesForUser(session!.user.id),
+    getInvoicesForUser(session.user.id),
+    getClientsForUser(session.user.id),
+    getRecurringInvoicesForUser(session.user.id),
   ]);
 
   const redovi: FakturaRed[] = fakture.map((f) => ({

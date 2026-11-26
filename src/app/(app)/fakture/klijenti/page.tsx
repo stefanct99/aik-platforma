@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { getClientsForUser } from "@/lib/clients";
 import { getInvoicesForUser } from "@/lib/invoices";
@@ -11,11 +12,13 @@ export const instant = false;
 
 export default async function KlijentiPage() {
   const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect("/prijava");
+
   const [klijenti, fakture, racuni, ponavljajuce] = await Promise.all([
-    getClientsForUser(session!.user.id),
-    getInvoicesForUser(session!.user.id),
-    getAccountsForUser(session!.user.id),
-    getRecurringInvoicesForUser(session!.user.id),
+    getClientsForUser(session.user.id),
+    getInvoicesForUser(session.user.id),
+    getAccountsForUser(session.user.id),
+    getRecurringInvoicesForUser(session.user.id),
   ]);
 
   const poslednjaPoKlijentu = new Map<string, Date>();

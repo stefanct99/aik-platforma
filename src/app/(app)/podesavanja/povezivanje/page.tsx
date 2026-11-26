@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { getBusinessForUser } from "@/lib/business";
 import { composeInboundAddress } from "@/lib/inbound-mail";
@@ -10,7 +11,9 @@ export const instant = false;
 export default async function PovezivanjePage() {
   const zaglavlja = await headers();
   const session = await auth.api.getSession({ headers: zaglavlja });
-  const biznis = await getBusinessForUser(session!.user.id);
+  if (!session) redirect("/prijava");
+
+  const biznis = await getBusinessForUser(session.user.id);
 
   const host = zaglavlja.get("host") ?? "localhost:3000";
   const protokol = host.startsWith("localhost") ? "http" : "https";

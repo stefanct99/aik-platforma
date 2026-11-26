@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { getNotificationSettings, VRSTE_OBAVESTENJA } from "@/lib/notification-settings";
 import { SettingsPageHeader } from "@/components/settings/SettingsPageHeader";
@@ -8,7 +9,9 @@ export const instant = false;
 
 export default async function ObavestenjaPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  const podesavanja = await getNotificationSettings(session!.user.id);
+  if (!session) redirect("/prijava");
+
+  const podesavanja = await getNotificationSettings(session.user.id);
 
   const pocetneVrednosti = Object.fromEntries(
     VRSTE_OBAVESTENJA.map(({ kljuc }) => [

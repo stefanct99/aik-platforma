@@ -1,4 +1,5 @@
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { getBusinessForUser } from "@/lib/business";
 import { formatDatumSrpski } from "@/lib/datum";
@@ -10,7 +11,9 @@ export const instant = false;
 
 export default async function ProfilFirmaPage() {
   const session = await auth.api.getSession({ headers: await headers() });
-  const biznis = await getBusinessForUser(session!.user.id);
+  if (!session) redirect("/prijava");
+
+  const biznis = await getBusinessForUser(session.user.id);
 
   return (
     <>

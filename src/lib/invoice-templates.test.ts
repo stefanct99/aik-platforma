@@ -300,6 +300,22 @@ describe("tabela stavki - čiste funkcije (Korak 8d-2)", () => {
     expect(def.opis.label).toBe("DESCRIPTION");
     expect(def.iznos.label).toBe("AMOUNT USD");
   });
+
+  // Ispravka poravnanja kolona: InvoiceDoc crta stavke kao pravu <table> (ne fleks-redove), pa širinu i
+  // poravnanje kolone u zaglavlju/svim redovima garantuje sâm raspoređivač tabela u pregledaču (ista
+  // širina kolone svuda) - nema posebne čiste funkcije koja RAČUNA širine. Ono što OVDE jeste čista
+  // funkcija i što se da testirati je poravnanje po koloni: Opis mora biti levo, sve brojčane kolone
+  // (Količina/JM/Cena/Popust/Iznos) moraju biti desno - isto u zaglavlju i u svim redovima, jer InvoiceDoc
+  // za oba koristi IST u "poravnanje" vrednost iz ovog objekta.
+  it("poravnanje po koloni je tačno (Opis levo, sve brojčane kolone desno) - isto za zaglavlje i redove", () => {
+    const def = definicijeKolonaTabele("sr", "EUR");
+    expect(def.opis.poravnanje).toBe("left");
+    expect(def.kolicina.poravnanje).toBe("right");
+    expect(def.jm.poravnanje).toBe("right");
+    expect(def.cena.poravnanje).toBe("right");
+    expect(def.popust.poravnanje).toBe("right");
+    expect(def.iznos.poravnanje).toBe("right");
+  });
 });
 
 describe("napraviPodrazumevaniSablonPodatke - pikselska vernost (Korak 8d-2)", () => {

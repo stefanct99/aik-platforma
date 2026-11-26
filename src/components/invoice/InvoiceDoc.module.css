@@ -86,7 +86,34 @@
   font-weight: 700;
 }
 
+/* Prava <table> za stavke (Korak 8d-4b, ispravka poravnanja kolona) - border-collapse da linije između
+   redova (.linijaReda ispod) budu jedna neprekinuta linija preko svih kolona, ne po segmentu po ćeliji. */
+.tabelaItemi {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabelaItemi th {
+  font-weight: 700;
+  vertical-align: top;
+}
+
+.tabelaItemi td {
+  vertical-align: top;
+}
+
+/* <th> je podrazumevano CENTRIRAN u pregledačima (za razliku od <td>, koji je već levo) - ova klasa mu
+   vraća levo poravnanje. Mora biti ISTE specifičnosti kao .desnoPoravnato (obe su samo klasa, bez
+   elementa), inače bi selektor ".tabelaItemi th" (klasa+element) uvek pobedio nad ".desnoPoravnato". */
+.levoPoravnato {
+  text-align: left;
+}
+
 .linijaReda {
+  border-top: 1px solid #161a17;
+}
+
+.linijaReda td {
   border-top: 1px solid #161a17;
 }
 

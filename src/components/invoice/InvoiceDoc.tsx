@@ -313,29 +313,46 @@ export function InvoiceDoc({
               style={{ ...stilBloka(sablon, "stavke"), ...stilKlika() }}
               onClick={naKlik("stavke")}
             >
-              <div
-                className={styles.tabelaRedZaglavlje}
-                style={{ padding: razmakRedovaTabele(sablon), background: bojaZaglavljaTabele(sablon) }}
-              >
-                {aktivneKolone.map((c) => (
-                  <span key={c} className={kolone[c].poravnanje === "right" ? styles.desnoPoravnato : undefined}>
-                    {kolone[c].label}
-                  </span>
-                ))}
-              </div>
-              {stavke.map((st, i) => (
-                <div
-                  className={`${styles.tabelaRed} ${imaLinijeRedovaTabele(sablon) ? styles.linijaReda : ""} ${sablon.table.zebra && i % 2 === 1 ? styles.zebra : ""}`}
-                  style={{ padding: razmakRedovaTabele(sablon) }}
-                  key={i}
-                >
-                  {aktivneKolone.map((c) => (
-                    <span key={c} className={kolone[c].poravnanje === "right" ? styles.desnoPoravnato : undefined}>
-                      {kolone[c].get(st)}
-                    </span>
+              {/* Korak 8d-4b (ispravka poravnanja): pravi <table> umesto fleks-redova - sa 2 kolone
+                  (podrazumevano) fleks je davao identičan izgled, ali sa 3+ kolona srednje kolone nisu imale
+                  fiksnu širinu (plutale su prema dužini teksta opisa u SVAKOM redu posebno), pa zaglavlje i
+                  vrednosti nisu bili poravnati. Pravi <table> garantuje istu širinu kolone u zaglavlju i u
+                  svim redovima (standardno ponašanje pregledača), isto kao u prototipu (InvoiceTable,
+                  referenca/prototip/js/fakture.js). "Ukupno"/"PDV" ispod ostaju fleks-redovi (van tabele),
+                  nepromenjeno - oni imaju samo 2 strane (natpis/iznos) i već su ispravno poravnati. */}
+              <table className={styles.tabelaItemi}>
+                <thead>
+                  <tr style={{ background: bojaZaglavljaTabele(sablon) }}>
+                    {aktivneKolone.map((c) => (
+                      <th
+                        key={c}
+                        className={kolone[c].poravnanje === "right" ? styles.desnoPoravnato : styles.levoPoravnato}
+                        style={{ padding: razmakRedovaTabele(sablon) }}
+                      >
+                        {kolone[c].label}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {stavke.map((st, i) => (
+                    <tr
+                      key={i}
+                      className={`${imaLinijeRedovaTabele(sablon) ? styles.linijaReda : ""} ${sablon.table.zebra && i % 2 === 1 ? styles.zebra : ""}`}
+                    >
+                      {aktivneKolone.map((c) => (
+                        <td
+                          key={c}
+                          className={kolone[c].poravnanje === "right" ? styles.desnoPoravnato : undefined}
+                          style={{ padding: razmakRedovaTabele(sablon) }}
+                        >
+                          {kolone[c].get(st)}
+                        </td>
+                      ))}
+                    </tr>
                   ))}
-                </div>
-              ))}
+                </tbody>
+              </table>
             </div>
           )}
           {prikazujUkupno && (

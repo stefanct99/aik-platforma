@@ -114,7 +114,10 @@ export function InvoiceSendStage({
     fd.set("lang", jezik);
     fd.set("dueDays", String(rokDana));
     fd.set("accountId", account?.id ?? "");
-    fd.set("note", "");
+    // Ispravka (nađen uživo u Koraku 8d-4): ovo je bilo uvek "" (prazno), pa je prvo slanje nepovratno
+    // brisalo Napomenu sa fakture - bezopasno dok se Napomena nigde nije prikazivala (pre Koraka 8d-2),
+    // sad vidljivo. Koristi STVARNU Napomenu sa forme (prop napomena, isti kao u pregledu uživo ovde).
+    fd.set("note", napomena ?? "");
     fd.set("adresa", trim);
     fd.set("stavke", JSON.stringify(stavke.map((s) => ({ desc: s.desc, qty: s.qty, price: s.price / 100 }))));
 

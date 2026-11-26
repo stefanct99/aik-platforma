@@ -662,6 +662,100 @@ describe("sendInvoice - zamrzavanje šablona (Korak 8d-2, odluka 1)", () => {
   });
 });
 
+describe("Ispravka: Napomena se ne gubi pri prvom slanju (nađeno uživo u Koraku 8d-4)", () => {
+  // InvoiceSendStage.tsx (klijentska komponenta, "Pregledaj i pošalji") je pri PRVOM slanju uvek slala
+  // praznu Napomenu na server (fd.set("note", "") bez obzira šta je stvarno upisano na formi) - ovde se
+  // testira tačno ono što taj ekran radi iza scene: sacuvajNacrt (sa Napomenom) pa sendInvoice, isti
+  // redosled poziva kao posaljiFakturuAction.
+  it("Napomena sa forme ostaje na fakturi posle prvog slanja (nova faktura)", async () => {
+    const { korisnik, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const nacrt = await sacuvajNacrt(korisnik.id, null, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      dueDays: 7,
+      note: "Test napomena",
+      items: [{ desc: "Usluga", qty: 1, price: 1000 }],
+    });
+    expect(nacrt.ok).toBe(true);
+    if (!nacrt.ok) return;
+
+    await sendInvoice(korisnik.id, nacrt.id);
+
+    const ucitana = await getInvoiceForUser(korisnik.id, nacrt.id);
+    expect(ucitana?.status).toBe("poslata");
+    expect(ucitana?.note).toBe("Test napomena");
+  });
+
+  it("Napomena ostaje i kad se OTVORI već sačuvan nacrt pa pošalje (bez nove izmene Napomene)", async () => {
+    const { korisnik, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const nacrt = await sacuvajNacrt(korisnik.id, null, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      dueDays: 7,
+      note: "Napomena iz nacrta",
+      items: [{ desc: "Usluga", qty: 1, price: 1000 }],
+    });
+    expect(nacrt.ok).toBe(true);
+    if (!nacrt.ok) return;
+
+    // "Otvaranje nacrta pa slanje" - InvoiceEditor učita postojeću Napomenu u formu (ovde: ponovo sačuva
+    // ISTU vrednost, kao da je forma ponovo otvorena i odmah poslata bez izmene), pa šalje.
+    await sacuvajNacrt(korisnik.id, nacrt.id, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      dueDays: 7,
+      note: "Napomena iz nacrta",
+      items: [{ desc: "Usluga", qty: 1, price: 1000 }],
+    });
+    await sendInvoice(korisnik.id, nacrt.id);
+
+    const ucitana = await getInvoiceForUser(korisnik.id, nacrt.id);
+    expect(ucitana?.note).toBe("Napomena iz nacrta");
+  });
+
+  it("prazna Napomena ostaje prazna (null) posle slanja - ne upisuje se prazan string", async () => {
+    const { korisnik, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const nacrt = await sacuvajNacrt(korisnik.id, null, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      dueDays: 7,
+      note: null,
+      items: [{ desc: "Usluga", qty: 1, price: 1000 }],
+    });
+    expect(nacrt.ok).toBe(true);
+    if (!nacrt.ok) return;
+
+    await sendInvoice(korisnik.id, nacrt.id);
+
+    const ucitana = await getInvoiceForUser(korisnik.id, nacrt.id);
+    expect(ucitana?.note).toBeNull();
+  });
+
+  it("'Pošalji ponovo' ne menja postojeću Napomenu", async () => {
+    const { korisnik, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const nacrt = await sacuvajNacrt(korisnik.id, null, {
+      clientId: klijent.id,
+      currency: "EUR",
+      lang: "sr",
+      dueDays: 7,
+      note: "Napomena koja ne sme da nestane",
+      items: [{ desc: "Usluga", qty: 1, price: 1000 }],
+    });
+    expect(nacrt.ok).toBe(true);
+    if (!nacrt.ok) return;
+    await sendInvoice(korisnik.id, nacrt.id);
+
+    await resendInvoice(korisnik.id, nacrt.id);
+
+    const ucitana = await getInvoiceForUser(korisnik.id, nacrt.id);
+    expect(ucitana?.note).toBe("Napomena koja ne sme da nestane");
+  });
+});
+
 describe("resendInvoice - ne dira templateSnapshot (Korak 8d-2, odluka 2)", () => {
   it("'Pošalji ponovo' ne menja postojeću zamrznutu kopiju šablona", async () => {
     const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();

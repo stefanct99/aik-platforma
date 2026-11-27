@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { TemaProvider } from "@/components/app-shell/TemaContext";
 import { FixedThemeTogglePill } from "@/components/app-shell/FixedThemeTogglePill";
 import type { Tema } from "@/lib/theme";
-import { IkonaX, IkonaChevronDole } from "@/components/ui/icons";
+import { IkonaX, IkonaChevronDole, IkonaKvacica } from "@/components/ui/icons";
 import { Toggle } from "@/components/ui/Toggle";
 import { Modal } from "@/components/ui/Modal";
 import { InvoiceDoc } from "@/components/invoice/InvoiceDoc";
@@ -31,7 +31,17 @@ import {
   type SvojstvaBloka,
   type Raspored,
 } from "@/lib/invoice-templates";
-import { sacuvajSablonAction, vratiSablonNaPodrazumevanoAction } from "@/app/(app)/fakture/actions";
+import {
+  sacuvajSablonAction,
+  vratiSablonNaPodrazumevanoAction,
+  listaSablonaAction,
+  ucitajSablonAction,
+  kreirajSablonAction,
+  duplirajSablonAction,
+  preimenujSablonAction,
+  postaviKaoPodrazumevaniAction,
+  type StavkaListeSablona,
+} from "@/app/(app)/fakture/actions";
 import styles from "./TemplateEditorClient.module.css";
 
 // Boje za "Boja teksta" (Korak 8d-4, frejm Fak18) - tačne vrednosti iz frejma, NE iz prototipa (koji ima
@@ -264,12 +274,16 @@ function BrojnoPolje({
 }
 
 export function TemplateEditorClient({
+  sablonId: pocetniId,
   sablon: pocetniSablon,
+  pocetnaLista,
   firma,
   racun,
   tema,
 }: {
+  sablonId: string;
   sablon: PodaciSablona;
+  pocetnaLista: StavkaListeSablona[];
   firma: { ownerName: string; name: string; mb: string; pib: string; street: string | null; city: string | null };
   racun: { id: string; currency: string; type: string; bank: string; iban: string | null; swift: string | null; number: string | null } | null;
   tema: Tema;
@@ -278,7 +292,15 @@ export function TemplateEditorClient({
   const searchParams = useSearchParams();
   const povratak = searchParams.get("povratak") || "/fakture";
 
+  const [sablonId, setSablonId] = useState(pocetniId);
   const [sablon, setSablon] = useState(pocetniSablon);
+  const [lista, setLista] = useState(pocetnaLista);
+  const [sablonOtvoren, setSablonOtvoren] = useState(false);
+  const [novoImeOtvoren, setNovoImeOtvoren] = useState(false);
+  const [novoImeUnos, setNovoImeUnos] = useState("Novi šablon");
+  const [preimenujOtvoren, setPreimenujOtvoren] = useState(false);
+  const [preimenujUnos, setPreimenujUnos] = useState("");
+  const [potvrdaNapustanja, setPotvrdaNapustanja] = useState<{ akcija: () => void } | null>(null);
   const [izmenjeno, setIzmenjeno] = useState(false);
   const [izabran, setIzabran] = useState<BlokKljuc>("firma");
   const [nivo, setNivo] = useState<"blok" | "tabela" | "cela">("blok");
@@ -305,7 +327,7 @@ export function TemplateEditorClient({
 
   async function naSacuvaj() {
     setCuvanje("cuvam");
-    const rezultat = await sacuvajSablonAction({
+    const rezultat = await sacuvajSablonAction(sablonId, {
       blocks: sablon.blocks,
       blocksOff: sablon.blocksOff,
       blockProps: sablon.blockProps,
@@ -325,10 +347,132 @@ export function TemplateEditorClient({
   }
 
   async function naVratiPodrazumevano() {
-    const podaci = await vratiSablonNaPodrazumevanoAction();
+    const podaci = await vratiSablonNaPodrazumevanoAction(sablonId);
     setSablon(podaci);
     setIzmenjeno(false);
     setGreska(null);
+  }
+
+  // Zamenjuje otvoreni šablon novim (izabran u meniju, "+ Novi šablon" ili "Dupliraj ovaj šablon") -
+  // upisuje i ?sablonId= u URL (router.replace, bez nove stavke u istoriji) da osvežavanje stranice
+  // ostane na istom šablonu. "izabran" u platnu (koji blok je selektovan) se vraća na "firma"/nivo "blok",
+  // isto kao posle "Vrati na podrazumevano" - stari izbor bloka ne mora da postoji u novom šablonu.
+  function ucitajUEditor(id: string, novi: PodaciSablona) {
+    setSablonId(id);
+    setSablon(novi);
+    setIzmenjeno(false);
+    setGreska(null);
+    setIzabran("firma");
+    setNivo("blok");
+    const noviParam = new URLSearchParams(searchParams.toString());
+    noviParam.set("sablonId", id);
+    router.replace(`/fakture/sablon?${noviParam.toString()}`, { scroll: false });
+  }
+
+  // Zadatak tačka 1: prebacivanje na drugi šablon ne sme tiho da izgubi nesačuvane izmene. Frejm (Fak27)
+  // ne pokazuje poseban dijalog za ovo - window.confirm/window.prompt NISU pouzdani u svim okruženjima
+  // (npr. u pregledu unutar ovog alata window.prompt baca grešku umesto da vrati vrednost), zato je
+  // upozorenje mali SOPSTVENI dijalog (Modal), ne prozor pretraživača (izveštaj). "akcija" se izvršava tek
+  // posle potvrde (ili odmah, ako nema nesačuvanih izmena).
+  function saPotvrdomAkoImaIzmena(akcija: () => void) {
+    if (!izmenjeno) {
+      akcija();
+      return;
+    }
+    setPotvrdaNapustanja({ akcija });
+  }
+
+  function naIzborSablona(id: string) {
+    setSablonOtvoren(false);
+    if (id === sablonId) return;
+    saPotvrdomAkoImaIzmena(async () => {
+      const rezultat = await ucitajSablonAction(id);
+      if (!rezultat.ok) {
+        setGreska(rezultat.greska);
+        return;
+      }
+      ucitajUEditor(rezultat.id, rezultat.sablon);
+    });
+  }
+
+  // "+ Novi šablon" (Fak27) - frejm ne pokazuje KAKO se unosi ime (nema prikazanog dijaloga za to), zato
+  // je dodat mali sopstveni dijalog sa poljem za unos, u istom stilu kao ostatak editora (izveštaj).
+  function naNoviSablon() {
+    setSablonOtvoren(false);
+    saPotvrdomAkoImaIzmena(() => {
+      setNovoImeUnos("Novi šablon");
+      setNovoImeOtvoren(true);
+    });
+  }
+
+  async function naPotvrdiNoviSablon() {
+    const ime = novoImeUnos.trim();
+    if (!ime) return;
+    const rezultat = await kreirajSablonAction(ime);
+    if (!rezultat.ok) {
+      setGreska(rezultat.greska);
+      return;
+    }
+    setNovoImeOtvoren(false);
+    setLista(await listaSablonaAction());
+    ucitajUEditor(rezultat.id, rezultat.sablon);
+  }
+
+  function naDupliraj() {
+    setSablonOtvoren(false);
+    saPotvrdomAkoImaIzmena(async () => {
+      const rezultat = await duplirajSablonAction(sablonId);
+      if (!rezultat.ok) {
+        setGreska(rezultat.greska);
+        return;
+      }
+      setLista(await listaSablonaAction());
+      ucitajUEditor(rezultat.id, rezultat.sablon);
+    });
+  }
+
+  // Preimenovanje i "Postavi kao podrazumevani" (zadatak tačka 3) - frejm (Fak27) ne pokazuje gde se ove
+  // dve radnje pokreću (nema olovke/ikonice za preimenovanje ni posebne opcije u redu šablona), zato su
+  // dodate kao još dve stavke u ISTOM padajućem meniju, posle "Dupliraj ovaj šablon" (izveštaj). Rade na
+  // šablonu koji je TRENUTNO otvoren (isto kao "Sačuvaj šablon"/"Vrati na podrazumevano", zadatak tačka 5).
+  // Ne traže potvrdu za nesačuvane izmene (menjaju samo ime/status podrazumevanog, ne i izgled), i spajaju
+  // samo TA dva polja u trenutni sablon (ne ceo rezultat.sablon) - da ne bi tiho prepisale neku nesačuvanu
+  // IZMENU IZGLEDA koju korisnik u međuvremenu pravi na platnu sa zastarelom verzijom sa servera.
+  function naPreimenuj() {
+    setSablonOtvoren(false);
+    setPreimenujUnos(sablon.name);
+    setPreimenujOtvoren(true);
+  }
+
+  async function naPotvrdiPreimenovanje() {
+    const ime = preimenujUnos.trim();
+    if (!ime || ime === sablon.name) {
+      setPreimenujOtvoren(false);
+      return;
+    }
+    const rezultat = await preimenujSablonAction(sablonId, ime);
+    if (!rezultat.ok) {
+      setGreska(rezultat.greska);
+      return;
+    }
+    setSablon((trenutni) => ({ ...trenutni, name: rezultat.sablon.name }));
+    setLista((stara) => stara.map((s) => (s.id === rezultat.id ? { ...s, name: rezultat.sablon.name } : s)));
+    setPreimenujOtvoren(false);
+  }
+
+  async function naPostaviPodrazumevani() {
+    setSablonOtvoren(false);
+    const rezultat = await postaviKaoPodrazumevaniAction(sablonId);
+    if (!rezultat.ok) {
+      setGreska(rezultat.greska);
+      return;
+    }
+    setSablon((trenutni) => ({ ...trenutni, isDefault: rezultat.sablon.isDefault }));
+    setLista((stara) =>
+      stara
+        .map((s) => ({ ...s, isDefault: s.id === rezultat.id }))
+        .sort((a, b) => (a.isDefault === b.isDefault ? 0 : a.isDefault ? -1 : 1)),
+    );
   }
 
   const bp = sablon.blockProps[izabran];
@@ -343,7 +487,54 @@ export function TemplateEditorClient({
               <button type="button" className={styles.zatvoriPilula} onClick={() => router.push(povratak)}>
                 <IkonaX size={18} /> Zatvori
               </button>
-              <span className={styles.sablonPilula}>Šablon: {sablon.name}</span>
+              <div style={{ position: "relative" }}>
+                <button
+                  type="button"
+                  className={`${styles.sablonPilula} ${sablonOtvoren ? styles.sablonPilulaOtvorena : ""}`}
+                  onClick={() => setSablonOtvoren((v) => !v)}
+                >
+                  Šablon: {sablon.name}
+                  <IkonaChevronDole size={16} />
+                </button>
+                {sablonOtvoren && (
+                  <div className={styles.sablonPadajuci}>
+                    {lista.map((s) => {
+                      const sIzabran = s.id === sablonId;
+                      return (
+                        <button
+                          key={s.id}
+                          type="button"
+                          className={`${styles.sablonStavka} ${sIzabran ? styles.sablonStavkaIzabrana : ""}`}
+                          onClick={() => naIzborSablona(s.id)}
+                        >
+                          <span className={styles.sablonStavkaTekst}>
+                            <span className={styles.sablonStavkaIme}>
+                              {s.name}
+                              {s.isDefault && <span className={styles.sablonBadge}>Podrazumevani</span>}
+                            </span>
+                          </span>
+                          <span className={styles.sablonKvacica}>{sIzabran && <IkonaKvacica size={18} />}</span>
+                        </button>
+                      );
+                    })}
+                    <div className={styles.sablonRazdvajac} />
+                    <button type="button" className={styles.sablonAkcija} onClick={naNoviSablon}>
+                      + Novi šablon
+                    </button>
+                    <button type="button" className={styles.sablonAkcija} onClick={naDupliraj}>
+                      Dupliraj ovaj šablon
+                    </button>
+                    <button type="button" className={styles.sablonAkcija} onClick={naPreimenuj}>
+                      Preimenuj ovaj šablon
+                    </button>
+                    {!sablon.isDefault && (
+                      <button type="button" className={styles.sablonAkcija} onClick={naPostaviPodrazumevani}>
+                        Postavi kao podrazumevani
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
               {izmenjeno && <span className={styles.znacka}>Izmene nisu sačuvane</span>}
             </div>
             <div className={styles.topbarDesno}>
@@ -859,6 +1050,83 @@ export function TemplateEditorClient({
                 }}
               >
                 Primeni raspored
+              </button>
+            </div>
+          </Modal>
+        )}
+        {potvrdaNapustanja && (
+          <Modal naslov="Nesačuvane izmene" onClose={() => setPotvrdaNapustanja(null)}>
+            <span className={styles.rasporedPodnaslov}>
+              Imaš nesačuvane izmene u šablonu &quot;{sablon.name}&quot;. Ako nastaviš, te izmene će biti izgubljene.
+            </span>
+            <div className={styles.unosDugmad}>
+              <button type="button" className={styles.dugmeMalo} onClick={() => setPotvrdaNapustanja(null)}>
+                Odustani
+              </button>
+              <button
+                type="button"
+                className={`${styles.dugmeMalo} ${styles.dugmePrimarno}`}
+                onClick={() => {
+                  const akcija = potvrdaNapustanja.akcija;
+                  setPotvrdaNapustanja(null);
+                  akcija();
+                }}
+              >
+                Nastavi
+              </button>
+            </div>
+          </Modal>
+        )}
+        {novoImeOtvoren && (
+          <Modal naslov="Novi šablon" onClose={() => setNovoImeOtvoren(false)}>
+            <div className={styles.poljeKutija}>
+              <input
+                type="text"
+                className={styles.poljeUnos}
+                value={novoImeUnos}
+                onChange={(e) => setNovoImeUnos(e.target.value)}
+                autoFocus
+                placeholder="Naziv šablona"
+              />
+            </div>
+            <div className={styles.unosDugmad}>
+              <button type="button" className={styles.dugmeMalo} onClick={() => setNovoImeOtvoren(false)}>
+                Odustani
+              </button>
+              <button
+                type="button"
+                className={`${styles.dugmeMalo} ${styles.dugmePrimarno}`}
+                disabled={!novoImeUnos.trim()}
+                onClick={naPotvrdiNoviSablon}
+              >
+                Napravi šablon
+              </button>
+            </div>
+          </Modal>
+        )}
+        {preimenujOtvoren && (
+          <Modal naslov="Preimenuj šablon" onClose={() => setPreimenujOtvoren(false)}>
+            <div className={styles.poljeKutija}>
+              <input
+                type="text"
+                className={styles.poljeUnos}
+                value={preimenujUnos}
+                onChange={(e) => setPreimenujUnos(e.target.value)}
+                autoFocus
+                placeholder="Naziv šablona"
+              />
+            </div>
+            <div className={styles.unosDugmad}>
+              <button type="button" className={styles.dugmeMalo} onClick={() => setPreimenujOtvoren(false)}>
+                Odustani
+              </button>
+              <button
+                type="button"
+                className={`${styles.dugmeMalo} ${styles.dugmePrimarno}`}
+                disabled={!preimenujUnos.trim()}
+                onClick={naPotvrdiPreimenovanje}
+              >
+                Sačuvaj ime
               </button>
             </div>
           </Modal>

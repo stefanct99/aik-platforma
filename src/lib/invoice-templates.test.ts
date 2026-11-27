@@ -32,6 +32,12 @@ import {
   ucitajSablonZaFakturu,
   sacuvajSablon,
   vratiSablonNaPodrazumevano,
+  listaSablona,
+  ucitajSablonPoId,
+  kreirajSablon,
+  duplirajSablon,
+  preimenujSablon,
+  postaviKaoPodrazumevani,
   type IzmenaSablona,
 } from "./invoice-templates-db";
 
@@ -563,12 +569,13 @@ describe("primeniRaspored - čista funkcija (Korak 8d-6)", () => {
 describe("Ispravka posle testa editora: sačuvana izmena se odmah vidi (tačka 1)", () => {
   it("izmena poravnanja/veličine/boje bloka je odmah vidljiva kroz NOV, nezavisan poziv za učitavanje (kao nova stranica)", async () => {
     const { biznis } = await napraviKorisnikaSaFirmom();
+    const { id: templateId } = await osigurajPodrazumevaniSablon(biznis.id);
     const podaci = napraviPodrazumevaniSablonPodatke();
     podaci.blockProps.napomena.color = "#B4281E";
     podaci.blockProps.rok.align = "center";
     podaci.blockProps.rok.size = "veci";
 
-    const rezultat = await sacuvajSablon(biznis.id, celaIzmena(podaci));
+    const rezultat = await sacuvajSablon(biznis.id, templateId, celaIzmena(podaci));
     expect(rezultat.ok).toBe(true);
 
     // Simulira NOVU, nezavisnu posetu stranici (Nova faktura, pregled nacrta, Pošalji ponovo, PDF) - nov
@@ -581,10 +588,11 @@ describe("Ispravka posle testa editora: sačuvana izmena se odmah vidi (tačka 1
 
   it("isključivanje/uključivanje bloka je odmah vidljivo kroz nov poziv za učitavanje", async () => {
     const { biznis } = await napraviKorisnikaSaFirmom();
+    const { id: templateId } = await osigurajPodrazumevaniSablon(biznis.id);
     const podaci = napraviPodrazumevaniSablonPodatke();
     const noviBlocksOff = [...podaci.blocksOff, "rok" as const];
 
-    await sacuvajSablon(biznis.id, { ...celaIzmena(podaci), blocksOff: noviBlocksOff });
+    await sacuvajSablon(biznis.id, templateId, { ...celaIzmena(podaci), blocksOff: noviBlocksOff });
 
     const svezeUcitan = await ucitajPodrazumevaniSablon(biznis.id);
     expect(svezeUcitan.blocksOff).toContain("rok");
@@ -594,10 +602,11 @@ describe("Ispravka posle testa editora: sačuvana izmena se odmah vidi (tačka 1
 describe("sacuvajSablon / vratiSablonNaPodrazumevano (Korak 8d-4, server akcija)", () => {
   it("upisuje izmenu bloka u bazu i vraća ažurirane podatke", async () => {
     const { biznis } = await napraviKorisnikaSaFirmom();
+    const { id: templateId } = await osigurajPodrazumevaniSablon(biznis.id);
     const podaci = napraviPodrazumevaniSablonPodatke();
     podaci.blockProps.napomena.color = "#1F4FBF";
 
-    const rezultat = await sacuvajSablon(biznis.id, celaIzmena(podaci));
+    const rezultat = await sacuvajSablon(biznis.id, templateId, celaIzmena(podaci));
     expect(rezultat.ok).toBe(true);
     if (!rezultat.ok) return;
     expect(rezultat.sablon.blockProps.napomena.color).toBe("#1F4FBF");
@@ -608,10 +617,11 @@ describe("sacuvajSablon / vratiSablonNaPodrazumevano (Korak 8d-4, server akcija)
 
   it("odbija upis sa neispravnom vrednošću (Širina 0)", async () => {
     const { biznis } = await napraviKorisnikaSaFirmom();
+    const { id: templateId } = await osigurajPodrazumevaniSablon(biznis.id);
     const podaci = napraviPodrazumevaniSablonPodatke();
     podaci.blockProps.firma.w = 0;
 
-    const rezultat = await sacuvajSablon(biznis.id, celaIzmena(podaci));
+    const rezultat = await sacuvajSablon(biznis.id, templateId, celaIzmena(podaci));
     expect(rezultat.ok).toBe(false);
 
     // Baza ostaje nepromenjena (ništa nije upisano) kad validacija ne prođe.
@@ -621,11 +631,12 @@ describe("sacuvajSablon / vratiSablonNaPodrazumevano (Korak 8d-4, server akcija)
 
   it("'Vrati na podrazumevano' vraća sve vrednosti na fabrička podešavanja", async () => {
     const { biznis } = await napraviKorisnikaSaFirmom();
+    const { id: templateId } = await osigurajPodrazumevaniSablon(biznis.id);
     const podaci = napraviPodrazumevaniSablonPodatke();
     podaci.blockProps.napomena.color = "#1F4FBF";
-    await sacuvajSablon(biznis.id, celaIzmena(podaci));
+    await sacuvajSablon(biznis.id, templateId, celaIzmena(podaci));
 
-    const vraceno = await vratiSablonNaPodrazumevano(biznis.id);
+    const vraceno = await vratiSablonNaPodrazumevano(biznis.id, templateId);
     expect(vraceno).toEqual(napraviPodrazumevaniSablonPodatke());
 
     const ucitan = await ucitajSablonZaFakturu({ businessId: biznis.id, templateSnapshot: null });
@@ -655,9 +666,10 @@ describe("sacuvajSablon / vratiSablonNaPodrazumevano (Korak 8d-4, server akcija)
     });
 
     // Sačuvaj SASVIM drugačiji šablon za firmu (simulira korisnika koji menja izgled posle slanja).
+    const { id: templateId } = await osigurajPodrazumevaniSablon(biznis.id);
     const noviPodaci = napraviPodrazumevaniSablonPodatke();
     noviPodaci.blockProps.napomena.color = "#1F4FBF";
-    await sacuvajSablon(biznis.id, celaIzmena(noviPodaci));
+    await sacuvajSablon(biznis.id, templateId, celaIzmena(noviPodaci));
 
     const ucitanZaFakturu = await ucitajSablonZaFakturu(faktura);
     expect(ucitanZaFakturu.blockProps.napomena.color).toBe("#8A5A00"); // i dalje zamrznuta boja, ne nova
@@ -667,13 +679,14 @@ describe("sacuvajSablon / vratiSablonNaPodrazumevano (Korak 8d-4, server akcija)
 describe("sacuvajSablon - nivoi Tabela i Cela faktura (Korak 8d-4b)", () => {
   it("upisuje izmene tabele i cele fakture, odmah vidljive kroz nov poziv za učitavanje", async () => {
     const { biznis } = await napraviKorisnikaSaFirmom();
+    const { id: templateId } = await osigurajPodrazumevaniSablon(biznis.id);
     const podaci = napraviPodrazumevaniSablonPodatke();
     podaci.table.cols = ["opis", "kolicina", "iznos"];
     podaci.table.zebra = true;
     podaci.doc.topBar = true;
     podaci.accentColor = "#1F4FBF";
 
-    const rezultat = await sacuvajSablon(biznis.id, celaIzmena(podaci));
+    const rezultat = await sacuvajSablon(biznis.id, templateId, celaIzmena(podaci));
     expect(rezultat.ok).toBe(true);
 
     const svezeUcitan = await ucitajPodrazumevaniSablon(biznis.id);
@@ -685,13 +698,14 @@ describe("sacuvajSablon - nivoi Tabela i Cela faktura (Korak 8d-4b)", () => {
 
   it("'Vrati na podrazumevano' vraća tabelu, celu fakturu i akcent boju na fabrička podešavanja", async () => {
     const { biznis } = await napraviKorisnikaSaFirmom();
+    const { id: templateId } = await osigurajPodrazumevaniSablon(biznis.id);
     const podaci = napraviPodrazumevaniSablonPodatke();
     podaci.table.zebra = true;
     podaci.doc.topBar = true;
     podaci.accentColor = "#1F4FBF";
-    await sacuvajSablon(biznis.id, celaIzmena(podaci));
+    await sacuvajSablon(biznis.id, templateId, celaIzmena(podaci));
 
-    const vraceno = await vratiSablonNaPodrazumevano(biznis.id);
+    const vraceno = await vratiSablonNaPodrazumevano(biznis.id, templateId);
     expect(vraceno).toEqual(napraviPodrazumevaniSablonPodatke());
   });
 
@@ -716,10 +730,11 @@ describe("sacuvajSablon - nivoi Tabela i Cela faktura (Korak 8d-4b)", () => {
       },
     });
 
+    const { id: templateId } = await osigurajPodrazumevaniSablon(biznis.id);
     const noviPodaci = napraviPodrazumevaniSablonPodatke();
     noviPodaci.table.zebra = true;
     noviPodaci.accentColor = "#1F4FBF";
-    await sacuvajSablon(biznis.id, celaIzmena(noviPodaci));
+    await sacuvajSablon(biznis.id, templateId, celaIzmena(noviPodaci));
 
     const ucitanZaFakturu = await ucitajSablonZaFakturu(faktura);
     expect(ucitanZaFakturu.table.zebra).toBe(false);
@@ -730,9 +745,10 @@ describe("sacuvajSablon - nivoi Tabela i Cela faktura (Korak 8d-4b)", () => {
 describe("sacuvajSablon - raspored (Korak 8d-6)", () => {
   it("upisuje primenjen raspored (layout i pozicije blokova), odmah vidljivo kroz nov poziv za učitavanje", async () => {
     const { biznis } = await napraviKorisnikaSaFirmom();
+    const { id: templateId } = await osigurajPodrazumevaniSablon(biznis.id);
     const podaci = primeniRaspored(napraviPodrazumevaniSablonPodatke(), "moderan");
 
-    const rezultat = await sacuvajSablon(biznis.id, celaIzmena(podaci));
+    const rezultat = await sacuvajSablon(biznis.id, templateId, celaIzmena(podaci));
     expect(rezultat.ok).toBe(true);
 
     const svezeUcitan = await ucitajPodrazumevaniSablon(biznis.id);
@@ -743,12 +759,13 @@ describe("sacuvajSablon - raspored (Korak 8d-6)", () => {
 
   it("'Vrati na podrazumevano' vraća raspored na Klasičan", async () => {
     const { biznis } = await napraviKorisnikaSaFirmom();
+    const { id: templateId } = await osigurajPodrazumevaniSablon(biznis.id);
     const podaci = primeniRaspored(napraviPodrazumevaniSablonPodatke(), "kompaktan");
-    await sacuvajSablon(biznis.id, celaIzmena(podaci));
+    await sacuvajSablon(biznis.id, templateId, celaIzmena(podaci));
 
-    const vraceno = await vratiSablonNaPodrazumevano(biznis.id);
-    expect(vraceno.layout).toBe("klasican");
-    expect(vraceno.doc.topBar).toBe(false);
+    const vraceno = await vratiSablonNaPodrazumevano(biznis.id, templateId);
+    expect(vraceno?.layout).toBe("klasican");
+    expect(vraceno?.doc.topBar).toBe(false);
   });
 
   it("već poslata faktura ostaje nepromenjena nakon promene rasporeda", async () => {
@@ -772,11 +789,109 @@ describe("sacuvajSablon - raspored (Korak 8d-6)", () => {
       },
     });
 
+    const { id: templateId } = await osigurajPodrazumevaniSablon(biznis.id);
     const noviPodaci = primeniRaspored(napraviPodrazumevaniSablonPodatke(), "kompaktan");
-    await sacuvajSablon(biznis.id, celaIzmena(noviPodaci));
+    await sacuvajSablon(biznis.id, templateId, celaIzmena(noviPodaci));
 
     const ucitanZaFakturu = await ucitajSablonZaFakturu(faktura);
     expect(ucitanZaFakturu.layout).toBe("klasican");
     expect(ucitanZaFakturu.doc.topBar).toBe(false);
+  });
+});
+
+describe("Više šablona (Korak 8d-7a, padajući meni 'Šablon: <ime>')", () => {
+  it("listaSablona vraća podrazumevani prvi, pa ostale po redosledu pravljenja", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const podrazumevani = await osigurajPodrazumevaniSablon(biznis.id);
+    const prvi = await kreirajSablon(biznis.id, "Srpski, dinarske fakture");
+    const drugi = await kreirajSablon(biznis.id, "Minimalan, engleski");
+
+    const lista = await listaSablona(biznis.id);
+    expect(lista.map((s) => s.id)).toEqual([podrazumevani.id, prvi.id, drugi.id]);
+    expect(lista[0]).toEqual({ id: podrazumevani.id, name: "Moj izgled", isDefault: true });
+    expect(lista[1].isDefault).toBe(false);
+    expect(lista[2].isDefault).toBe(false);
+  });
+
+  it("kreirajSablon pravi šablon sa Klasičan izgledom, datim imenom, nikad podrazumevan", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const { sablon } = await kreirajSablon(biznis.id, "Drugi šablon");
+
+    expect(sablon).toEqual({ ...napraviPodrazumevaniSablonPodatke(), name: "Drugi šablon", isDefault: false });
+  });
+
+  it("ucitajSablonPoId učitava tačan šablon, i odbija id druge firme (provera vlasništva)", async () => {
+    const { biznis: biznisA } = await napraviKorisnikaSaFirmom();
+    const { biznis: biznisB } = await napraviKorisnikaSaFirmom();
+    const { id } = await kreirajSablon(biznisA.id, "Šablon firme A");
+
+    const ucitanIsteFirme = await ucitajSablonPoId(biznisA.id, id);
+    expect(ucitanIsteFirme?.sablon.name).toBe("Šablon firme A");
+
+    const ucitanDrugeFirme = await ucitajSablonPoId(biznisB.id, id);
+    expect(ucitanDrugeFirme).toBeNull();
+  });
+
+  it("duplirajSablon kopira sve podatke, ime '<ime> (kopija)', nikad podrazumevan (čak ni original)", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const podrazumevani = await osigurajPodrazumevaniSablon(biznis.id);
+    const izmena = napraviPodrazumevaniSablonPodatke();
+    izmena.accentColor = "#1F4FBF";
+    izmena.table.zebra = true;
+    await sacuvajSablon(biznis.id, podrazumevani.id, celaIzmena(izmena));
+
+    const kopija = await duplirajSablon(biznis.id, podrazumevani.id);
+    expect(kopija?.sablon.name).toBe("Moj izgled (kopija)");
+    expect(kopija?.sablon.isDefault).toBe(false);
+    expect(kopija?.sablon.accentColor).toBe("#1F4FBF");
+    expect(kopija?.sablon.table.zebra).toBe(true);
+
+    const drugaFirma = await napraviKorisnikaSaFirmom();
+    expect(await duplirajSablon(drugaFirma.biznis.id, podrazumevani.id)).toBeNull();
+  });
+
+  it("preimenujSablon menja samo ime, ostala polja i podrazumevani status ostaju", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const { id } = await osigurajPodrazumevaniSablon(biznis.id);
+
+    const rezultat = await preimenujSablon(biznis.id, id, "Novo ime");
+    expect(rezultat?.sablon).toEqual({ ...napraviPodrazumevaniSablonPodatke(), name: "Novo ime" });
+
+    const drugaFirma = await napraviKorisnikaSaFirmom();
+    expect(await preimenujSablon(drugaFirma.biznis.id, id, "Tuđe ime")).toBeNull();
+  });
+
+  it("postaviKaoPodrazumevani: tačno jedan podrazumevani po firmi, uvek (prebacuje ga sa starog na novi)", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const stari = await osigurajPodrazumevaniSablon(biznis.id);
+    const { id: noviId } = await kreirajSablon(biznis.id, "Novi podrazumevani");
+
+    const rezultat = await postaviKaoPodrazumevani(biznis.id, noviId);
+    expect(rezultat?.sablon.isDefault).toBe(true);
+
+    const lista = await listaSablona(biznis.id);
+    expect(lista.filter((s) => s.isDefault)).toEqual([{ id: noviId, name: "Novi podrazumevani", isDefault: true }]);
+    const stariUcitan = await ucitajSablonPoId(biznis.id, stari.id);
+    expect(stariUcitan?.sablon.isDefault).toBe(false);
+  });
+
+  it("sacuvajSablon i vratiSablonNaPodrazumevano rade na NE-podrazumevanom šablonu, nezavisno od podrazumevanog", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    await osigurajPodrazumevaniSablon(biznis.id); // podrazumevani postoji, ali se ne dira
+    const { id: drugiId } = await kreirajSablon(biznis.id, "Drugi šablon");
+
+    const izmena = napraviPodrazumevaniSablonPodatke();
+    izmena.accentColor = "#B4281E";
+    const sacuvan = await sacuvajSablon(biznis.id, drugiId, celaIzmena(izmena));
+    expect(sacuvan.ok).toBe(true);
+
+    // Podrazumevani šablon firme ostaje netaknut (0F2A22, ne B4281E).
+    const podrazumevani = await ucitajPodrazumevaniSablon(biznis.id);
+    expect(podrazumevani.accentColor).toBe("#0F2A22");
+
+    // "Vrati na podrazumevano" na DRUGOM šablonu vraća njegov izgled, ali čuva NJEGOVO ime i
+    // isDefault:false (zadatak 8d-7a tačka 5: "ime i status podrazumevanog ostaju").
+    const vraceno = await vratiSablonNaPodrazumevano(biznis.id, drugiId);
+    expect(vraceno).toEqual({ ...napraviPodrazumevaniSablonPodatke(), name: "Drugi šablon", isDefault: false });
   });
 });

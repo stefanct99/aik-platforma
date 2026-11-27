@@ -53,6 +53,122 @@
   color: var(--color-text);
   box-sizing: border-box;
   white-space: nowrap;
+  cursor: pointer;
+}
+
+/* "Otvoreno" stanje dugmeta "Šablon: <ime>" (Korak 8d-7a, frejm Fak27) - obojen okvir je ISTA boja
+   (#0F2A22) u obe teme (potvrđeno u Dk_Fak27 - nije var(--color-mark-bg), koja je u tamnoj temi druga
+   nijansa), zato var(--color-forest-900) iz tokens.css (ne theme.css), ne postojeći theme-scoped token. */
+.sablonPilulaOtvorena {
+  border: 2px solid var(--color-forest-900);
+}
+
+/* Padajući meni "Šablon: <ime>" (Fak27/Dk_Fak27) - sidran uz dugme (isti obrazac kao .dodajPadajuci niže),
+   ne centriran ispod cele trake kao u samom frejmu (ta apsolutna pozicija zavisi od ukupne širine leve
+   trake, krhko i nije deo izgleda FAKTURE - izveštaj). Boje/senka/okvir su DIREKTNO iz frejma, svi već
+   postoje kao tokeni (--color-surface/--color-border-input/--shadow-card-lg), ništa novo nije izmišljeno. */
+.sablonPadajuci {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 20;
+  width: 340px;
+  box-sizing: border-box;
+  padding: 6px;
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-input);
+  box-shadow: var(--shadow-card-lg);
+  display: flex;
+  flex-direction: column;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.sablonStavka {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 0;
+  background: none;
+  width: 100%;
+  text-align: left;
+  color: var(--color-text);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.sablonStavka:hover {
+  background: var(--color-bg);
+}
+
+.sablonStavkaIzabrana,
+.sablonStavkaIzabrana:hover {
+  background: var(--color-subnav-bg-active);
+}
+
+.sablonStavkaTekst {
+  flex: 1;
+  min-width: 0;
+}
+
+.sablonStavkaIme {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sablonBadge {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 9999px;
+  background: var(--color-icon-chip-bg);
+  color: var(--color-icon-chip-ink);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.sablonKvacica {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 18px;
+  color: var(--color-subnav-icon-active);
+}
+
+.sablonRazdvajac {
+  height: 1px;
+  background: var(--color-border);
+  margin: 6px 0;
+  flex: none;
+}
+
+.sablonAkcija {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 0;
+  background: none;
+  text-align: left;
+  color: var(--color-text);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.sablonAkcija:hover {
+  background: var(--color-bg);
 }
 
 .znacka {
@@ -598,6 +714,15 @@
 }
 
 .rasporedDugmad {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+/* Dugmad reda "Odustani"/"primarno dugme" u malim dijalozima za unos (Korak 8d-7a: "+ Novi šablon",
+   "Preimenuj ovaj šablon", upozorenje o nesačuvanim izmenama) - isti raspored kao .rasporedDugmad, ali pod
+   neutralnim imenom (ovi dijalozi nemaju veze sa rasporedom fakture). */
+.unosDugmad {
   display: flex;
   justify-content: flex-end;
   gap: var(--space-3);

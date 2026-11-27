@@ -31,6 +31,98 @@ export async function osigurajPodrazumevaniSablon(businessId: string) {
   });
 }
 
+// ===================== Više šablona (Korak 8d-7a, frejm Fak27) =====================
+// Šema (name/isDefault) je postojala od Koraka 8d-1 - baš zato da ovaj korak ne traži migraciju baze,
+// samo nove funkcije koje čitaju/pišu VIŠE redova po firmi umesto uvek "onog sa isDefault:true".
+
+export type StavkaListeSablona = { id: string; name: string; isDefault: boolean };
+
+// Lista svih šablona firme za padajući meni "Šablon: <ime>" - podrazumevani uvek prvi (kao u Fak27),
+// ostali po redosledu pravljenja (najstariji prvo).
+export async function listaSablona(businessId: string): Promise<StavkaListeSablona[]> {
+  await osigurajPodrazumevaniSablon(businessId);
+  return prisma.invoiceTemplate.findMany({
+    where: { businessId },
+    orderBy: [{ isDefault: "desc" }, { createdAt: "asc" }],
+    select: { id: true, name: true, isDefault: true },
+  });
+}
+
+// Učitavanje KONKRETNOG šablona po id-u (biranje u padajućem meniju) - provera vlasništva (businessId)
+// kao svuda u ovom fajlu: korisnik A ne može da učita šablon firme korisnika B ni da pogodi tuđ id.
+export async function ucitajSablonPoId(
+  businessId: string,
+  id: string,
+): Promise<{ id: string; sablon: PodaciSablona } | null> {
+  const red = await prisma.invoiceTemplate.findFirst({ where: { id, businessId } });
+  if (!red) return null;
+  return { id: red.id, sablon: sablonRedUPodatke(red) };
+}
+
+// "+ Novi šablon" (Fak27): uvek Klasičan izgled (napraviPodrazumevaniSablonPodatke), nikad podrazumevani.
+export async function kreirajSablon(businessId: string, ime: string): Promise<{ id: string; sablon: PodaciSablona }> {
+  const podaci = napraviPodrazumevaniSablonPodatke();
+  const novi = await prisma.invoiceTemplate.create({
+    data: { businessId, ...podaci, name: ime, isDefault: false, assignRule: Prisma.JsonNull },
+  });
+  return { id: novi.id, sablon: sablonRedUPodatke(novi) };
+}
+
+// "Dupliraj ovaj šablon" (Fak27): tačna kopija svih polja trenutno otvorenog šablona, ime "<ime> (kopija)",
+// nikad podrazumevani (čak ni ako je original bio).
+export async function duplirajSablon(
+  businessId: string,
+  id: string,
+): Promise<{ id: string; sablon: PodaciSablona } | null> {
+  const izvor = await prisma.invoiceTemplate.findFirst({ where: { id, businessId } });
+  if (!izvor) return null;
+  const novi = await prisma.invoiceTemplate.create({
+    data: {
+      businessId,
+      name: `${izvor.name} (kopija)`,
+      isDefault: false,
+      layout: izvor.layout,
+      accentColor: izvor.accentColor,
+      blocks: izvor.blocks as Prisma.InputJsonValue,
+      blocksOff: izvor.blocksOff as Prisma.InputJsonValue,
+      blockProps: izvor.blockProps as Prisma.InputJsonValue,
+      table: izvor.table as Prisma.InputJsonValue,
+      doc: izvor.doc as Prisma.InputJsonValue,
+      assignRule: (izvor.assignRule ?? Prisma.JsonNull) as Prisma.InputJsonValue,
+    },
+  });
+  return { id: novi.id, sablon: sablonRedUPodatke(novi) };
+}
+
+// Promena imena (zadatak tačka 3) - frejm ne pokazuje GDE se ovo pokreće (nema posebnog dijaloga ni
+// ikonice za izmenu u Fak27), zato je u editoru rešeno kao stavka u istom padajućem meniju (izveštaj).
+export async function preimenujSablon(
+  businessId: string,
+  id: string,
+  novoIme: string,
+): Promise<{ id: string; sablon: PodaciSablona } | null> {
+  const postojeci = await prisma.invoiceTemplate.findFirst({ where: { id, businessId } });
+  if (!postojeci) return null;
+  const azuriran = await prisma.invoiceTemplate.update({ where: { id }, data: { name: novoIme } });
+  return { id: azuriran.id, sablon: sablonRedUPodatke(azuriran) };
+}
+
+// "Postavi kao podrazumevani" (zadatak tačka 3) - tačno jedan podrazumevani po firmi, UVEK: transakcija
+// skida isDefault sa svih ostalih i postavlja ga na izabrani, atomično (isti princip kao
+// osigurajPodrazumevaniSablon, primenjen i na promenu, ne samo na prvo pravljenje).
+export async function postaviKaoPodrazumevani(
+  businessId: string,
+  id: string,
+): Promise<{ id: string; sablon: PodaciSablona } | null> {
+  const postojeci = await prisma.invoiceTemplate.findFirst({ where: { id, businessId } });
+  if (!postojeci) return null;
+  const [, azuriran] = await prisma.$transaction([
+    prisma.invoiceTemplate.updateMany({ where: { businessId, isDefault: true }, data: { isDefault: false } }),
+    prisma.invoiceTemplate.update({ where: { id }, data: { isDefault: true } }),
+  ]);
+  return { id: azuriran.id, sablon: sablonRedUPodatke(azuriran) };
+}
+
 // Podrazumevani šablon firme, kao čisti podaci (koristi se za NOVU fakturu koja još ne postoji u bazi -
 // nema šta da bude "zamrznuto", i za postojeću fakturu bez templateSnapshot-a).
 export async function ucitajPodrazumevaniSablon(businessId: string): Promise<PodaciSablona> {
@@ -63,12 +155,17 @@ export type IzmenaSablona = {
 
 export type SacuvajSablonRezultat = { ok: true; sablon: PodaciSablona } | { ok: false; razlog: string };
 
-// Upisuje izmene u PODRAZUMEVANI šablon firme (za sada postoji samo jedan šablon po firmi - izbor između
-// više šablona dolazi u 8d-7). Menja blocks/blocksOff/blockProps (nivo Blok), table/doc/accentColor
-// (nivoi Tabela i Cela faktura, Korak 8d-4b) i, od Koraka 8d-6, i layout (dijalog "Raspored").
+// Upisuje izmene u KONKRETAN šablon (templateId - od Koraka 8d-7a firma može imati više njih, editor šalje
+// id šablona koji je trenutno otvoren). Menja blocks/blocksOff/blockProps (nivo Blok), table/doc/accentColor
+// (nivoi Tabela i Cela faktura, Korak 8d-4b) i, od Koraka 8d-6, i layout (dijalog "Raspored"). Ime i status
+// podrazumevanog se NE diraju ovde (menjaju ih preimenujSablon/postaviKaoPodrazumevani).
 // Već poslate fakture ovo ne dotiče - one crtaju iz svoje zamrznute kopije (Invoice.templateSnapshot),
 // ne iz ovog reda (videti ucitajSablonZaFakturu).
-export async function sacuvajSablon(businessId: string, izmena: IzmenaSablona): Promise<SacuvajSablonRezultat> {
+export async function sacuvajSablon(
+  businessId: string,
+  templateId: string,
+  izmena: IzmenaSablona,
+): Promise<SacuvajSablonRezultat> {
   for (const blok of Object.keys(izmena.blockProps) as BlokKljuc[]) {
     const greske = validirajSvojstvaBloka(izmena.blockProps[blok]);
     if (Object.keys(greske).length > 0) {
@@ -76,7 +173,7 @@ export async function sacuvajSablon(businessId: string, izmena: IzmenaSablona): 
     }
   }
 
-  const postojeci = await prisma.invoiceTemplate.findFirst({ where: { businessId, isDefault: true } });
+  const postojeci = await prisma.invoiceTemplate.findFirst({ where: { id: templateId, businessId } });
   if (!postojeci) return { ok: false, razlog: "Šablon ne postoji." };
 
   const azuriran = await prisma.invoiceTemplate.update({
@@ -94,19 +191,28 @@ export async function sacuvajSablon(businessId: string, izmena: IzmenaSablona): 
   return { ok: true, sablon: sablonRedUPodatke(azuriran) };
 }
 
-// "Vrati na podrazumevano" (Korak 8d-4 tačka 6) - vraća CEO red na fabrička podešavanja iz Koraka 8d-1,
-// ne samo blockProps (tako da kasniji nivoi Tabela/Cela faktura zateknu čiste podatke ako je korisnik
-// prethodno nešto menjao u njima kroz buduće korake).
-export async function vratiSablonNaPodrazumevano(businessId: string): Promise<PodaciSablona> {
-  const postojeci = await prisma.invoiceTemplate.findFirst({ where: { businessId, isDefault: true } });
+// "Vrati na podrazumevano" (Korak 8d-4 tačka 6, od 8d-7a tačka 5: radi na KONKRETNOM šablonu, ne uvek na
+// onom sa isDefault:true) - vraća samo IZGLED (blocks/blocksOff/blockProps/table/doc/accentColor/layout)
+// na fabrička podešavanja iz Koraka 8d-1. Ime i status podrazumevanog tog šablona OSTAJU (zadatak,
+// tačka 5) - zato se ovde ne upisuje ...podaci u celini kao pre 8d-7a (to bi prepisalo i name/isDefault).
+export async function vratiSablonNaPodrazumevano(
+  businessId: string,
+  templateId: string,
+): Promise<PodaciSablona | null> {
+  const postojeci = await prisma.invoiceTemplate.findFirst({ where: { id: templateId, businessId } });
+  if (!postojeci) return null;
   const podaci = napraviPodrazumevaniSablonPodatke();
-  if (!postojeci) {
-    const novi = await osigurajPodrazumevaniSablon(businessId);
-    return sablonRedUPodatke(novi);
-  }
-  await prisma.invoiceTemplate.update({
+  const azuriran = await prisma.invoiceTemplate.update({
     where: { id: postojeci.id },
-    data: { ...podaci, assignRule: podaci.assignRule ?? Prisma.JsonNull },
+    data: {
+      layout: podaci.layout,
+      accentColor: podaci.accentColor,
+      blocks: podaci.blocks,
+      blocksOff: podaci.blocksOff,
+      blockProps: podaci.blockProps,
+      table: podaci.table,
+      doc: podaci.doc,
+    },
   });
-  return podaci;
+  return sablonRedUPodatke(azuriran);
 }

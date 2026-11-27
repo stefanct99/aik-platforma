@@ -8,8 +8,17 @@ import { getBusinessForUser } from "@/lib/business";
 import {
   sacuvajSablon,
   vratiSablonNaPodrazumevano,
+  listaSablona,
+  ucitajSablonPoId,
+  kreirajSablon,
+  duplirajSablon,
+  preimenujSablon,
+  postaviKaoPodrazumevani,
   type IzmenaSablona,
+  type StavkaListeSablona,
 } from "@/lib/invoice-templates-db";
+
+export type { StavkaListeSablona };
 import type { PodaciSablona } from "@/lib/invoice-templates";
 import {
   markInvoicePaid,
@@ -429,12 +438,12 @@ export async function obrisiPonavljajucuAction(id: string) {
 
 export type SacuvajSablonStanje = { ok: true; sablon: PodaciSablona } | { ok: false; greska: string };
 
-export async function sacuvajSablonAction(izmena: IzmenaSablona): Promise<SacuvajSablonStanje> {
+export async function sacuvajSablonAction(templateId: string, izmena: IzmenaSablona): Promise<SacuvajSablonStanje> {
   const korisnik = await trenutniKorisnik();
   const biznis = await getBusinessForUser(korisnik.id);
   if (!biznis) return { ok: false, greska: "Firma ne postoji." };
 
-  const rezultat = await sacuvajSablon(biznis.id, izmena);
+  const rezultat = await sacuvajSablon(biznis.id, templateId, izmena);
   if (!rezultat.ok) return { ok: false, greska: rezultat.razlog };
 
   revalidatePath("/fakture/nova");
@@ -442,13 +451,81 @@ export async function sacuvajSablonAction(izmena: IzmenaSablona): Promise<Sacuva
   return { ok: true, sablon: rezultat.sablon };
 }
 
-export async function vratiSablonNaPodrazumevanoAction(): Promise<PodaciSablona> {
+export async function vratiSablonNaPodrazumevanoAction(templateId: string): Promise<PodaciSablona> {
   const korisnik = await trenutniKorisnik();
   const biznis = await getBusinessForUser(korisnik.id);
   if (!biznis) throw new Error("Firma ne postoji.");
 
-  const podaci = await vratiSablonNaPodrazumevano(biznis.id);
+  const podaci = await vratiSablonNaPodrazumevano(biznis.id, templateId);
+  if (!podaci) throw new Error("Šablon ne postoji.");
   revalidatePath("/fakture/nova");
   revalidatePath("/fakture/sablon");
   return podaci;
+}
+
+// ===================== Više šablona (Korak 8d-7a, padajući meni "Šablon: <ime>") =====================
+
+export async function listaSablonaAction(): Promise<StavkaListeSablona[]> {
+  const korisnik = await trenutniKorisnik();
+  const biznis = await getBusinessForUser(korisnik.id);
+  if (!biznis) return [];
+  return listaSablona(biznis.id);
+}
+
+export type SablonStanje = { ok: true; id: string; sablon: PodaciSablona } | { ok: false; greska: string };
+
+export async function ucitajSablonAction(templateId: string): Promise<SablonStanje> {
+  const korisnik = await trenutniKorisnik();
+  const biznis = await getBusinessForUser(korisnik.id);
+  if (!biznis) return { ok: false, greska: "Firma ne postoji." };
+  const rezultat = await ucitajSablonPoId(biznis.id, templateId);
+  if (!rezultat) return { ok: false, greska: "Šablon ne postoji." };
+  return { ok: true, ...rezultat };
+}
+
+export async function kreirajSablonAction(ime: string): Promise<SablonStanje> {
+  const korisnik = await trenutniKorisnik();
+  const biznis = await getBusinessForUser(korisnik.id);
+  if (!biznis) return { ok: false, greska: "Firma ne postoji." };
+  if (!ime.trim()) return { ok: false, greska: "Unesi naziv šablona." };
+
+  const rezultat = await kreirajSablon(biznis.id, ime.trim());
+  revalidatePath("/fakture/sablon");
+  return { ok: true, ...rezultat };
+}
+
+export async function duplirajSablonAction(templateId: string): Promise<SablonStanje> {
+  const korisnik = await trenutniKorisnik();
+  const biznis = await getBusinessForUser(korisnik.id);
+  if (!biznis) return { ok: false, greska: "Firma ne postoji." };
+
+  const rezultat = await duplirajSablon(biznis.id, templateId);
+  if (!rezultat) return { ok: false, greska: "Šablon ne postoji." };
+  revalidatePath("/fakture/sablon");
+  return { ok: true, ...rezultat };
+}
+
+export async function preimenujSablonAction(templateId: string, novoIme: string): Promise<SablonStanje> {
+  const korisnik = await trenutniKorisnik();
+  const biznis = await getBusinessForUser(korisnik.id);
+  if (!biznis) return { ok: false, greska: "Firma ne postoji." };
+  if (!novoIme.trim()) return { ok: false, greska: "Unesi naziv šablona." };
+
+  const rezultat = await preimenujSablon(biznis.id, templateId, novoIme.trim());
+  if (!rezultat) return { ok: false, greska: "Šablon ne postoji." };
+  revalidatePath("/fakture/nova");
+  revalidatePath("/fakture/sablon");
+  return { ok: true, ...rezultat };
+}
+
+export async function postaviKaoPodrazumevaniAction(templateId: string): Promise<SablonStanje> {
+  const korisnik = await trenutniKorisnik();
+  const biznis = await getBusinessForUser(korisnik.id);
+  if (!biznis) return { ok: false, greska: "Firma ne postoji." };
+
+  const rezultat = await postaviKaoPodrazumevani(biznis.id, templateId);
+  if (!rezultat) return { ok: false, greska: "Šablon ne postoji." };
+  revalidatePath("/fakture/nova");
+  revalidatePath("/fakture/sablon");
+  return { ok: true, ...rezultat };
 }

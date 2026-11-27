@@ -23,10 +23,17 @@ async function proveriRaspored(page: Page): Promise<string[]> {
       );
     }
     // Prelomljen tekst u tabelama: ćelija čiji scrollWidth premašuje clientWidth (tekst se ne vidi ceo).
+    // NAMERNO skraćen tekst (white-space:nowrap + overflow:hidden + text-overflow:ellipsis) SA naslovom
+    // (title na ćeliji ili unutra, pun tekst na hover) nije greška - to je upravo traženo ponašanje
+    // (zadatak: "skrati sa elipsom, ceo tekst na hover") i uvek ima scrollWidth > clientWidth po definiciji
+    // elipse - zato se takva ćelija ne prijavljuje.
     document.querySelectorAll("table td, table th").forEach((cel) => {
-      if (cel.scrollWidth > cel.clientWidth + 2) {
-        problemi.push(`Tabela: tekst ne staje u ćeliju "${cel.textContent?.trim().slice(0, 40)}"`);
-      }
+      if (cel.scrollWidth <= cel.clientWidth + 2) return;
+      const stil = getComputedStyle(cel);
+      const imaElipsu = stil.textOverflow === "ellipsis" && stil.overflow === "hidden" && stil.whiteSpace === "nowrap";
+      const imaNaslov = cel.hasAttribute("title") || cel.querySelector("[title]") !== null;
+      if (imaElipsu && imaNaslov) return;
+      problemi.push(`Tabela: tekst ne staje u ćeliju "${cel.textContent?.trim().slice(0, 40)}"`);
     });
     // Preklapanje glavnih blokova: bočni meni (već ima aria-label u aplikaciji, bez izmene koda) i glavni
     // sadržaj (semantički <main>, već postoji u AppShell-u) ne smeju geometrijski da se seku. Stranice bez

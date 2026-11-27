@@ -95,6 +95,10 @@
 
 .desnaKolona {
   flex: 1;
+  /* Podrazumevano (min-width: auto) flex stavka ne sme da se smanji ispod "prirodne" širine sadržaja
+     (papir/pregled) - na 1280px to gura red širi od dostupnog prostora i pravi horizontalni skrol.
+     InvoiceDocPreview inače već ume da se smanji (ResizeObserver + scale), samo mu ovo dozvoljava. */
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);

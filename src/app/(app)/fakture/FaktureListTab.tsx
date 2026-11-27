@@ -318,7 +318,9 @@ export function FaktureListTab({ redovi, danasIso }: { redovi: FakturaRed[]; dan
                     <td className={red.efektivni === "stornirana" ? styles.prigusen : ""}>
                       {red.efektivni === "nacrt" ? "Nacrt" : red.number}
                     </td>
-                    <td className={styles.ellip}>{red.clientName}</td>
+                    <td className={styles.ellip} title={red.clientName}>
+                      {red.clientName}
+                    </td>
                     <td>{red.efektivni === "nacrt" ? "Nije poslata" : formatDatumSrpski(new Date(red.issueDate))}</td>
                     <td>
                       {red.efektivni === "nacrt"

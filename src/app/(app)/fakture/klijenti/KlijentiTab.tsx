@@ -156,7 +156,7 @@ export function KlijentiTab({
                       </td>
                       <td>{k.country}</td>
                       <td>{opisPodrazumevanog(k)}</td>
-                      <td className={styles.ellip}>
+                      <td className={styles.ellip} title={opisStavke(k) ?? "Iznos se upisuje na fakturi"}>
                         {opisStavke(k) ?? <span className={styles.podnaslov}>Iznos se upisuje na fakturi</span>}
                       </td>
                       <td>

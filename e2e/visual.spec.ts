@@ -57,6 +57,11 @@ const STRANICE: { naziv: string; putanja: string; blokovi?: string }[] = [
   { naziv: "klijenti", putanja: "/fakture/klijenti" },
   { naziv: "ponavljajuce", putanja: "/fakture/ponavljajuce" },
   { naziv: "editor-sablona", putanja: "/fakture/sablon" },
+  // "knjiga-prihoda" (ova provera) se oslanja na to da e2e-run.ts pokreće CEO paket u jednom probnom
+  // nalogu, bez resetovanja baze između fajlova - knjiga-prihoda.spec.ts (abecedno pre ovog fajla, pa se
+  // izvršava pre njega) ostavi za sobom redove sa STVARNIM kursom/dinarskom protivvrednošću (Korak 9b) i
+  // namerno dug broj fakture (Korak 6), pa generička provera ispod (scrollWidth > clientWidth, bez
+  // elipse+title) automatski pokriva i te kolone/vrednosti - ne samo prazno/"–" stanje.
   { naziv: "knjiga-prihoda", putanja: "/knjiga-prihoda" },
 ];
 

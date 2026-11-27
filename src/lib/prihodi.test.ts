@@ -7,6 +7,7 @@ import {
   ukupanPrihodUGodini,
   brojUplataPoKlijentu,
   uplataRec,
+  izracunajIznosRsd,
   type PrihodRed,
 } from "./prihodi";
 
@@ -100,6 +101,36 @@ describe("brojUplataPoKlijentu", () => {
       { klijentId: "k1", klijentIme: "Acme", broj: 2 },
       { klijentId: "k2", klijentIme: "Zed", broj: 1 },
     ]);
+  });
+});
+
+describe("izracunajIznosRsd", () => {
+  it("1.000,00 EUR (iznos=100000) po kursu 117,20 = 117.200,00 din (11720000 para)", () => {
+    expect(izracunajIznosRsd(100000, 117.2)).toBe(11_720_000);
+  });
+
+  it("zaokružuje na najbližu paru (2 decimale dinara)", () => {
+    // 0,01 EUR (iznos=1) * 117,2345 = 1,172345 din -> zaokruženo na 1,17 din = 117 para.
+    expect(izracunajIznosRsd(1, 117.2345)).toBe(117);
+  });
+
+  it("zaokružuje .5 pare naviše (standardno zaokruživanje, ne bankarsko)", () => {
+    // 1 para (0,01 najmanje jedinice) * kurs takav da je proizvod tačno na granici .5 pare.
+    expect(izracunajIznosRsd(2, 117.25)).toBe(235); // 2 * 117,25 = 234,50 -> 235
+  });
+
+  it("nema greške zaokruživanja za kurs koji u binarnom floating-point zapisu nije tačan (npr. 107,10)", () => {
+    // Direktno iznos*kurs (oba floating-point) bi za ovaj kurs moglo da padne na 4712809,999999999 -
+    // funkcija prvo zaokružuje kurs na ceo broj (1071000 = 107,10 * 10000) pa množi kao cele brojeve.
+    expect(izracunajIznosRsd(44_000, 107.1)).toBe(4_712_400);
+  });
+
+  it("veliki iznos (realna faktura) daje tačan rezultat", () => {
+    expect(izracunajIznosRsd(1_200_000, 117.2)).toBe(140_640_000);
+  });
+
+  it.each([0, -1, -117.2, NaN, Infinity, -Infinity])("baca grešku za nevažeći kurs (%s)", (kurs) => {
+    expect(() => izracunajIznosRsd(100000, kurs)).toThrow("Kurs mora biti broj veći od 0.");
   });
 });
 

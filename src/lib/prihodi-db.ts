@@ -5,9 +5,9 @@ import { prisma } from "./prisma";
 import { getBusinessForUser } from "./business";
 import type { PrihodRed } from "./prihodi";
 
-// Income.amountRsd/rate su danas UVEK null (Korak 9b ih tek popunjava, videti schema.prisma) - za
-// dinarsku uplatu je RSD protivvrednost trivijalno jednaka iznosu (nema kursa), zato se ovde IZVODI, ne
-// čita se iz baze.
+// Devizni: Income.amountRsd/rate su null dok kurs nije upisan (ručno, Korak 9b - nema još NBS
+// integracije, videti schema.prisma). Dinarski NEMA kurs - RSD protivvrednost je trivijalno jednaka
+// iznosu, zato se ovde IZVODI, ne čita se iz baze.
 function uPrihodRed(red: {
   id: string;
   date: Date;

@@ -1,9 +1,11 @@
 // Knjiga prihoda: lista (desktop, Korak 9a) - kartice zbira, podtabovi, filteri (Godina/Mesec/Klijent),
-// "Očisti filtere", prazno stanje, red sa fakturom otvara fakturu. Fixture (beforeAll): dve NOVE plaćene
-// fakture (scripts/e2e-db.ts: create-paid-invoice) - devizna (EUR, bez upisanog kursa - Korak 9b tek
-// dolazi) i dinarska, sa poznatim iznosima/datumima da provere budu tačne. Čiste se zajedno sa celim
-// probnim nalogom na kraju (e2e-cleanup.ts) - nijedan drugi fajl u paketu ne pravi "placena" fakturu, pa
-// nema rizika od međusobnog uticaja.
+// "Očisti filtere", prazno stanje, red sa fakturom otvara fakturu; plus Korak 9b (kurs i dinarska
+// protivvrednost za devizne prihode) i regresija "kolona Faktura se ne skraćuje". Fixture (beforeAll):
+// NOVE plaćene fakture (scripts/e2e-db.ts: create-paid-invoice) u RAZLIČITIM godinama po grupi testova
+// (2026/2025/2027) da sabiranja/brojevi uplata iz jedne grupe ne utiču na drugu, sa poznatim
+// iznosima/datumima/kursevima da provere budu tačne. Čiste se zajedno sa celim probnim nalogom na kraju
+// (e2e-cleanup.ts) - nijedan drugi fajl u paketu ne pravi "placena" fakturu, pa nema rizika od
+// međusobnog uticaja.
 import { test, expect } from "@playwright/test";
 import { e2eDb } from "./db";
 
@@ -16,6 +18,11 @@ let fakturaDinarska: { id: string; broj: string };
 // uplata koje ostali testovi iznad proveravaju za tekuću godinu.
 let fakturaDugaDevizna: { id: string; broj: string };
 let fakturaDugaDinarska: { id: string; broj: string };
+// Korak 9b: kurs i dinarska protivvrednost za devizne prihode. Godina 2027 (sledeća, nedirnuta drugim
+// testovima) - jedna uplata SA upisanim kursom (proverava prikaz stvarnih vrednosti i da ULAZI u zbir) i
+// jedna BEZ kursa (proverava da u istoj godini i dalje ostaje "–" i isključena iz zbira, uz onu sa kursom).
+let fakturaSaKursom: { id: string; broj: string };
+let fakturaBezKursa9b: { id: string; broj: string };
 
 test.beforeAll(() => {
   fakturaDevizna = e2eDb("create-paid-invoice", { klijent: "Acme", valuta: "EUR", iznos: 100000, datum: "2026-01-15" });
@@ -38,6 +45,19 @@ test.beforeAll(() => {
     iznos: 1000000,
     datum: "2025-06-15",
     broj: "101/26-12",
+  });
+  fakturaSaKursom = e2eDb("create-paid-invoice", {
+    klijent: "Acme",
+    valuta: "EUR",
+    iznos: 100000,
+    datum: "2027-03-10",
+    kurs: 117.2,
+  });
+  fakturaBezKursa9b = e2eDb("create-paid-invoice", {
+    klijent: "Dinarska",
+    valuta: "EUR",
+    iznos: 50000,
+    datum: "2027-04-05",
   });
 });
 
@@ -154,6 +174,40 @@ test("kolona Faktura se nikad ne skraćuje, čak ni za neuobičajeno dug broj, n
       `Dinarski, ${sirina}px: broj fakture "${fakturaDugaDinarska.broj}" je skraćen (scrollWidth=${dimenzije.scrollWidth}, clientWidth=${dimenzije.clientWidth})`,
     ).toBeLessThanOrEqual(dimenzije.clientWidth + 1);
   }
+});
+
+test("Korak 9b: devizna uplata SA kursom prikazuje stvarne vrednosti i ulazi u zbir, ona BEZ kursa ostaje '–' i izuzeta", async ({
+  page,
+}) => {
+  await page.getByRole("combobox").first().selectOption("2027");
+  await expect(page.getByText("Ukupan prihod u 2027.")).toBeVisible();
+
+  // 1.000,00 € * 117,2 = 117.200,00 din (izracunajIznosRsd) - kartica "Devizni prihodi" sabira OBE uplate
+  // (ona SA kursom ulazi, ona BEZ kursa doprinosi 0), ali broji obe kao uplate (2).
+  const devizniKarta = page.locator('[class*="sporednaKartica"]', { hasText: "Devizni prihodi" });
+  await expect(devizniKarta.getByText("117.200,00 din")).toBeVisible();
+  await expect(devizniKarta.getByText("2 uplate")).toBeVisible();
+
+  // "Ukupan prihod u 2027." (kalendarska godina) = ista vrednost (nema dinarskih uplata u ovoj godini).
+  await expect(page.getByText("117.200,00 din").first()).toBeVisible();
+
+  await expect(page.getByRole("button", { name: /^Devizni prihodi/ })).toBeVisible();
+
+  const redSaKursom = page.locator("tbody tr", { hasText: "Acme Inc. (E2E)" });
+  await expect(redSaKursom.getByText(fakturaSaKursom.broj, { exact: true })).toBeVisible();
+  const celijeSaKursom = redSaKursom.locator("td");
+  await expect(celijeSaKursom.nth(4)).toHaveText("117,20"); // Kurs (sr-RS, 2 decimale - frejm Kp1)
+  await expect(celijeSaKursom.nth(5)).toHaveText("117.200,00"); // U dinarima (bez oznake valute)
+
+  const redBezKursa = page.locator("tbody tr", { hasText: "Dinarska Firma (E2E)" });
+  await expect(redBezKursa.getByText(fakturaBezKursa9b.broj, { exact: true })).toBeVisible();
+  const celijeBezKursa = redBezKursa.locator("td");
+  await expect(celijeBezKursa.nth(4)).toHaveText("–");
+  await expect(celijeBezKursa.nth(5)).toHaveText("–");
+
+  // Red "Ukupno devizni prihodi" sabira SAMO uplatu sa kursom (500,00 € bez kursa doprinosi 0).
+  const ukupnoRed = page.locator("tr", { hasText: "Ukupno devizni prihodi" });
+  await expect(ukupnoRed.getByText("117.200,00")).toBeVisible();
 });
 
 test("filter Godina menja kartice, dugmad Izvezi/Dodaj prihod ne rade ništa (još)", async ({ page }) => {

@@ -13,6 +13,7 @@
     "make-admin": "tsx --env-file=.env.local scripts/make-admin.ts",
     "seed:fakture": "tsx --env-file=.env.local scripts/seed-fakture.ts",
     "ponavljajuce:pokreni": "tsx --env-file=.env.local scripts/pokreni-ponavljajuce.ts",
+    "kursevi:popuni-probne": "tsx --env-file=.env.local scripts/popuni-probne-kurseve.ts",
     "test:db:pripremi": "tsx --env-file=.env.local scripts/pripremi-test-bazu.ts",
     "test:e2e": "tsx --env-file=.env.local scripts/e2e-run.ts"
   },

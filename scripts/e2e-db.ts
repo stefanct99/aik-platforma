@@ -139,6 +139,18 @@ async function main() {
         broj = argumenti.broj as string;
         await prisma.invoice.update({ where: { id: faktura.id }, data: { number: broj } });
       }
+      // "kurs" opciono (Korak 9b) - createInvoiceWithHistory NIKAD sam ne upisuje rate/amountRsd (markPaid
+      // tok to ne radi, videti izveštaj Korak 9b); test za PRIKAZ stvarnog kursa (ne "–") mora da ga upiše
+      // posebno, baš kao što to danas radi JEDINO scripts/popuni-probne-kurseve.ts za razvojnu bazu.
+      if (argumenti.kurs) {
+        const { izracunajIznosRsd } = await import("../src/lib/prihodi");
+        const kurs = argumenti.kurs as number;
+        const income = await prisma.income.findFirstOrThrow({ where: { invoiceId: faktura.id } });
+        await prisma.income.update({
+          where: { id: income.id },
+          data: { rate: kurs, amountRsd: izracunajIznosRsd(income.amount, kurs) },
+        });
+      }
       console.log(JSON.stringify({ id: faktura.id, broj }));
       break;
     }

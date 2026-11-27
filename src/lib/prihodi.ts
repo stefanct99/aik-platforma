@@ -75,6 +75,22 @@ export function uplataRec(n: number): string {
   return "uplata";
 }
 
+// Dinarska protivvrednost deviznog prihoda (Korak 9b) - iznos JE VEĆ u najmanjoj jedinici valute uplate
+// (amount, npr. cent EUR), kurs je RSD za 1 jedinicu te valute (npr. 117,20) - proizvod iznos*kurs daje
+// DIREKTNO rezultat u para (najmanjoj jedinici RSD), bez dodatnog skaliranja: 1000,00 EUR (iznos=100000)
+// * 117,20 = 117.200,00 din = 11720000 para. Kurs se PRE množenja zaokružuje na ceo broj u 1/10000
+// jedinicama (Math.round(kurs*10000)) da bi množenje sa iznosom (ceo broj) ostalo tačna celobrojna
+// aritmetika - direktno iznos*kurs (oba kao floating point) bi za pojedine kurseve unelo grešku
+// zaokruživanja pre finalnog zaokruživanja na paru. Dinarski prihodi nemaju kurs, ova funkcija ih se ne
+// tiče (iznosRsd im je uvek jednak iznosu, videti prihodi-db.ts).
+export function izracunajIznosRsd(iznosUNajmanjojJedinici: number, kurs: number): number {
+  if (!Number.isFinite(kurs) || kurs <= 0) {
+    throw new Error("Kurs mora biti broj veći od 0.");
+  }
+  const kursNa10000 = Math.round(kurs * 10000);
+  return Math.round((iznosUNajmanjojJedinici * kursNa10000) / 10000);
+}
+
 export type BrojUplataPoKlijentu = { klijentId: string; klijentIme: string; broj: number }[];
 
 // Za padajući meni filtera "Klijent" (Kp9): broj uplata PO KLIJENTU, računat iz redova TRENUTNOG podtaba

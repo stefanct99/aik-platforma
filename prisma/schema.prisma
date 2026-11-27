@@ -444,7 +444,10 @@ model Income {
   currency String
   amount   Int // u najmanjoj jedinici valute uplate
 
-  // Samo za devizne (kind="devizni") - NIŠTA se ne izmišlja, ostaje prazno dok Knjiga prihoda ne postoji.
+  // Samo za devizne (kind="devizni"). markInvoicePaid ga NE postavlja (frejmovi/prototip ne pokazuju unos
+  // kursa u tom trenutku, videti izveštaj Korak 9b) - ostaje null dok kurs ne stigne nekim DRUGIM putem
+  // (danas: samo probna dev skripta, scripts/popuni-probne-kurseve.ts). Prava NBS integracija (kurs na
+  // dan priliva) je poseban, kasniji korak.
   rate      Float?
   amountRsd Int?
 

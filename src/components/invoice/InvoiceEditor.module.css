@@ -544,9 +544,13 @@ select.kombo {
 }
 
 /* Papir se skališe da popuni širinu kolone (InvoiceDocPreview, Korak 8b ispravka: "A4 pregled desno je
-   premali u odnosu na prostor") - raste sa prozorom umesto da ostane fiksnih 480px na širokim ekranima. */
+   premali u odnosu na prostor") - raste sa prozorom umesto da ostane fiksnih 480px na širokim ekranima.
+   Ispravka (veliki ekrani): max-width 760px (na 1440px je papir 688px, 760px je "malo veće") - sprečava
+   da papir postane ogroman na 1920/2560 (bez ovoga: 928px na 1920, 1248px na 2560), ostaje levo
+   poravnat u pregledKolona, prazan prostor desno ne remeti ništa. */
 .papirOmot {
   width: 100%;
+  max-width: 760px;
 }
 
 .dijalogTelo {

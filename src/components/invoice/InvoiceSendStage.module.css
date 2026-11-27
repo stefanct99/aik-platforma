@@ -160,9 +160,12 @@
   color: var(--color-text-muted);
 }
 /* Papir se skališe da popuni širinu kolone (InvoiceDocPreview, Korak 8b ispravka), isto kao u
-   InvoiceEditor-u - raste sa prozorom umesto da ostane fiksnih 480px. */
+   InvoiceEditor-u - raste sa prozorom umesto da ostane fiksnih 480px.
+   Ispravka (veliki ekrani): max-width 760px, isti razlog i broj kao u InvoiceEditor-u (isti raspored
+   kolona, isti problem na 1920/2560). */
 .papirOmot {
   width: 100%;
+  max-width: 760px;
 }
 
 .pregledMobilni {

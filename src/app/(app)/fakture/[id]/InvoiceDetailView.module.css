@@ -81,8 +81,12 @@
   align-items: flex-start;
 }
 
+/* Širina 560px je nepromenjena do i uključujući 1440px (clamp minimum). Iznad toga leva kolona raste
+   1:1 sa prozorom (Ispravka: "pregled fakture na velikom ekranu postaje prevelik") da bi desna kolona
+   sa fakturom ostala blizu veličine sa 1440px, do razumne gornje granice od 760px (iznad toga bi karte
+   Detalji/Istorija/Uplata postale neprirodno široke) - ostatak rasta ide u papirOmot max-width ispod. */
 .levaKolona {
-  width: 560px;
+  width: clamp(560px, calc(100vw - 880px), 760px);
   flex: none;
   display: flex;
   flex-direction: column;
@@ -176,9 +180,14 @@
 /* Papir se skalira da popuni širinu kolone (InvoiceDocPreview, isti mehanizam kao InvoiceEditor/
    InvoiceSendStage - "previše praznog prostora na velikim ekranima") umesto da ostane fiksnih 468px -
    raste sa prozorom. Telefon ispod zadržava fiksnu širinu (336px, nepromenjeno) preko iste komponente,
-   samo manji izmereni prostor daje manju skalu - PDF/dokument ostaje nepromenjen, jedan izvor istine. */
+   samo manji izmereni prostor daje manju skalu - PDF/dokument ostaje nepromenjen, jedan izvor istine.
+   Ispravka (veliki ekrani): max-width 600px (na 1440px je papir 516px, 600px je "malo veće" nego to,
+   razmera ~1,25 umesto ~1,08) - sprečava da papir postane ogroman na 1920/2560, bez obzira koliko
+   desnaKolona (flex:1) poraste; ostaje levo poravnat (podrazumevano align-items:stretch, ne centriran),
+   prazan prostor desno u koloni ostaje nevidljiv i ne remeti ništa. */
 .papirOmot {
   width: 100%;
+  max-width: 600px;
   overflow: hidden;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);

@@ -541,6 +541,13 @@
   color: var(--color-text-muted);
 }
 
+/* Greška ispod brojnog polja (Pozicija/Veličina) - isti obrazac kao poruke o greškama polja u ostatku
+   aplikacije (npr. InvoiceEditor.module.css .poljeGreskaTekst): crvena, manja od obične labele. */
+.poljeGreska {
+  font-size: 0.8125rem;
+  color: var(--color-danger);
+}
+
 .segment {
   display: flex;
   gap: 4px;

@@ -34,6 +34,7 @@ import {
   type SvojstvaBloka,
   type Raspored,
   type PraviloDodele,
+  type GreskaSvojstavaBloka,
 } from "@/lib/invoice-templates";
 import {
   sacuvajSablonAction,
@@ -273,7 +274,7 @@ function BrojnoPolje({
         />
         <span className={styles.poljeJedinica}>px</span>
       </div>
-      {greska && <span className={styles.labela}>{greska}</span>}
+      {greska && <span className={styles.poljeGreska}>{greska}</span>}
     </div>
   );
 }
@@ -318,6 +319,17 @@ export function TemplateEditorClient({
   const [greska, setGreska] = useState<string | null>(null);
   const [rasporedOtvoren, setRasporedOtvoren] = useState(false);
   const [rasporedIzbor, setRasporedIzbor] = useState<Raspored>(sablon.layout);
+  // Greška u polju Pozicija/Veličina (X/Y/Širina/Visina) DOK korisnik kuca neispravnu vrednost - odvojeno
+  // od "sablon" stanja jer se neispravna vrednost NIKAD ne upisuje tamo (zato "bpGreske" dole, računato iz
+  // sablon.blockProps, ne bi nikad imalo šta da prijavi - ispravka: poruka se ranije nikad nije prikazivala).
+  const [lokalnaGreskaBloka, setLokalnaGreskaBloka] = useState<GreskaSvojstavaBloka>({});
+
+  // Greška pozicije/veličine važi za KONKRETNO izabrani blok - promena izbora (klik na drugi blok u listi
+  // ili na platnu) ne sme da ostavi "zaglavljenu" poruku od prethodnog bloka. queueMicrotask (ne direktan
+  // poziv u telu efekta) - isti obrazac kao InvoiceEditor.tsx (react-hooks/set-state-in-effect).
+  useEffect(() => {
+    queueMicrotask(() => setLokalnaGreskaBloka({}));
+  }, [izabran]);
 
   function izmeniSablon(novi: PodaciSablona) {
     setSablon(novi);
@@ -329,7 +341,20 @@ export function TemplateEditorClient({
   }
 
   function naIzmenuSvojstva(izmena: Partial<SvojstvaBloka>) {
-    if (Object.keys(validirajSvojstvaBloka(izmena)).length > 0) return;
+    const greske = validirajSvojstvaBloka(izmena);
+    // Ispravka: poruka greške za POZICIJU/VELIČINU se ranije nikad nije prikazivala - upis se odbijao PRE
+    // nego što uđe u "sablon" stanje, a poruka se računala iz tog (uvek ispravnog) stanja. Sad se greška
+    // drži u OVOM, odvojenom stanju (po polju - X/Y/Širina/Visina su nezavisni), nestaje čim to POLJE
+    // dobije ispravnu vrednost (ili se izabere drugi blok - videti useEffect ispod).
+    setLokalnaGreskaBloka((trenutne) => {
+      const nove = { ...trenutne };
+      for (const kljuc of Object.keys(izmena) as (keyof GreskaSvojstavaBloka)[]) {
+        if (greske[kljuc]) nove[kljuc] = greske[kljuc];
+        else delete nove[kljuc];
+      }
+      return nove;
+    });
+    if (Object.keys(greske).length > 0) return;
     izmeniSablon(azurirajSvojstvaBloka(sablon, izabran, izmena));
   }
 
@@ -364,6 +389,7 @@ export function TemplateEditorClient({
     setSablon(podaci);
     setIzmenjeno(false);
     setGreska(null);
+    setLokalnaGreskaBloka({});
   }
 
   // Zamenjuje otvoreni šablon novim (izabran u meniju, "+ Novi šablon" ili "Dupliraj ovaj šablon") -
@@ -375,6 +401,7 @@ export function TemplateEditorClient({
     setSablon(novi);
     setIzmenjeno(false);
     setGreska(null);
+    setLokalnaGreskaBloka({});
     setIzabran("firma");
     setNivo("blok");
     const noviParam = new URLSearchParams(searchParams.toString());
@@ -529,7 +556,6 @@ export function TemplateEditorClient({
   const imenaKlijenata: Record<string, string> = Object.fromEntries(klijenti.map((k) => [k.id, k.name]));
 
   const bp = sablon.blockProps[izabran];
-  const bpGreske = validirajSvojstvaBloka(bp);
 
   return (
     <div className="appShell" data-theme={tema === "sistem" ? undefined : tema}>
@@ -832,12 +858,12 @@ export function TemplateEditorClient({
                   </div>
 
                   <div className={styles.dvaPolja}>
-                    <BrojnoPolje labela="Pozicija X" vrednost={bp.x} onChange={(v) => naIzmenuSvojstva({ x: v })} greska={bpGreske.x} />
-                    <BrojnoPolje labela="Pozicija Y" vrednost={bp.y} onChange={(v) => naIzmenuSvojstva({ y: v })} greska={bpGreske.y} />
+                    <BrojnoPolje labela="Pozicija X" vrednost={bp.x} onChange={(v) => naIzmenuSvojstva({ x: v })} greska={lokalnaGreskaBloka.x} />
+                    <BrojnoPolje labela="Pozicija Y" vrednost={bp.y} onChange={(v) => naIzmenuSvojstva({ y: v })} greska={lokalnaGreskaBloka.y} />
                   </div>
                   <div className={styles.dvaPolja}>
-                    <BrojnoPolje labela="Širina" vrednost={bp.w} onChange={(v) => naIzmenuSvojstva({ w: v })} greska={bpGreske.w} />
-                    <BrojnoPolje labela="Visina" vrednost={bp.h} onChange={(v) => naIzmenuSvojstva({ h: v })} greska={bpGreske.h} />
+                    <BrojnoPolje labela="Širina" vrednost={bp.w} onChange={(v) => naIzmenuSvojstva({ w: v })} greska={lokalnaGreskaBloka.w} />
+                    <BrojnoPolje labela="Visina" vrednost={bp.h} onChange={(v) => naIzmenuSvojstva({ h: v })} greska={lokalnaGreskaBloka.h} />
                   </div>
 
                   <div className={styles.prekidacRed}>

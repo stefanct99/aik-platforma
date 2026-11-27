@@ -115,9 +115,7 @@ test("pozadina i okvir bloka menjaju platno (blok 'Bankovni podaci') - ostaje po
   });
 });
 
-test("pozicija/veličina bloka: Širina menja platno (kolona firme), Visina < 1 - GREŠKA APLIKACIJE (izveštaj)", async ({
-  page,
-}) => {
+test("pozicija/veličina bloka: Širina menja platno (kolona firme), Visina < 1 prikazuje grešku", async ({ page }) => {
   await page.locator('[class*="blokRed"]', { hasText: "Podaci o tvojoj firmi" }).click();
 
   // Širina bloka "Podaci o tvojoj firmi" je JEDINO polje pozicije/veličine koje danas ima VIDLJIV efekat
@@ -138,15 +136,28 @@ test("pozicija/veličina bloka: Širina menja platno (kolona firme), Visina < 1 
     await expect(desnaKolona).toHaveCSS("width", "300px");
   });
 
-  // STVARNA GREŠKA APLIKACIJE (ne popravljam, samo beležim - zadatak): TemplateEditorClient.tsx
-  // naIzmenuSvojstva() odbija upis kad validirajSvojstvaBloka() javi grešku, ALI se poruka
-  // "Mora biti broj veći od 0." računa iz VEĆ UPISANOG (uvek ispravnog) stanja - zato se nikad stvarno ne
-  // prikazuje. Upisivanje "0" u Visinu se TIHO odbija: polje se vrati na poslednju ispravnu vrednost, bez
-  // ikakve poruke o grešci na ekranu (potvrđeno uživo, 27.11.2026). Test ispod dokumentuje TAČNO ovo
-  // ponašanje (tiho odbijanje, bez poruke), ne traženo ("poruka o grešci"), jer ta poruka nikad ne izlazi.
+  // Neispravna vrednost (< 1) se i dalje NE ČUVA u šablon, ali sad se ispod polja prikazuje poruka dok je
+  // vrednost neispravna (ranije se ovo tiho odbijalo bez ikakve poruke - popravljeno).
   const visinaPolje = page.getByText("Visina", { exact: true }).locator("xpath=..").locator("input");
   const pocetnaVisina = await visinaPolje.inputValue();
+  const greskaVisina = page.getByText("Mora biti broj veći od 0.");
+
+  await expect(greskaVisina).not.toBeVisible();
   await visinaPolje.fill("0");
-  await expect(visinaPolje).toHaveValue(pocetnaVisina); // tiho odbijeno, vrednost se nije promenila
-  await expect(page.getByText("Mora biti broj veći od 0.")).not.toBeVisible(); // greška se NIKAD ne prikazuje
+  await expect(visinaPolje).toHaveValue(pocetnaVisina); // i dalje se ne čuva u šablon
+  await expect(greskaVisina).toBeVisible();
+
+  await visinaPolje.fill("-5");
+  await expect(greskaVisina).toBeVisible(); // ostaje vidljiva i za negativnu vrednost
+
+  // Ispravna vrednost - poruka nestaje, vrednost se čuva.
+  await visinaPolje.fill("200");
+  await expect(greskaVisina).not.toBeVisible();
+  await expect(visinaPolje).toHaveValue("200");
+
+  // Izbor drugog bloka čisti lokalnu grešku (ne sme da "procuri" na drugi blok).
+  await visinaPolje.fill("0");
+  await expect(greskaVisina).toBeVisible();
+  await page.locator('[class*="blokRed"]', { hasText: "Bankovni podaci" }).click();
+  await expect(greskaVisina).not.toBeVisible();
 });

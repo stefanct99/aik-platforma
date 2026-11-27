@@ -554,7 +554,9 @@
 
 .segment button {
   flex: 1;
+  min-width: 0;
   height: 36px;
+  padding: 0 4px;
   border-radius: 6px;
   display: flex;
   align-items: center;
@@ -565,6 +567,9 @@
   border: 0;
   cursor: pointer;
   font-family: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .segmentAktivan {

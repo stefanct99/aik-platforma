@@ -1085,7 +1085,7 @@ export function TemplateEditorClient({
                         <div className={styles.segment}>
                           {(
                             [
-                              ["bez", "Bez pravila"],
+                              ["bez", "Bez"],
                               ["klijenti", NAZIVI_TIPA_PRAVILA.klijenti],
                               ["valuta", NAZIVI_TIPA_PRAVILA.valuta],
                               ["jezik", NAZIVI_TIPA_PRAVILA.jezik],
@@ -1140,10 +1140,11 @@ export function TemplateEditorClient({
                                 }
                                 onClick={() => izmeniSablon(azurirajPraviloDodele(sablon, { tip: "valuta", valuta: v }))}
                               >
-                                {v === "RSD" ? "RSD (domaći klijenti)" : v}
+                                {v}
                               </button>
                             ))}
                           </div>
+                          <span className={styles.hint}>RSD važi za domaće klijente.</span>
                           <div className={styles.poljeKutija}>
                             <input
                               type="text"

@@ -1,0 +1,431 @@
+.sadrzaj {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.glava {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+}
+
+.glavaTekst {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.naslov {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+}
+
+.opis {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  max-width: 640px;
+}
+
+.akcije {
+  display: flex;
+  gap: var(--space-3);
+}
+
+/* Kartice zbira (Kp1/Kp2) */
+.kartice {
+  display: flex;
+  gap: var(--space-4);
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.glavnaKartica {
+  flex: 1;
+  min-width: 280px;
+  box-sizing: border-box;
+  padding: var(--space-5);
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.glavnaVrh {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.labelaMuted {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.vrednostVelika {
+  font-size: 2rem;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+/* Traka i boja "blizu limita" (#D98E04) nisu iz tokena teme - frejm (Kp1/Kp7) pokazuje ISTE heks
+   vrednosti u obe teme (nema tamne varijante), zato su ovde doslovne, ne var(--color-*). */
+.traka {
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: #edeae6;
+  overflow: hidden;
+}
+.appShell[data-theme="tamni"] .traka {
+  background: #262c28;
+}
+@media (prefers-color-scheme: dark) {
+  .appShell:not([data-theme="svetli"]):not([data-theme="tamni"]) .traka {
+    background: #262c28;
+  }
+}
+
+.trakaIspuna {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--color-mark-bg);
+}
+
+.trakaIspunaUpozorenje {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: #d98e04;
+}
+
+.trakaFoot {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.sporedneKartice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 280px;
+  flex: none;
+}
+
+.sporednaKartica {
+  box-sizing: border-box;
+  padding: var(--space-4);
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vrednostSrednja {
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+/* Podtabovi + filteri (Kp1/Kp9) */
+.redPodtabovaIFiltera,
+.redFilteraProsto {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.podtabovi {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* Pilula aktivnog podtaba je NAMERNO ista (skoro crna) boja u OBE teme, ne var(--color-text)/
+   var(--color-bg) kao slični filteri drugde (npr. FaktureListTab .cipAktivan) - potvrđeno frejmom
+   (Kp1, identičan heks u svetlom i tamnom panelu). */
+.podtab,
+.podtabAktivan {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 40px;
+  padding: 0 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid rgba(22, 26, 23, 0.12);
+  background: var(--color-surface);
+  color: var(--color-nav-text);
+}
+.appShell[data-theme="tamni"] .podtab {
+  border-color: rgba(255, 255, 255, 0.148);
+}
+@media (prefers-color-scheme: dark) {
+  .appShell:not([data-theme="svetli"]):not([data-theme="tamni"]) .podtab {
+    border-color: rgba(255, 255, 255, 0.148);
+  }
+}
+.podtabAktivan {
+  border: 0;
+  background: #161a17;
+  color: #fff;
+}
+
+.broj {
+  color: var(--color-text-muted);
+}
+.brojAktivan {
+  color: #c9d6cf;
+}
+
+.filteri {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.selectOmot {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.selectOmot svg {
+  position: absolute;
+  right: 14px;
+  pointer-events: none;
+  color: var(--color-text-muted);
+}
+.select {
+  height: 40px;
+  padding: 0 36px 0 14px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-input);
+  font-size: 0.875rem;
+  color: var(--color-text);
+  appearance: none;
+  cursor: pointer;
+}
+
+.klijentOmot {
+  position: relative;
+}
+.kombo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 40px;
+  padding: 0 14px;
+  box-sizing: border-box;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-input);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.875rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.padajuciKlijent {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 8px);
+  /* right:0, ne left:0 - filter Klijent je poslednji desno u redu (Kp9), otvoren od leve ivice bi gurao
+     stranicu u horizontalni skrol kad je prozor baš dovoljno širok da ga ne primeti. */
+  right: 0;
+  min-width: 260px;
+  box-sizing: border-box;
+  padding: var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-overlay);
+  display: flex;
+  flex-direction: column;
+}
+.klijentRed,
+.klijentRedAktivan {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  height: 44px;
+  padding: 0 14px;
+  border-radius: var(--radius-sm);
+  background: none;
+  border: 0;
+  text-align: left;
+  color: var(--color-text);
+  font-size: 1rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.klijentRedAktivan {
+  background: var(--color-subnav-bg-active);
+}
+.brojBledo {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  margin-left: auto;
+}
+
+.ocistiFiltere {
+  font-size: 0.875rem;
+  color: var(--color-text);
+}
+
+/* Prazno stanje (Kp3) */
+.prazno {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  text-align: center;
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border);
+  padding: 64px 0;
+}
+.praznaIkonica {
+  width: 64px;
+  height: 64px;
+  border-radius: 9999px;
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.praznoNaslov {
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+.praznoOpis {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  max-width: 420px;
+}
+
+/* Tabela (Kp1/Kp2) - isti obrazac kao FaktureListTab/KlijentiTab: bez colgroup, širina po koloni preko
+   th, max-width:0 na td pušta table-layout:auto da ih stvarno poštuje umesto da ih širi. */
+.tabelaWrap {
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+}
+.tabela th {
+  text-align: left;
+  padding: 12px 24px;
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+.tabela td {
+  padding: 0 24px;
+  height: 56px;
+  border-top: 1px solid var(--color-border);
+  font-size: 1rem;
+  max-width: 0;
+  white-space: nowrap;
+}
+/* Samo kolone sa STVARNO promenljivom dužinom (ime klijenta, broj fakture) se skraćuju - datum/iznos/
+   kurs/izvor su predvidive dužine na širini kolone, skraćivanje bi im samo sakrilo deo teksta bez razloga
+   (npr. bedž "Ručno" je širi od "96px" nagoveštaja kolone, ali to je u redu - nije predugačak tekst). */
+.kolonaKlijent,
+.kolonaFaktura,
+.kolonaFakturaRsd {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Uplata/Faktura - manji, prigušeni tekst (frejm Kp1/Kp2: 0.875rem, ista boja kao ostatak prigušenog
+   teksta), za razliku od Klijent/Iznos/Kurs/U dinarima koji ostaju običnim tekstom (1rem). */
+.kolonaUplata,
+.kolonaFaktura,
+.kolonaFakturaRsd {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+.desno {
+  text-align: right;
+}
+.red {
+  cursor: pointer;
+}
+.red:hover {
+  background: var(--color-bg);
+}
+.redUkupno {
+  background: var(--color-bg);
+}
+
+/* 108/108px, ne 100/100px kao u frejmu: tačno "15.11.2026." (11 znakova) na 0.875rem traži malo više od
+   100px da ne bi uopšte dodirivalo granicu skraćivanja - sitna, bezbedna rezerva, bez vizuelne razlike. */
+.kolonaUplata {
+  width: 108px;
+}
+.kolonaFaktura,
+.kolonaFakturaRsd {
+  width: 108px;
+}
+.kolonaIznos {
+  width: 110px;
+}
+.kolonaKurs {
+  width: 64px;
+}
+.kolonaDinari {
+  width: 120px;
+}
+.kolonaDinariRsd {
+  width: 160px;
+}
+.kolonaIzvor {
+  width: 96px;
+}
+
+.ellip {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Bedž "Izvor" - vrednosti su POTVRĐENE postojeći tokeni (badge-warning = isti heks kao frejm "Ručno";
+   "Mejl banke" se poklapa sa color-bg/color-nav-text, ne sa badge-neutral). */
+.znackaMejl,
+.znackaRucno {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+.znackaMejl {
+  background: var(--color-bg);
+  color: var(--color-nav-text);
+}
+.znackaRucno {
+  background: var(--color-badge-warning-bg);
+  color: var(--color-badge-warning-text);
+}

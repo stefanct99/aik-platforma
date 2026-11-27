@@ -109,6 +109,31 @@ async function main() {
       console.log(JSON.stringify({ ok: true }));
       break;
     }
+    case "create-paid-invoice": {
+      // Faktura NASTAJE već kao "placena" (ne nacrt pa posle oznaka) - createInvoiceWithHistory (isti kod
+      // koji koristi i razvojni seed) tad SAMA pravi Income zapis (src/lib/invoices.ts) - baš ono što
+      // Knjiga prihoda (Korak 9a) čita. Namerno BEZ rate/amountRsd (to je stvarno današnje stanje, Korak
+      // 9b ih tek popunjava) - test:e2e za Knjigu prihoda ovo i proverava ("–" u koloni Kurs/U dinarima).
+      const { createInvoiceWithHistory } = await import("../src/lib/invoices");
+      const biznis = await prisma.business.findFirstOrThrow({ where: { name: "E2E Probna Firma" } });
+      const klijent = await prisma.client.findFirstOrThrow({
+        where: { businessId: biznis.id, name: { contains: argumenti.klijent as string } },
+      });
+      const datum = new Date(argumenti.datum as string);
+      const faktura = await createInvoiceWithHistory(biznis.id, {
+        clientId: klijent.id,
+        currency: argumenti.valuta as string,
+        lang: "en",
+        issueDate: datum,
+        dueDays: 7,
+        items: [{ desc: "E2E uplata", qty: 1, price: argumenti.iznos as number }],
+        status: "placena",
+        sentAt: datum,
+        paidDate: datum,
+      });
+      console.log(JSON.stringify({ id: faktura.id, broj: faktura.number }));
+      break;
+    }
     default:
       throw new Error(`Nepoznata komanda: ${komanda}`);
   }

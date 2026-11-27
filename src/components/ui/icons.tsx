@@ -41,6 +41,18 @@ export function IkonaFakture(props: IkonicaProps) {
   );
 }
 
+// Prazno stanje Knjige prihoda (Korak 9a, frejm Kp3) - BLIZU IkonaFakture, ali nije identična (poslednja
+// linija "M9 17h6", ne "M9 17h4") - prototip (Icons.book) koristi sopstvenu varijantu, ne deli je sa
+// navigacijom.
+export function IkonaKnjigaPrihodaPrazno(props: IkonicaProps) {
+  return (
+    <Ikonica {...props}>
+      <path d="M7 3h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
+      <path d="M14 3v5h5M9 13h6M9 17h6" />
+    </Ikonica>
+  );
+}
+
 export function IkonaKnjigaPrihoda(props: IkonicaProps) {
   return (
     <Ikonica {...props}>

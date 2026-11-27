@@ -57,6 +57,7 @@ const STRANICE: { naziv: string; putanja: string; blokovi?: string }[] = [
   { naziv: "klijenti", putanja: "/fakture/klijenti" },
   { naziv: "ponavljajuce", putanja: "/fakture/ponavljajuce" },
   { naziv: "editor-sablona", putanja: "/fakture/sablon" },
+  { naziv: "knjiga-prihoda", putanja: "/knjiga-prihoda" },
 ];
 
 test.describe.configure({ mode: "serial" });

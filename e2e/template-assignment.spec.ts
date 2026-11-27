@@ -101,6 +101,19 @@ test("red prvenstva: pravilo po klijentu pobeđuje pravilo po valuti kad oba odg
   await expect.poll(() => imaTrakuNaVrhu(page), { timeout: 10_000 }).toBe(true);
 });
 
+test("opis pravila dodele u padajućem meniju šablona (zadatak: dopuna E2E testova, tačka 5)", async ({ page }) => {
+  await page.goto("/fakture/sablon");
+  await page.getByRole("button", { name: /^Šablon:/ }).click();
+
+  // Podnaslov je DEO istog dugmeta kao naziv šablona (opisPravilaDodele, invoice-templates.ts) - tačno ove
+  // tri formulacije, za tri tipa pravila napravljena u beforeAll (valuta RSD/klijent/jezik).
+  await expect(page.getByRole("button", { name: "E2E RSD pravilo Domaći klijenti (RSD)" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "E2E Acme pravilo Acme Inc. (E2E)" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "E2E Engleski pravilo Fakture na engleskom" })).toBeVisible();
+  // Podrazumevani šablon uvek ima isti, fiksni podnaslov, bez obzira na assignRule (uvek null za njega).
+  await expect(page.getByRole("button", { name: "Moj izgled Podrazumevani Svi klijenti osim niže" })).toBeVisible();
+});
+
 test("poslata faktura ostaje na zamrznutom izgledu posle KASNIJE izmene pravila dodele", async ({ page }) => {
   // Ovaj test radi pun tok slanja fakture PA izmenu šablona u istom testu - duže od podrazumevanih 30s.
   test.setTimeout(60_000);

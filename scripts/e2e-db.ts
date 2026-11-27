@@ -60,6 +60,55 @@ async function main() {
       console.log(JSON.stringify({ ok: true }));
       break;
     }
+    case "create-other-business": {
+      // Druga, NEZAVISNA probna firma (drugi korisnik) - samo za proveru izolacije šablona po firmi
+      // (template-isolation.spec.ts). Isti obrazac kao glavni probni nalog (scripts/e2e-seed.ts): pravi se
+      // preko auth.api.signUpEmail + saveOnboardingStep1/2/finishOnboarding (ne ručnim Prisma.create, da bi
+      // Business dobio sva obavezna izvedena polja - inboundSlug/inboundCode/calendarToken). Ne loguje se
+      // nikad - testu treba samo businessId/templateId, za pokušaj pristupa IZ sesije glavnog probnog naloga.
+      const { randomBytes } = await import("node:crypto");
+      const { auth } = await import("../src/lib/auth");
+      const { saveOnboardingStep1, saveOnboardingStep2, finishOnboarding, getBusinessForUser } = await import(
+        "../src/lib/business"
+      );
+      const sufiks = randomBytes(6).toString("hex");
+      const email = `e2e-druga-firma-${sufiks}@aik-test.local`;
+      await auth.api.signUpEmail({
+        body: { name: "Druga Firma Vlasnik", email, password: `E2e-${randomBytes(9).toString("hex")}` },
+        headers: new Headers(),
+        asResponse: false,
+      });
+      const korisnik = await prisma.user.findUniqueOrThrow({ where: { email } });
+      await prisma.user.update({ where: { id: korisnik.id }, data: { emailVerified: true } });
+      await saveOnboardingStep1(korisnik.id, {
+        ownerName: "Drugi Probni",
+        name: "Druga Probna Firma (E2E)",
+        pib: `E2E${sufiks}`.slice(0, 9),
+        mb: `E2E${sufiks}`.slice(0, 8),
+        delatnostCode: "62.10",
+        delatnostName: "Računarsko programiranje",
+        regDate: new Date("2024-01-01"),
+      });
+      await saveOnboardingStep2(korisnik.id, { street: "Druga 2", city: "Novi Sad", zip: "21000" });
+      await finishOnboarding(korisnik.id);
+      const biznis = await getBusinessForUser(korisnik.id);
+      if (!biznis) throw new Error("Druga probna firma nije napravljena.");
+      // saveOnboardingStep1 već pravi podrazumevani šablon - samo ga preimenuj/oboji da bude
+      // raspoznatljiv (ime/boja koji ne postoje ni u jednoj drugoj probnoj firmi).
+      const postojeciSablon = await prisma.invoiceTemplate.findFirstOrThrow({ where: { businessId: biznis.id } });
+      const sablon = await prisma.invoiceTemplate.update({
+        where: { id: postojeciSablon.id },
+        data: { name: "Tuđi šablon (E2E izolacija)", accentColor: "#FF00FF" },
+      });
+      console.log(JSON.stringify({ userId: korisnik.id, businessId: biznis.id, templateId: sablon.id }));
+      break;
+    }
+    case "delete-other-business": {
+      // Cascade (schema.prisma) nosi sa sobom Business + InvoiceTemplate.
+      await prisma.user.deleteMany({ where: { id: argumenti.userId } });
+      console.log(JSON.stringify({ ok: true }));
+      break;
+    }
     default:
       throw new Error(`Nepoznata komanda: ${komanda}`);
   }

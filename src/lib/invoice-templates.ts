@@ -55,7 +55,18 @@ export type PodesavanjaDokumenta = {
   logoShape: "kvadrat" | "krug";
 };
 
-export type PraviloDodele = { domestic: boolean } | { currency: string } | { lang: "sr" | "en" } | null;
+// Pravilo dodele (Korak 8d-7b, zadatak tačka 1) - PREPISUJE raniji oblik ({domestic}|{currency}|{lang},
+// preuzet iz prototipa store.js) jer zadatak sada eksplicitno traži i uslov po KONKRETNIM klijentima
+// (prototip ovo nema - prototipov selectors.js samo proverava client.domestic/invoice.currency/invoice.lang,
+// nikad listu id-jeva klijenata - izveštaj). Bezbedno je promeniti oblik bez migracije: assignRule se do
+// sada nigde stvarno nije upisivalo (uvek Prisma.JsonNull), ni jedan red u bazi ga nema postavljenog.
+// "domestic" iz prototipa NIJE zadržan kao poseban uslov - zadatak (tačka 2) ga izričito svodi na PREČICU
+// za "valuta: RSD" (naš Client model nema sopstveno polje domestic, ima samo currency po fakturi/klijentu).
+export type PraviloDodele =
+  | { tip: "klijenti"; klijentId: string[] }
+  | { tip: "valuta"; valuta: string }
+  | { tip: "jezik"; jezik: "sr" | "en" }
+  | null;
 
 export type PodaciSablona = {
   name: string;
@@ -405,6 +416,86 @@ export function azurirajDokument(sablon: PodaciSablona, izmena: Partial<Podesava
 // na PodaciSablona, isto kao u prototipu).
 export function azurirajAkcentBoju(sablon: PodaciSablona, boja: string): PodaciSablona {
   return { ...sablon, accentColor: boja };
+}
+
+// ===================== Pravilo dodele šablona (Korak 8d-7b) =====================
+// Nijedan frejm ne pokazuje KONTROLE za podešavanje pravila (ni Fak27 ni Fak26 ne sadrže reč "pravilo" ni
+// "uslov" nigde) - samo gotove podnaslove u padajućem meniju šablona. Kontrole u panelu "Cela faktura" su
+// zato napravljene od postojećih obrazaca iz OVOG istog editora (segmentovano dugme kao "Margine"/
+// "Veličina teksta", prekidači kao lista "Blokovi" za više klijenata) - izveštaj.
+
+export const NAZIVI_TIPA_PRAVILA: Record<NonNullable<PraviloDodele>["tip"], string> = {
+  klijenti: "Klijent(i)",
+  valuta: "Valuta",
+  jezik: "Jezik",
+};
+
+// Postavlja/menja pravilo dodele TRENUTNO otvorenog šablona - deo istog "Sačuvaj šablon" toka kao
+// margine/traka/font (zadatak ne kaže drugačije, a ovo polje živi u istom panelu "Cela faktura"), ne
+// menja se odmah kao preimenovanje/postavljanje podrazumevanog (to su radnje u meniju, ne u panelu).
+export function azurirajPraviloDodele(sablon: PodaciSablona, pravilo: PraviloDodele): PodaciSablona {
+  return { ...sablon, assignRule: pravilo };
+}
+
+// Validacija pre čuvanja (zadatak tačka 1: "klijent (jedan ili više)") - prazna lista klijenata ili prazna
+// valuta ne znače "bez pravila", nego grešku (korisnik je izabrao tip pravila ali nije dovršio unos).
+export function validirajPraviloDodele(pravilo: PraviloDodele): string | null {
+  if (!pravilo) return null;
+  if (pravilo.tip === "klijenti" && pravilo.klijentId.length === 0) {
+    return "Izaberi bar jednog klijenta.";
+  }
+  if (pravilo.tip === "valuta" && !pravilo.valuta.trim()) {
+    return "Izaberi ili upiši valutu.";
+  }
+  return null;
+}
+
+// Podnaslov ispod imena šablona u padajućem meniju (Fak27: "Svi klijenti osim niže" za podrazumevani,
+// "Domaći klijenti (RSD)", ime klijenta, "EUR" i slično - zadatak tačka 4). "Domaći klijenti (RSD)" je
+// PREČICA (zadatak tačka 2: domaći = valuta RSD), ne poseban tip pravila - ista valuta:"RSD" vrednost,
+// samo drugačiji tekst. Za jezik frejm ne pokazuje primer podnaslova - "Fakture na srpskom/engleskom" je
+// izveden po istom obrascu kao "Klijenti u <valuta>" (izveštaj). Imena klijenata se razrešavaju iz mape
+// (id -> ime) koju poziv prosledi - ovaj fajl ne sme da zna za bazu (videti komentar na vrhu fajla).
+export function opisPravilaDodele(
+  sablon: { isDefault: boolean; assignRule: PraviloDodele },
+  imenaKlijenata: Record<string, string>,
+): string | null {
+  if (sablon.isDefault) return "Svi klijenti osim niže";
+  const pravilo = sablon.assignRule;
+  if (!pravilo) return null;
+  if (pravilo.tip === "valuta") {
+    return pravilo.valuta === "RSD" ? "Domaći klijenti (RSD)" : `Klijenti u ${pravilo.valuta}`;
+  }
+  if (pravilo.tip === "jezik") {
+    return pravilo.jezik === "sr" ? "Fakture na srpskom" : "Fakture na engleskom";
+  }
+  const imena = pravilo.klijentId.map((id) => imenaKlijenata[id] ?? "(obrisan klijent)");
+  return imena.join(", ");
+}
+
+export type KriterijumiFakture = { clientId: string | null; currency: string; jezik: "sr" | "en" };
+
+function odgovaraPraviluDodele(pravilo: NonNullable<PraviloDodele>, kriterijumi: KriterijumiFakture): boolean {
+  if (pravilo.tip === "klijenti") return !!kriterijumi.clientId && pravilo.klijentId.includes(kriterijumi.clientId);
+  if (pravilo.tip === "valuta") return pravilo.valuta === kriterijumi.currency;
+  return pravilo.jezik === kriterijumi.jezik;
+}
+
+// Bira šablon za fakturu po pravilima dodele (zadatak tačka 3) - JEDINO mesto gde se ova logika računa
+// (server za nacrte/PDF/zamrzavanje pri slanju, klijent za uživo pregled u editoru nove fakture dok se
+// menja klijent/valuta - zadatak tačka 6 - oba pozivaju OVU istu funkciju, nikad svoju kopiju logike).
+// Red prvenstva kad više šablona odgovara (frejm ovo ne precizira - odluka, izveštaj): klijent je
+// najprecizniji uslov (imenuje tačne klijente), pa valuta, pa jezik (najširi uslov) - isti redosled kao
+// prototipov selectors.js (domestic/client pre currency pre lang). Unutar istog nivoa preciznosti pobeđuje
+// RANIJE napravljen šablon (niz "sabloni" mora biti po redosledu kreiranja - videti listaSablonaZaDodelu
+// u invoice-templates-db.ts). Ako nijedan ne odgovara, vraća se podrazumevani (uvek postoji tačno jedan).
+export function izaberiSablonPoPravilu(sabloni: PodaciSablona[], kriterijumi: KriterijumiFakture): PodaciSablona {
+  const saPravilom = sabloni.filter((s) => !s.isDefault && s.assignRule);
+  for (const tip of ["klijenti", "valuta", "jezik"] as const) {
+    const nadjen = saPravilom.find((s) => s.assignRule?.tip === tip && odgovaraPraviluDodele(s.assignRule!, kriterijumi));
+    if (nadjen) return nadjen;
+  }
+  return sabloni.find((s) => s.isDefault) ?? sabloni[0];
 }
 
 // ===================== Dijalog "Raspored" (Korak 8d-6, frejm Fak24) =====================

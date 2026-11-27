@@ -9,6 +9,8 @@ import {
   napraviPodrazumevaniSablonPodatke,
   sablonRedUPodatke,
   validirajSvojstvaBloka,
+  validirajPraviloDodele,
+  izaberiSablonPoPravilu,
   NAZIVI_BLOKOVA,
   type BlokKljuc,
   type SvojstvaBloka,
@@ -16,6 +18,8 @@ import {
   type PodesavanjaTabele,
   type PodesavanjaDokumenta,
   type Raspored,
+  type PraviloDodele,
+  type KriterijumiFakture,
 } from "./invoice-templates";
 
 // Idempotentno: ako firma već ima podrazumevani šablon, vraća njega (ne pravi drugi). Ovim se - isto kao
@@ -35,17 +39,30 @@ export async function osigurajPodrazumevaniSablon(businessId: string) {
 // Šema (name/isDefault) je postojala od Koraka 8d-1 - baš zato da ovaj korak ne traži migraciju baze,
 // samo nove funkcije koje čitaju/pišu VIŠE redova po firmi umesto uvek "onog sa isDefault:true".
 
-export type StavkaListeSablona = { id: string; name: string; isDefault: boolean };
+// assignRule je ovde zato što padajući meni (Fak27) prikazuje podnaslov izveden iz pravila (zadatak
+// 8d-7b, tačka 4, videti opisPravilaDodele) - lista bi inače morala da pravi poseban poziv po stavki.
+export type StavkaListeSablona = { id: string; name: string; isDefault: boolean; assignRule: PraviloDodele };
 
 // Lista svih šablona firme za padajući meni "Šablon: <ime>" - podrazumevani uvek prvi (kao u Fak27),
 // ostali po redosledu pravljenja (najstariji prvo).
 export async function listaSablona(businessId: string): Promise<StavkaListeSablona[]> {
   await osigurajPodrazumevaniSablon(businessId);
-  return prisma.invoiceTemplate.findMany({
+  const redovi = await prisma.invoiceTemplate.findMany({
     where: { businessId },
     orderBy: [{ isDefault: "desc" }, { createdAt: "asc" }],
-    select: { id: true, name: true, isDefault: true },
+    select: { id: true, name: true, isDefault: true, assignRule: true },
   });
+  return redovi.map((r) => ({ ...r, assignRule: (r.assignRule ?? null) as PraviloDodele }));
+}
+
+// Svi šabloni firme kao čisti podaci, po redosledu KREIRANJA (zadatak 8d-7b, tačka 3: red prvenstva kod
+// pravila dodele kad više njih odgovara - videti izaberiSablonPoPravilu u invoice-templates.ts, koja
+// očekuje baš ovaj redosled). Koristi se za biranje šablona nacrta/nove fakture po pravilu - NE za
+// padajući meni (ta lista, listaSablona iznad, ima svoj - podrazumevani prvi - redosled za prikaz).
+export async function svaSablonaZaDodelu(businessId: string): Promise<PodaciSablona[]> {
+  await osigurajPodrazumevaniSablon(businessId);
+  const redovi = await prisma.invoiceTemplate.findMany({ where: { businessId }, orderBy: { createdAt: "asc" } });
+  return redovi.map(sablonRedUPodatke);
 }
 
 // Učitavanje KONKRETNOG šablona po id-u (biranje u padajućem meniju) - provera vlasništva (businessId)
@@ -149,14 +166,29 @@ export async function ucitajPodrazumevaniSablon(businessId: string): Promise<Pod
   return sablonRedUPodatke(red);
 }
 
-// Koji šablon se crta za DATU fakturu (Korak 8d-2, pravilo 2): zamrznuta kopija ako postoji, inače
-// podrazumevani šablon firme. Biranje po pravilu dodele (klijent/valuta/jezik) NIJE deo ovog koraka -
-// dolazi u 8d-3 (Sel.templateForInvoice u prototipu).
+// Koji šablon se crta za DATU fakturu (Korak 8d-2 pravilo 2, prošireno u 8d-7b): zamrznuta kopija ako
+// postoji (poslata/plaćena faktura - ništa od ovoga ispod se ne dotiče takve fakture, snapshot uvek
+// pobeđuje). Inače (nacrt) bira se šablon PO PRAVILU DODELE (klijent/valuta/jezik, izaberiSablonPoPravilu)
+// na osnovu TRENUTNIH polja fakture - clientId/currency/lang su opcioni parametri (ne deo "faktura" tipa
+// pre ovog koraka) baš zato da ucitajSablonZaFakturu i dalje radi i za pozive koji ih ne prosleđuju
+// (postojeći testovi/pozivi) - bez njih se tiho vraća na podrazumevani, kao i pre 8d-7b.
 export async function ucitajSablonZaFakturu(faktura: {
   businessId: string;
   templateSnapshot: unknown;
+  clientId?: string | null;
+  currency?: string | null;
+  lang?: string | null;
 }): Promise<PodaciSablona> {
   if (faktura.templateSnapshot) return faktura.templateSnapshot as PodaciSablona;
+  if (faktura.clientId && faktura.currency) {
+    const sabloni = await svaSablonaZaDodelu(faktura.businessId);
+    const kriterijumi: KriterijumiFakture = {
+      clientId: faktura.clientId,
+      currency: faktura.currency,
+      jezik: faktura.lang === "en" ? "en" : "sr",
+    };
+    return izaberiSablonPoPravilu(sabloni, kriterijumi);
+  }
   return ucitajPodrazumevaniSablon(faktura.businessId);
 }
 
@@ -170,6 +202,7 @@ export type IzmenaSablona = {
   doc: PodesavanjaDokumenta;
   accentColor: string;
   layout: Raspored;
+  assignRule: PraviloDodele;
 };
 
 export type SacuvajSablonRezultat = { ok: true; sablon: PodaciSablona } | { ok: false; razlog: string };
@@ -191,9 +224,15 @@ export async function sacuvajSablon(
       return { ok: false, razlog: `Neispravna vrednost za blok "${NAZIVI_BLOKOVA[blok]}".` };
     }
   }
+  const greskaPravila = validirajPraviloDodele(izmena.assignRule);
+  if (greskaPravila) return { ok: false, razlog: greskaPravila };
 
   const postojeci = await prisma.invoiceTemplate.findFirst({ where: { id: templateId, businessId } });
   if (!postojeci) return { ok: false, razlog: "Šablon ne postoji." };
+
+  // Podrazumevani šablon nema pravilo (zadatak tačka 4) - provereno i OVDE, ne samo time što editor ne
+  // prikazuje kontrole za podrazumevani šablon (ista odbrana "na dva mesta" kao kod brisanja u 8d-7a).
+  const noviAssignRule: PraviloDodele = postojeci.isDefault ? null : izmena.assignRule;
 
   const azuriran = await prisma.invoiceTemplate.update({
     where: { id: postojeci.id },
@@ -205,6 +244,7 @@ export async function sacuvajSablon(
       doc: izmena.doc,
       accentColor: izmena.accentColor,
       layout: izmena.layout,
+      assignRule: (noviAssignRule ?? Prisma.JsonNull) as Prisma.InputJsonValue,
     },
   });
   return { ok: true, sablon: sablonRedUPodatke(azuriran) };

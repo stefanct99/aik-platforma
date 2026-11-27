@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { afterAll, describe, expect, it } from "vitest";
+import { Prisma } from "../../generated/prisma/client";
 import { prisma } from "./prisma";
 import { saveOnboardingStep1 } from "./business";
 import { napraviPodrazumevaniSablonPodatke } from "./invoice-templates";
@@ -659,6 +660,96 @@ describe("sendInvoice - zamrzavanje šablona (Korak 8d-2, odluka 1)", () => {
       status: "nacrt",
     });
     expect(f.templateSnapshot).toBeNull();
+  });
+});
+
+describe("sendInvoice - bira šablon po pravilu dodele (Korak 8d-7b)", () => {
+  it("pri prvom slanju koristi šablon čije pravilo odgovara valuti fakture, ne uvek podrazumevani", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    await prisma.invoiceTemplate.create({
+      data: {
+        businessId: biznis.id,
+        ...napraviPodrazumevaniSablonPodatke(),
+        name: "RSD šablon",
+        isDefault: false,
+        accentColor: "#B4281E",
+        assignRule: { tip: "valuta", valuta: "RSD" },
+      },
+    });
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "RSD",
+      lang: "sr",
+      issueDate: new Date("2026-09-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "Usluga", qty: 1, price: 1000 }],
+      status: "nacrt",
+    });
+
+    await sendInvoice(korisnik.id, f.id);
+
+    const posle = await prisma.invoice.findUniqueOrThrow({ where: { id: f.id } });
+    const snimak = posle.templateSnapshot as { name: string; accentColor: string };
+    expect(snimak.name).toBe("RSD šablon");
+    expect(snimak.accentColor).toBe("#B4281E");
+  });
+
+  it("faktura čija valuta ne odgovara nijednom pravilu i dalje dobija podrazumevani šablon", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    await prisma.invoiceTemplate.create({
+      data: {
+        businessId: biznis.id,
+        ...napraviPodrazumevaniSablonPodatke(),
+        name: "RSD šablon",
+        isDefault: false,
+        assignRule: { tip: "valuta", valuta: "RSD" },
+      },
+    });
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "USD", // ne RSD - nijedno pravilo ne odgovara
+      lang: "sr",
+      issueDate: new Date("2026-09-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "Usluga", qty: 1, price: 1000 }],
+      status: "nacrt",
+    });
+
+    await sendInvoice(korisnik.id, f.id);
+
+    const posle = await prisma.invoice.findUniqueOrThrow({ where: { id: f.id } });
+    expect((posle.templateSnapshot as { name: string }).name).toBe("Moj izgled");
+  });
+
+  it("izmena pravila POSLE slanja ne menja već poslatu fakturu (snapshot ostaje zamrznut)", async () => {
+    const { korisnik, biznis, klijent } = await napraviKorisnikaSaFirmomIKlijentom();
+    const rsdSablon = await prisma.invoiceTemplate.create({
+      data: {
+        businessId: biznis.id,
+        ...napraviPodrazumevaniSablonPodatke(),
+        name: "RSD šablon",
+        isDefault: false,
+        assignRule: { tip: "valuta", valuta: "RSD" },
+      },
+    });
+    const f = await createInvoiceWithHistory(biznis.id, {
+      clientId: klijent.id,
+      currency: "RSD",
+      lang: "sr",
+      issueDate: new Date("2026-09-01T00:00:00.000Z"),
+      dueDays: 7,
+      items: [{ desc: "Usluga", qty: 1, price: 1000 }],
+      status: "nacrt",
+    });
+    await sendInvoice(korisnik.id, f.id);
+    const posleSlanja = await prisma.invoice.findUniqueOrThrow({ where: { id: f.id } });
+    const snimak = posleSlanja.templateSnapshot;
+
+    // Obriši RSD pravilo POSLE slanja (simulira korisnika koji kasnije menja podešavanja šablona).
+    await prisma.invoiceTemplate.update({ where: { id: rsdSablon.id }, data: { assignRule: Prisma.JsonNull } });
+
+    const posleIzmene = await prisma.invoice.findUniqueOrThrow({ where: { id: f.id } });
+    expect(posleIzmene.templateSnapshot).toEqual(snimak);
   });
 });
 

@@ -26,10 +26,14 @@ import {
   azurirajDokument,
   azurirajAkcentBoju,
   primeniRaspored,
+  azurirajPraviloDodele,
+  opisPravilaDodele,
+  NAZIVI_TIPA_PRAVILA,
   type PodaciSablona,
   type BlokKljuc,
   type SvojstvaBloka,
   type Raspored,
+  type PraviloDodele,
 } from "@/lib/invoice-templates";
 import {
   sacuvajSablonAction,
@@ -278,6 +282,7 @@ export function TemplateEditorClient({
   sablonId: pocetniId,
   sablon: pocetniSablon,
   pocetnaLista,
+  klijenti,
   firma,
   racun,
   tema,
@@ -285,6 +290,7 @@ export function TemplateEditorClient({
   sablonId: string;
   sablon: PodaciSablona;
   pocetnaLista: StavkaListeSablona[];
+  klijenti: { id: string; name: string }[];
   firma: { ownerName: string; name: string; mb: string; pib: string; street: string | null; city: string | null };
   racun: { id: string; currency: string; type: string; bank: string; iban: string | null; swift: string | null; number: string | null } | null;
   tema: Tema;
@@ -337,6 +343,7 @@ export function TemplateEditorClient({
       doc: sablon.doc,
       accentColor: sablon.accentColor,
       layout: sablon.layout,
+      assignRule: sablon.assignRule,
     });
     setCuvanje("mirno");
     if (!rezultat.ok) {
@@ -346,6 +353,10 @@ export function TemplateEditorClient({
     setGreska(null);
     setSablon(rezultat.sablon);
     setIzmenjeno(false);
+    // Podnaslov u padajućem meniju (opisPravilaDodele) čita assignRule IZ LISTE (lista), ne iz trenutnog
+    // "sablon" stanja - bez ovoga bi "Sačuvaj šablon" posle izmene pravila ostavio STARI podnaslov u
+    // meniju dok se stranica ne osveži (nađeno uživo pri proveri Koraka 8d-7b).
+    setLista((stara) => stara.map((s) => (s.id === sablonId ? { ...s, assignRule: rezultat.sablon.assignRule } : s)));
   }
 
   async function naVratiPodrazumevano() {
@@ -499,6 +510,24 @@ export function TemplateEditorClient({
     ucitajUEditor(rezultat.id, rezultat.sablon);
   }
 
+  // Pravilo dodele (Korak 8d-7b) - ista "Sačuvaj šablon" grana kao ostala podešavanja u panelu "Cela
+  // faktura" (margine, traka...), ne menja se odmah kao preimenovanje/postavljanje podrazumevanog u meniju.
+  function naPromenuTipaPravila(tip: NonNullable<PraviloDodele>["tip"] | "bez") {
+    if (tip === "bez") izmeniSablon(azurirajPraviloDodele(sablon, null));
+    else if (tip === "klijenti") izmeniSablon(azurirajPraviloDodele(sablon, { tip: "klijenti", klijentId: [] }));
+    else if (tip === "valuta") izmeniSablon(azurirajPraviloDodele(sablon, { tip: "valuta", valuta: "RSD" }));
+    else izmeniSablon(azurirajPraviloDodele(sablon, { tip: "jezik", jezik: "sr" }));
+  }
+
+  function naPrebaciKlijentaPravila(id: string) {
+    if (sablon.assignRule?.tip !== "klijenti") return;
+    const trenutni = sablon.assignRule.klijentId;
+    const novi = trenutni.includes(id) ? trenutni.filter((x) => x !== id) : [...trenutni, id];
+    izmeniSablon(azurirajPraviloDodele(sablon, { tip: "klijenti", klijentId: novi }));
+  }
+
+  const imenaKlijenata: Record<string, string> = Object.fromEntries(klijenti.map((k) => [k.id, k.name]));
+
   const bp = sablon.blockProps[izabran];
   const bpGreske = validirajSvojstvaBloka(bp);
 
@@ -524,6 +553,7 @@ export function TemplateEditorClient({
                   <div className={styles.sablonPadajuci}>
                     {lista.map((s) => {
                       const sIzabran = s.id === sablonId;
+                      const podnaslov = opisPravilaDodele(s, imenaKlijenata);
                       return (
                         <button
                           key={s.id}
@@ -536,6 +566,7 @@ export function TemplateEditorClient({
                               {s.name}
                               {s.isDefault && <span className={styles.sablonBadge}>Podrazumevani</span>}
                             </span>
+                            {podnaslov && <span className={styles.sablonStavkaPodnaslov}>{podnaslov}</span>}
                           </span>
                           <span className={styles.sablonKvacica}>{sIzabran && <IkonaKvacica size={18} />}</span>
                         </button>
@@ -1038,6 +1069,129 @@ export function TemplateEditorClient({
                       ))}
                     </div>
                   </div>
+
+                  {/* Pravilo dodele (Korak 8d-7b) - nijedan frejm ne pokazuje ove kontrole (ni Fak27 ni
+                      Fak26 ne sadrže reč "pravilo" ni "uslov"), zato su napravljene od POSTOJEĆIH obrazaca
+                      iz ovog istog editora (segment kao "Margine", prekidači kao lista "Kolone") - izveštaj. */}
+                  {sablon.isDefault ? (
+                    <div className={styles.kontrola}>
+                      <span className={styles.labela}>Pravilo dodele</span>
+                      <span className={styles.hint}>Podrazumevani šablon nema pravilo - uvek je rezervni izbor.</span>
+                    </div>
+                  ) : (
+                    <>
+                      <div className={styles.kontrola}>
+                        <span className={styles.labela}>Pravilo dodele</span>
+                        <div className={styles.segment}>
+                          {(
+                            [
+                              ["bez", "Bez pravila"],
+                              ["klijenti", NAZIVI_TIPA_PRAVILA.klijenti],
+                              ["valuta", NAZIVI_TIPA_PRAVILA.valuta],
+                              ["jezik", NAZIVI_TIPA_PRAVILA.jezik],
+                            ] as const
+                          ).map(([tip, lb]) => (
+                            <button
+                              key={tip}
+                              type="button"
+                              className={(sablon.assignRule?.tip ?? "bez") === tip ? styles.segmentAktivan : ""}
+                              onClick={() => naPromenuTipaPravila(tip)}
+                            >
+                              {lb}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {sablon.assignRule?.tip === "klijenti" && (
+                        <div className={styles.kontrola}>
+                          <span className={styles.labela}>Klijenti</span>
+                          {klijenti.length === 0 ? (
+                            <span className={styles.hint}>Nema klijenata - prvo dodaj klijenta.</span>
+                          ) : (
+                            <div className={styles.kolonaLista}>
+                              {klijenti.map((k) => (
+                                <div key={k.id} className={styles.kolonaRed}>
+                                  <span>{k.name}</span>
+                                  <Toggle
+                                    on={sablon.assignRule?.tip === "klijenti" && sablon.assignRule.klijentId.includes(k.id)}
+                                    onChange={() => naPrebaciKlijentaPravila(k.id)}
+                                    label={`Uključi ${k.name}`}
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {sablon.assignRule?.tip === "valuta" && (
+                        <div className={styles.kontrola}>
+                          <span className={styles.labela}>Valuta</span>
+                          <div className={styles.segment}>
+                            {(["RSD", "EUR", "USD"] as const).map((v) => (
+                              <button
+                                key={v}
+                                type="button"
+                                className={
+                                  sablon.assignRule?.tip === "valuta" && sablon.assignRule.valuta === v
+                                    ? styles.segmentAktivan
+                                    : ""
+                                }
+                                onClick={() => izmeniSablon(azurirajPraviloDodele(sablon, { tip: "valuta", valuta: v }))}
+                              >
+                                {v === "RSD" ? "RSD (domaći klijenti)" : v}
+                              </button>
+                            ))}
+                          </div>
+                          <div className={styles.poljeKutija}>
+                            <input
+                              type="text"
+                              className={styles.poljeUnos}
+                              placeholder="Druga valuta (npr. GBP)"
+                              value={
+                                sablon.assignRule?.tip === "valuta" && !["RSD", "EUR", "USD"].includes(sablon.assignRule.valuta)
+                                  ? sablon.assignRule.valuta
+                                  : ""
+                              }
+                              onChange={(e) =>
+                                izmeniSablon(
+                                  azurirajPraviloDodele(sablon, { tip: "valuta", valuta: e.target.value.toUpperCase() }),
+                                )
+                              }
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {sablon.assignRule?.tip === "jezik" && (
+                        <div className={styles.kontrola}>
+                          <span className={styles.labela}>Jezik</span>
+                          <div className={styles.segment}>
+                            {(
+                              [
+                                ["sr", "Srpski"],
+                                ["en", "Engleski"],
+                              ] as const
+                            ).map(([v, lb]) => (
+                              <button
+                                key={v}
+                                type="button"
+                                className={
+                                  sablon.assignRule?.tip === "jezik" && sablon.assignRule.jezik === v
+                                    ? styles.segmentAktivan
+                                    : ""
+                                }
+                                onClick={() => izmeniSablon(azurirajPraviloDodele(sablon, { tip: "jezik", jezik: v }))}
+                              >
+                                {lb}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )}
                 </>
               )}
             </div>

@@ -123,6 +123,18 @@
   white-space: nowrap;
 }
 
+/* Podnaslov pravila dodele (Korak 8d-7b, Fak27: "Svi klijenti osim niže"/"Domaći klijenti (RSD)") - isti
+   token kao druge prigušene oznake (--color-text-muted), potvrđen hex-za-hex u oba frejma (6B706C/8C948E). */
+.sablonStavkaPodnaslov {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .sablonBadge {
   display: inline-flex;
   align-items: center;

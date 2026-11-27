@@ -8,7 +8,7 @@ import { formatBrojFakture, parseBrojFakture } from "./invoice-numbering";
 import { izracunajUkupno, rokFakture } from "./invoice-status";
 import { pocetakDanaUtc } from "./datum";
 import { posaljiRazvojniMejl } from "./mail";
-import { ucitajPodrazumevaniSablon } from "./invoice-templates-db";
+import { ucitajSablonZaFakturu } from "./invoice-templates-db";
 
 export type StavkaUnos = { desc: string; qty: number; price: number };
 
@@ -402,10 +402,17 @@ export async function sendInvoice(
 
   const sad = new Date();
   if (faktura.status === "nacrt") {
-    // Zamrzavanje izgleda (Korak 8d-2, odluka 1): pri PRVOM slanju se u fakturu upiše kopija šablona koji
-    // tada važi (uvek podrazumevani firme - biranje po pravilu dodele dolazi u 8d-3), da kasnija izmena
-    // šablona ne promeni izgled već poslate fakture. "Pošalji ponovo" (resendInvoice) ovo NE dira.
-    const sablon = await ucitajPodrazumevaniSablon(faktura.businessId);
+    // Zamrzavanje izgleda (Korak 8d-2, odluka 1; biranje po pravilu dodele dodato u 8d-7b): pri PRVOM
+    // slanju se u fakturu upiše kopija šablona koji TADA važi za ovog klijenta/valutu/jezik (isto što i
+    // pregled nacrta pokazuje, ucitajSablonZaFakturu - WYSIWYG), da kasnija izmena šablona ili pravila ne
+    // promeni izgled već poslate fakture. "Pošalji ponovo" (resendInvoice) ovo NE dira.
+    const sablon = await ucitajSablonZaFakturu({
+      businessId: faktura.businessId,
+      templateSnapshot: null,
+      clientId: faktura.clientId,
+      currency: faktura.currency,
+      lang: faktura.lang,
+    });
     const rezultat = await prisma.invoice.updateMany({
       where: { id: invoiceId, status: "nacrt" },
       data: { status: "poslata", sentAt: sad, templateSnapshot: sablon },

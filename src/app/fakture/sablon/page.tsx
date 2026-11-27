@@ -6,6 +6,7 @@ import { jeDozvoljenaAdminPrijava } from "@/lib/admin-dev-gate";
 import { trebaPreusmeravanjeNaOnboarding } from "@/lib/onboarding-guard";
 import { getBusinessForUser } from "@/lib/business";
 import { getAccountsForUser } from "@/lib/bank-accounts";
+import { getClientsForUser } from "@/lib/clients";
 import { osigurajPodrazumevaniSablon, ucitajSablonPoId, listaSablona } from "@/lib/invoice-templates-db";
 import { sablonRedUPodatke } from "@/lib/invoice-templates";
 import { isValidTema } from "@/lib/theme";
@@ -38,6 +39,9 @@ export default async function SablonFakturePage({
   }
   const lista = await listaSablona(biznis!.id);
   const racuni = await getAccountsForUser(session!.user.id);
+  // Za kontrolu "Klijent(i)" u pravilu dodele (Korak 8d-7b) i razrešavanje imena u podnaslovu padajućeg
+  // menija (opisPravilaDodele) - samo id/ime je potrebno, ne ceo profil klijenta.
+  const klijenti = (await getClientsForUser(session!.user.id)).map((k) => ({ id: k.id, name: k.name }));
   // "Primer podataka" (Korak 8d-4 tačka 4, frejm Fak18): platno crta probnu fakturu sa stvarnim podacima
   // firme/računa prijavljenog korisnika (isto kao u prototipu, gde je firma takođe stvarna), ali sa
   // izmišljenim klijentom/stavkama (isti klijent i stavke kao u prototipovoj TemplateEditor funkciji -
@@ -50,6 +54,7 @@ export default async function SablonFakturePage({
       sablonId={izabran.id}
       sablon={izabran.sablon}
       pocetnaLista={lista}
+      klijenti={klijenti}
       firma={{
         ownerName: biznis!.ownerName,
         name: biznis!.name,

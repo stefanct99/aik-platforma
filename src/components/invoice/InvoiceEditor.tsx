@@ -15,7 +15,7 @@ import { IkonaUpozorenje } from "@/components/auth-shell/auth-icons";
 import { IkonaX, IkonaChevronDole, IkonaKanta, IkonaPretraga, IkonaPlus } from "@/components/ui/icons";
 import { InvoiceDoc } from "./InvoiceDoc";
 import { InvoiceDocPreview } from "./InvoiceDocPreview";
-import type { PodaciSablona } from "@/lib/invoice-templates";
+import { izaberiSablonPoPravilu, type PodaciSablona } from "@/lib/invoice-templates";
 import { ClientPanel } from "@/app/(app)/fakture/klijenti/ClientPanel";
 import type { NoviKlijent } from "@/app/(app)/fakture/actions";
 import { sacuvajNacrtAction, promeniBrojAction, obrisiNacrtAction } from "@/app/(app)/fakture/actions";
@@ -102,7 +102,8 @@ export function InvoiceEditor({
   firma,
   sledeciBroj,
   tema,
-  sablon,
+  zamrznutSablon,
+  sabloniZaDodelu,
 }: {
   postojeca: PostojecaFaktura | null;
   pocetniDuplikat: PocetniDuplikat | null;
@@ -111,7 +112,11 @@ export function InvoiceEditor({
   firma: { ownerName: string; name: string; mb: string; pib: string; street: string | null; city: string | null };
   sledeciBroj: string;
   tema: Tema;
-  sablon: PodaciSablona;
+  // Već poslata faktura (uređuje se, spec 6.9) ima zamrznut izgled - nikad se ne menja, čak ni kad se
+  // klijent/valuta/jezik dalje menjaju u ovoj formi (Korak 8d-7b, zadatak tačka 5). Nacrt/nova faktura
+  // (zamrznutSablon: null) umesto toga uživo bira šablon iz sabloniZaDodelu po pravilu dodele, ispod.
+  zamrznutSablon: PodaciSablona | null;
+  sabloniZaDodelu: PodaciSablona[];
 }) {
   const router = useRouter();
   const polazna = postojeca ?? pocetniDuplikat;
@@ -128,6 +133,17 @@ export function InvoiceEditor({
 
   const [currency, setCurrency] = useState(polazna?.currency ?? klijent?.defaultCurrency ?? "EUR");
   const [lang, setLang] = useState<"sr" | "en">(polazna?.lang ?? klijent?.defaultLang ?? "sr");
+
+  // Koji šablon se crta u pregledu (Korak 8d-7b) - zamrznut za već poslatu fakturu (uređivanje je ne sme
+  // da promeni), inače uživo po pravilu dodele iz TRENUTNOG klijenta/valute/jezika (zadatak tačka 6:
+  // "promena klijenta ili valute na nacrtu odmah menja šablon u pregledu" - proširено i na jezik, isti
+  // princip, drugi deo iste forme). ISTA čista funkcija koju koristi i server pri slanju
+  // (ucitajSablonZaFakturu/sendInvoice) - garantuje da je ono što se ovde vidi tačno ono što se zamrzava.
+  const sablon = useMemo(
+    () => zamrznutSablon ?? izaberiSablonPoPravilu(sabloniZaDodelu, { clientId, currency, jezik: lang }),
+    [zamrznutSablon, sabloniZaDodelu, clientId, currency, lang],
+  );
+
   const pocetniRokJePreset = polazna ? ROK_PRESETI.includes(polazna.dueDays) : true;
   const [rokPreset, setRokPreset] = useState<string>(
     polazna ? (pocetniRokJePreset ? String(polazna.dueDays) : "drugi") : "7",

@@ -8,7 +8,8 @@ import { getBusinessForUser } from "@/lib/business";
 import { getClientsForUser } from "@/lib/clients";
 import { getAccountsForUser } from "@/lib/bank-accounts";
 import { getInvoiceForUser } from "@/lib/invoices";
-import { ucitajSablonZaFakturu } from "@/lib/invoice-templates-db";
+import { svaSablonaZaDodelu } from "@/lib/invoice-templates-db";
+import type { PodaciSablona } from "@/lib/invoice-templates";
 import { isValidTema } from "@/lib/theme";
 import { InvoiceEditor } from "@/components/invoice/InvoiceEditor";
 
@@ -29,7 +30,12 @@ export default async function IzmeniFakturuPage({ params }: { params: Promise<{ 
   const faktura = await getInvoiceForUser(session!.user.id, id);
   if (!faktura) notFound();
   if (faktura.status !== "nacrt" && faktura.status !== "poslata") redirect(`/fakture/${id}`);
-  const sablon = await ucitajSablonZaFakturu(faktura);
+  // Već poslata faktura ima zamrznut izgled (Korak 8d-7b, zadatak tačka 5) - dalje uređivanje forme (npr.
+  // promena klijenta) ne sme da ga promeni, zato se prosleđuje DIREKTNO (ne kroz pravilo dodele). Nacrt
+  // (templateSnapshot je uvek null za nacrt) umesto toga dobija celu listu šablona, da editor uživo bira
+  // po trenutnom klijentu/valuti/jeziku u formi (zadatak tačka 6).
+  const zamrznutSablon = faktura.templateSnapshot as PodaciSablona | null;
+  const sabloniZaDodelu = await svaSablonaZaDodelu(biznis!.id);
 
   const [klijenti, racuni] = await Promise.all([
     getClientsForUser(session!.user.id),
@@ -89,7 +95,8 @@ export default async function IzmeniFakturuPage({ params }: { params: Promise<{ 
       }}
       sledeciBroj={faktura.number}
       tema={isValidTema(session!.user.theme) ? session!.user.theme : "sistem"}
-      sablon={sablon}
+      zamrznutSablon={zamrznutSablon}
+      sabloniZaDodelu={sabloniZaDodelu}
     />
   );
 }

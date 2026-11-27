@@ -24,6 +24,10 @@ import {
   azurirajAkcentBoju,
   primeniRaspored,
   SVI_RASPOREDI,
+  azurirajPraviloDodele,
+  validirajPraviloDodele,
+  opisPravilaDodele,
+  izaberiSablonPoPravilu,
   type PodaciSablona,
 } from "./invoice-templates";
 import {
@@ -39,6 +43,7 @@ import {
   preimenujSablon,
   postaviKaoPodrazumevani,
   obrisiSablon,
+  svaSablonaZaDodelu,
   type IzmenaSablona,
 } from "./invoice-templates-db";
 
@@ -53,6 +58,7 @@ function celaIzmena(podaci: PodaciSablona): IzmenaSablona {
     doc: podaci.doc,
     accentColor: podaci.accentColor,
     layout: podaci.layout,
+    assignRule: podaci.assignRule,
   };
 }
 
@@ -809,7 +815,7 @@ describe("Više šablona (Korak 8d-7a, padajući meni 'Šablon: <ime>')", () => 
 
     const lista = await listaSablona(biznis.id);
     expect(lista.map((s) => s.id)).toEqual([podrazumevani.id, prvi.id, drugi.id]);
-    expect(lista[0]).toEqual({ id: podrazumevani.id, name: "Moj izgled", isDefault: true });
+    expect(lista[0]).toEqual({ id: podrazumevani.id, name: "Moj izgled", isDefault: true, assignRule: null });
     expect(lista[1].isDefault).toBe(false);
     expect(lista[2].isDefault).toBe(false);
   });
@@ -871,7 +877,9 @@ describe("Više šablona (Korak 8d-7a, padajući meni 'Šablon: <ime>')", () => 
     expect(rezultat?.sablon.isDefault).toBe(true);
 
     const lista = await listaSablona(biznis.id);
-    expect(lista.filter((s) => s.isDefault)).toEqual([{ id: noviId, name: "Novi podrazumevani", isDefault: true }]);
+    expect(lista.filter((s) => s.isDefault)).toEqual([
+      { id: noviId, name: "Novi podrazumevani", isDefault: true, assignRule: null },
+    ]);
     const stariUcitan = await ucitajSablonPoId(biznis.id, stari.id);
     expect(stariUcitan?.sablon.isDefault).toBe(false);
   });
@@ -1003,3 +1011,172 @@ describe("obrisiSablon (Korak 8d-7a dopuna, brisanje šablona)", () => {
     expect(podrazumevani.id).not.toBe(drugiId);
   });
 });
+
+describe("Pravilo dodele - čiste funkcije (Korak 8d-7b)", () => {
+  function sabl(ime: string, pravilo: PodaciSablona["assignRule"]): PodaciSablona {
+    return { ...napraviPodrazumevaniSablonPodatke(), name: ime, isDefault: false, assignRule: pravilo };
+  }
+  const podrazumevani = { ...napraviPodrazumevaniSablonPodatke(), name: "Moj izgled" };
+
+  it("azurirajPraviloDodele menja samo assignRule, ostala polja ostaju netaknuta", () => {
+    const podaci = napraviPodrazumevaniSablonPodatke();
+    const azuriran = azurirajPraviloDodele(podaci, { tip: "valuta", valuta: "RSD" });
+    expect(azuriran.assignRule).toEqual({ tip: "valuta", valuta: "RSD" });
+    expect(azuriran).toEqual({ ...podaci, assignRule: { tip: "valuta", valuta: "RSD" } });
+  });
+
+  it("validirajPraviloDodele: null je uvek ispravno (bez pravila)", () => {
+    expect(validirajPraviloDodele(null)).toBeNull();
+  });
+
+  it("validirajPraviloDodele: prazna lista klijenata je greška, ne 'bez pravila'", () => {
+    expect(validirajPraviloDodele({ tip: "klijenti", klijentId: [] })).toBe("Izaberi bar jednog klijenta.");
+    expect(validirajPraviloDodele({ tip: "klijenti", klijentId: ["c1"] })).toBeNull();
+  });
+
+  it("validirajPraviloDodele: prazna valuta je greška", () => {
+    expect(validirajPraviloDodele({ tip: "valuta", valuta: "" })).toBe("Izaberi ili upiši valutu.");
+    expect(validirajPraviloDodele({ tip: "valuta", valuta: "EUR" })).toBeNull();
+  });
+
+  it("opisPravilaDodele: podrazumevani uvek 'Svi klijenti osim niže', bez obzira na assignRule", () => {
+    expect(opisPravilaDodele(podrazumevani, {})).toBe("Svi klijenti osim niže");
+  });
+
+  it("opisPravilaDodele: ne-podrazumevani bez pravila nema podnaslov (null)", () => {
+    expect(opisPravilaDodele(sabl("Prazan", null), {})).toBeNull();
+  });
+
+  it("opisPravilaDodele: valuta RSD je prečica 'Domaći klijenti (RSD)', ostale 'Klijenti u <valuta>'", () => {
+    expect(opisPravilaDodele(sabl("x", { tip: "valuta", valuta: "RSD" }), {})).toBe("Domaći klijenti (RSD)");
+    expect(opisPravilaDodele(sabl("x", { tip: "valuta", valuta: "USD" }), {})).toBe("Klijenti u USD");
+  });
+
+  it("opisPravilaDodele: jezik", () => {
+    expect(opisPravilaDodele(sabl("x", { tip: "jezik", jezik: "sr" }), {})).toBe("Fakture na srpskom");
+    expect(opisPravilaDodele(sabl("x", { tip: "jezik", jezik: "en" }), {})).toBe("Fakture na engleskom");
+  });
+
+  it("opisPravilaDodele: klijenti - razrešava imena iz mape, nepoznat id dobija zamenski tekst", () => {
+    const s = sabl("x", { tip: "klijenti", klijentId: ["c1", "c2"] });
+    expect(opisPravilaDodele(s, { c1: "Acme Inc.", c2: "Bluebird GmbH" })).toBe("Acme Inc., Bluebird GmbH");
+    expect(opisPravilaDodele(s, { c1: "Acme Inc." })).toBe("Acme Inc., (obrisan klijent)");
+  });
+
+  it("izaberiSablonPoPravilu: bira šablon po klijentu", () => {
+    const sabloni = [podrazumevani, sabl("Klijent A", { tip: "klijenti", klijentId: ["c1"] })];
+    const izabran = izaberiSablonPoPravilu(sabloni, { clientId: "c1", currency: "EUR", jezik: "sr" });
+    expect(izabran.name).toBe("Klijent A");
+  });
+
+  it("izaberiSablonPoPravilu: bira šablon po valuti", () => {
+    const sabloni = [podrazumevani, sabl("RSD", { tip: "valuta", valuta: "RSD" })];
+    const izabran = izaberiSablonPoPravilu(sabloni, { clientId: "c9", currency: "RSD", jezik: "sr" });
+    expect(izabran.name).toBe("RSD");
+  });
+
+  it("izaberiSablonPoPravilu: bira šablon po jeziku", () => {
+    const sabloni = [podrazumevani, sabl("Engleski", { tip: "jezik", jezik: "en" })];
+    const izabran = izaberiSablonPoPravilu(sabloni, { clientId: "c9", currency: "EUR", jezik: "en" });
+    expect(izabran.name).toBe("Engleski");
+  });
+
+  it("izaberiSablonPoPravilu: red prvenstva - klijent pobeđuje valutu i jezik kad oba odgovaraju", () => {
+    const sabloni = [
+      podrazumevani,
+      sabl("Po valuti", { tip: "valuta", valuta: "RSD" }),
+      sabl("Po jeziku", { tip: "jezik", jezik: "sr" }),
+      sabl("Po klijentu", { tip: "klijenti", klijentId: ["c1"] }),
+    ];
+    const izabran = izaberiSablonPoPravilu(sabloni, { clientId: "c1", currency: "RSD", jezik: "sr" });
+    expect(izabran.name).toBe("Po klijentu");
+  });
+
+  it("izaberiSablonPoPravilu: red prvenstva - valuta pobeđuje jezik kad oba odgovaraju (klijent ne odgovara)", () => {
+    const sabloni = [
+      podrazumevani,
+      sabl("Po jeziku", { tip: "jezik", jezik: "sr" }),
+      sabl("Po valuti", { tip: "valuta", valuta: "RSD" }),
+    ];
+    const izabran = izaberiSablonPoPravilu(sabloni, { clientId: "c9", currency: "RSD", jezik: "sr" });
+    expect(izabran.name).toBe("Po valuti");
+  });
+
+  it("izaberiSablonPoPravilu: unutar istog nivoa preciznosti pobeđuje RANIJE napravljen (redosled u nizu)", () => {
+    const sabloni = [
+      podrazumevani,
+      sabl("Prvi RSD", { tip: "valuta", valuta: "RSD" }),
+      sabl("Drugi RSD", { tip: "valuta", valuta: "RSD" }),
+    ];
+    const izabran = izaberiSablonPoPravilu(sabloni, { clientId: "c9", currency: "RSD", jezik: "sr" });
+    expect(izabran.name).toBe("Prvi RSD");
+  });
+
+  it("izaberiSablonPoPravilu: ako nijedno pravilo ne odgovara, vraća podrazumevani (rezervni)", () => {
+    const sabloni = [
+      podrazumevani,
+      sabl("RSD", { tip: "valuta", valuta: "RSD" }),
+      sabl("Engleski", { tip: "jezik", jezik: "en" }),
+    ];
+    const izabran = izaberiSablonPoPravilu(sabloni, { clientId: "c9", currency: "USD", jezik: "sr" });
+    expect(izabran.name).toBe("Moj izgled");
+  });
+});
+
+describe("ucitajSablonZaFakturu - bira po pravilu dodele za nacrt (Korak 8d-7b)", () => {
+  it("nacrt bez snapshot-a, sa clientId/currency/lang, bira šablon po pravilu (ne uvek podrazumevani)", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    await kreirajSablonSaPravilom(biznis.id, "RSD šablon", { tip: "valuta", valuta: "RSD" });
+
+    const ucitan = await ucitajSablonZaFakturu({
+      businessId: biznis.id,
+      templateSnapshot: null,
+      clientId: "svejedno-id",
+      currency: "RSD",
+      lang: "sr",
+    });
+    expect(ucitan.name).toBe("RSD šablon");
+  });
+
+  it("bez clientId/currency (pozivi koji ih ne prosleđuju) i dalje tiho vraća podrazumevani, kao pre 8d-7b", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    await kreirajSablonSaPravilom(biznis.id, "RSD šablon", { tip: "valuta", valuta: "RSD" });
+
+    const ucitan = await ucitajSablonZaFakturu({ businessId: biznis.id, templateSnapshot: null });
+    expect(ucitan.name).toBe("Moj izgled");
+  });
+
+  it("poslata faktura (snapshot) se ne dira bez obzira na pravila - snapshot uvek pobeđuje", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    await kreirajSablonSaPravilom(biznis.id, "RSD šablon", { tip: "valuta", valuta: "RSD" });
+    const zamrznut = { ...napraviPodrazumevaniSablonPodatke(), name: "Zamrznuto" };
+
+    const ucitan = await ucitajSablonZaFakturu({
+      businessId: biznis.id,
+      templateSnapshot: zamrznut,
+      clientId: "x",
+      currency: "RSD", // odgovaralo bi RSD šablonu da snapshot nije postojao
+      lang: "sr",
+    });
+    expect(ucitan.name).toBe("Zamrznuto");
+  });
+});
+
+describe("svaSablonaZaDodelu (Korak 8d-7b)", () => {
+  it("vraća sve šablone firme po redosledu kreiranja (ne podrazumevani prvi, kao listaSablona)", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const podrazumevani = await osigurajPodrazumevaniSablon(biznis.id);
+    const { id: drugiId } = await kreirajSablon(biznis.id, "Drugi");
+    const { id: treciId } = await kreirajSablon(biznis.id, "Treći");
+
+    const sabloni = await svaSablonaZaDodelu(biznis.id);
+    expect(sabloni.map((s) => s.name)).toEqual(["Moj izgled", "Drugi", "Treći"]);
+    expect([podrazumevani.id, drugiId, treciId].length).toBe(3); // samo da se id-jevi koriste, bez upozorenja
+  });
+});
+
+async function kreirajSablonSaPravilom(businessId: string, ime: string, pravilo: PodaciSablona["assignRule"]) {
+  const { id } = await kreirajSablon(businessId, ime);
+  const sablon = await ucitajSablonPoId(businessId, id);
+  await sacuvajSablon(businessId, id, { ...celaIzmena(sablon!.sablon), assignRule: pravilo });
+}

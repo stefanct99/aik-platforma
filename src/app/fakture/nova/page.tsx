@@ -8,7 +8,7 @@ import { getBusinessForUser } from "@/lib/business";
 import { getClientsForUser } from "@/lib/clients";
 import { getAccountsForUser } from "@/lib/bank-accounts";
 import { getInvoiceForUser, pogledajSledeciBroj } from "@/lib/invoices";
-import { ucitajPodrazumevaniSablon } from "@/lib/invoice-templates-db";
+import { svaSablonaZaDodelu } from "@/lib/invoice-templates-db";
 import { pocetakDanaUtc } from "@/lib/datum";
 import { isValidTema } from "@/lib/theme";
 import { InvoiceEditor } from "@/components/invoice/InvoiceEditor";
@@ -52,7 +52,9 @@ export default async function NovaFakturaPage({
   }
 
   const sledeciBroj = await pogledajSledeciBroj(biznis!.id, pocetakDanaUtc());
-  const sablon = await ucitajPodrazumevaniSablon(biznis!.id);
+  // Nova faktura nikad nije poslata - zamrznutSablon je uvek null, uživo biranje po pravilu dodele
+  // (Korak 8d-7b) počinje od onog što je korisnik izabrao kao klijenta/valutu/jezik u samoj formi.
+  const sabloniZaDodelu = await svaSablonaZaDodelu(biznis!.id);
 
   return (
     <InvoiceEditor
@@ -97,7 +99,8 @@ export default async function NovaFakturaPage({
       }}
       sledeciBroj={sledeciBroj}
       tema={isValidTema(session!.user.theme) ? session!.user.theme : "sistem"}
-      sablon={sablon}
+      zamrznutSablon={null}
+      sabloniZaDodelu={sabloniZaDodelu}
     />
   );
 }

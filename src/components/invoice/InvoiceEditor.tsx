@@ -161,6 +161,10 @@ export function InvoiceEditor({
   const [jezikPicker, setJezikPicker] = useState(false);
   const [noviKlijentOtvoren, setNoviKlijentOtvoren] = useState(false);
   const [showErrors, setShowErrors] = useState(false);
+  // Automatsko čuvanje nacrta ne uspeva (tiho) dok klijent nije izabran (server uvek zahteva klijenta) -
+  // ovo prikazuje kratku poruku ispod polja "Klijent" umesto da forma zauvek ostane na "nije sačuvano"
+  // bez objašnjenja. Gasi se čim korisnik izabere klijenta (postaviIzKlijenta).
+  const [nacrtKlijentGreska, setNacrtKlijentGreska] = useState(false);
   const [zatvoriPotvrda, setZatvoriPotvrda] = useState(false);
   const [brojGreska, setBrojGreska] = useState<string | null>(null);
   const [stage, setStage] = useState<"edit" | "send" | "sent">("edit");
@@ -200,6 +204,7 @@ export function InvoiceEditor({
 
   function postaviIzKlijenta(k: KlijentZaFakturu) {
     setClientId(k.id);
+    setNacrtKlijentGreska(false);
     setCurrency(k.defaultCurrency);
     setLang(k.defaultLang);
     const jePreset = ROK_PRESETI.includes(k.defaultDueDays);
@@ -258,8 +263,12 @@ export function InvoiceEditor({
     const rezultat = await sacuvajNacrtAction(trenutniId, { id: null, broj: null, sacuvanoU: null, greska: null }, formDataZaSlanje());
     if (rezultat.greska) {
       setCuvanjeStanje("izmenjeno");
+      // Jedini poznati razlog neuspeha bez klijenta je upravo nedostatak klijenta (server ga uvek
+      // zahteva) - za bilo koji drugi razlog (npr. mreža) ništa se novo ne prikazuje, isto kao pre.
+      setNacrtKlijentGreska(!clientId);
       return null;
     }
+    setNacrtKlijentGreska(false);
     setTrenutniId(rezultat.id);
     if (rezultat.broj) {
       setBroj(rezultat.broj);
@@ -511,12 +520,12 @@ export function InvoiceEditor({
                   )}
                 </div>
               )}
-              {showErrors && errClient && (
+              {(showErrors && errClient) || nacrtKlijentGreska ? (
                 <div className={styles.poljeGreska}>
                   <IkonaUpozorenje size={16} />
-                  <span>Izaberi klijenta kome šalješ fakturu.</span>
+                  <span>{showErrors && errClient ? "Izaberi klijenta kome šalješ fakturu." : "Izaberi klijenta da bi se nacrt sačuvao."}</span>
                 </div>
-              )}
+              ) : null}
             </div>
 
             {klijent?.billingEmail && (

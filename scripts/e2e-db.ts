@@ -131,7 +131,15 @@ async function main() {
         sentAt: datum,
         paidDate: datum,
       });
-      console.log(JSON.stringify({ id: faktura.id, broj: faktura.number }));
+      // "broj" opciono - samo da test (knjiga-prihoda.spec.ts) može da zada TAČAN, namerno dug broj fakture
+      // (npr. "100/26-12") umesto automatski dodeljenog, da proveri da takav broj nikad ne bude skraćen u
+      // koloni Faktura. Jedinstvenost brojeva po firmi (@@unique([businessId, number])) ostaje na testu.
+      let broj = faktura.number;
+      if (argumenti.broj) {
+        broj = argumenti.broj as string;
+        await prisma.invoice.update({ where: { id: faktura.id }, data: { number: broj } });
+      }
+      console.log(JSON.stringify({ id: faktura.id, broj }));
       break;
     }
     default:

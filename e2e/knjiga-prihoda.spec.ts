@@ -11,6 +11,11 @@ test.describe.configure({ mode: "serial" });
 
 let fakturaDevizna: { id: string; broj: string };
 let fakturaDinarska: { id: string; broj: string };
+// Namerno dug, netipičan broj fakture (regresija: kolona Faktura ga je sekla na 1440px iako je staj'o -
+// videti test niže "kolona Faktura se nikad ne skraćuje"). Godina 2025 (ne 2026) da ne menja zbirove/broj
+// uplata koje ostali testovi iznad proveravaju za tekuću godinu.
+let fakturaDugaDevizna: { id: string; broj: string };
+let fakturaDugaDinarska: { id: string; broj: string };
 
 test.beforeAll(() => {
   fakturaDevizna = e2eDb("create-paid-invoice", { klijent: "Acme", valuta: "EUR", iznos: 100000, datum: "2026-01-15" });
@@ -19,6 +24,20 @@ test.beforeAll(() => {
     valuta: "RSD",
     iznos: 5000000,
     datum: "2026-02-20",
+  });
+  fakturaDugaDevizna = e2eDb("create-paid-invoice", {
+    klijent: "Acme",
+    valuta: "EUR",
+    iznos: 50000,
+    datum: "2025-05-10",
+    broj: "100/26-12",
+  });
+  fakturaDugaDinarska = e2eDb("create-paid-invoice", {
+    klijent: "Dinarska",
+    valuta: "RSD",
+    iznos: 1000000,
+    datum: "2025-06-15",
+    broj: "101/26-12",
   });
 });
 
@@ -97,6 +116,44 @@ test("prazno stanje za godinu bez uplata", async ({ page }) => {
     page.getByText("Čim stigne uplata, upisujem je ovde sam. Možeš i ručno da dodaš prihod koji ja ne vidim, na primer gotovinu."),
   ).toBeVisible();
   await expect(page.getByText("0,00 din").first()).toBeVisible();
+});
+
+test("kolona Faktura se nikad ne skraćuje, čak ni za neuobičajeno dug broj, na 1280/1440/1920/2560px", async ({
+  page,
+}) => {
+  // Regresija: "100/26-12"/"101/26-12" (godina 2025, da ne menja zbirove 2026 provereni gore) su se ranije
+  // sekle na "…" na 1440px iako su stale - kolona Faktura je imala fiksnu širinu (108px) deljenu sa Uplata.
+  // Ovaj test bi PAO pre ispravke (scrollWidth > clientWidth na bar jednoj od ovih širina).
+  await page.getByRole("combobox").first().selectOption("2025");
+  const sirine = [1280, 1440, 1920, 2560];
+
+  await expect(page.getByRole("button", { name: /^Devizni prihodi/ })).toBeVisible();
+  const celijaDevizni = page.locator("tbody tr", { hasText: fakturaDugaDevizna.broj }).getByText(fakturaDugaDevizna.broj, {
+    exact: true,
+  });
+  await expect(celijaDevizni).toBeVisible();
+  for (const sirina of sirine) {
+    await page.setViewportSize({ width: sirina, height: 900 });
+    const dimenzije = await celijaDevizni.evaluate((el) => ({ scrollWidth: el.scrollWidth, clientWidth: el.clientWidth }));
+    expect(
+      dimenzije.scrollWidth,
+      `Devizni, ${sirina}px: broj fakture "${fakturaDugaDevizna.broj}" je skraćen (scrollWidth=${dimenzije.scrollWidth}, clientWidth=${dimenzije.clientWidth})`,
+    ).toBeLessThanOrEqual(dimenzije.clientWidth + 1);
+  }
+
+  await page.getByRole("button", { name: /^Dinarski prihodi/ }).click();
+  const celijaDinarski = page
+    .locator("tbody tr", { hasText: fakturaDugaDinarska.broj })
+    .getByText(fakturaDugaDinarska.broj, { exact: true });
+  await expect(celijaDinarski).toBeVisible();
+  for (const sirina of sirine) {
+    await page.setViewportSize({ width: sirina, height: 900 });
+    const dimenzije = await celijaDinarski.evaluate((el) => ({ scrollWidth: el.scrollWidth, clientWidth: el.clientWidth }));
+    expect(
+      dimenzije.scrollWidth,
+      `Dinarski, ${sirina}px: broj fakture "${fakturaDugaDinarska.broj}" je skraćen (scrollWidth=${dimenzije.scrollWidth}, clientWidth=${dimenzije.clientWidth})`,
+    ).toBeLessThanOrEqual(dimenzije.clientWidth + 1);
+  }
 });
 
 test("filter Godina menja kartice, dugmad Izvezi/Dodaj prihod ne rade ništa (još)", async ({ page }) => {

@@ -348,12 +348,11 @@
   max-width: 0;
   white-space: nowrap;
 }
-/* Samo kolone sa STVARNO promenljivom dužinom (ime klijenta, broj fakture) se skraćuju - datum/iznos/
-   kurs/izvor su predvidive dužine na širini kolone, skraćivanje bi im samo sakrilo deo teksta bez razloga
-   (npr. bedž "Ručno" je širi od "96px" nagoveštaja kolone, ali to je u redu - nije predugačak tekst). */
-.kolonaKlijent,
-.kolonaFaktura,
-.kolonaFakturaRsd {
+/* Samo Klijent (ime firme može biti proizvoljno dugo) se skraćuje, uz title tooltip (zadatak: "Kolone
+   Klijent... neka preuzme eventualni manjak prostora, ne kolona Faktura"). Faktura (format N/GG-M) NIKAD
+   se ne skraćuje - ispravka: ranija fiksna širina (108px) je sekla duže brojeve (npr. "100/26-12") iako
+   su stali, 1280-2560px. Datum/iznos/kurs/izvor su predvidive dužine, isto bez skraćivanja. */
+.kolonaKlijent {
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -378,15 +377,14 @@
   background: var(--color-bg);
 }
 
-/* 108/108px, ne 100/100px kao u frejmu: tačno "15.11.2026." (11 znakova) na 0.875rem traži malo više od
-   100px da ne bi uopšte dodirivalo granicu skraćivanja - sitna, bezbedna rezerva, bez vizuelne razlike. */
+/* 108px, ne 100px kao u frejmu: tačno "15.11.2026." (11 znakova) na 0.875rem traži malo više od 100px da
+   ne bi uopšte dodirivalo granicu skraćivanja - sitna, bezbedna rezerva, bez vizuelne razlike. */
 .kolonaUplata {
   width: 108px;
 }
-.kolonaFaktura,
-.kolonaFakturaRsd {
-  width: 108px;
-}
+/* Faktura NAMERNO bez fiksne širine (ispravka) - širi se po sadržaju (beli prostor ne prelama, max-width:0
+   na .tabela td gore samo sprečava da auto-layout tabele ovu kolonu nepotrebno naduva, ne skraćuje je) da
+   bi i duži brojevi (npr. "100/26-12") stali bez skraćivanja; Klijent (flex, fluidan) preuzima razliku. */
 .kolonaIznos {
   width: 110px;
 }

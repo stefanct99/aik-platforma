@@ -13,7 +13,8 @@
     "make-admin": "tsx --env-file=.env.local scripts/make-admin.ts",
     "seed:fakture": "tsx --env-file=.env.local scripts/seed-fakture.ts",
     "ponavljajuce:pokreni": "tsx --env-file=.env.local scripts/pokreni-ponavljajuce.ts",
-    "test:db:pripremi": "tsx --env-file=.env.local scripts/pripremi-test-bazu.ts"
+    "test:db:pripremi": "tsx --env-file=.env.local scripts/pripremi-test-bazu.ts",
+    "test:e2e": "tsx --env-file=.env.local scripts/e2e-run.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.1",
@@ -26,6 +27,7 @@
     "react-dom": "19.3.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "@types/node": "^24",
     "@types/pg": "^8.23.1",
     "@types/react": "^19",

@@ -14,6 +14,9 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Referenca (prototip, specifikacije) se ne menja i nije deo koda koji se isporučuje.
     "referenca/**",
+    // Generisani izveštaji/artefakti E2E testova (Playwright), ne izvorni kod.
+    "test-results/**",
+    ".playwright/**",
   ]),
 ]);
 

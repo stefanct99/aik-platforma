@@ -13,6 +13,12 @@
 # testing
 /coverage
 
+# Playwright E2E (Korak: automatski E2E testovi) - sesija i generisana lozinka probnog naloga
+# (e2e/global-setup.ts) NIKAD u git-u, isto kao .env*. test-results je izveštaj/slike, menja se svakim
+# pokretanjem.
+/.playwright/
+/test-results/
+
 # next.js
 /.next/
 /out/

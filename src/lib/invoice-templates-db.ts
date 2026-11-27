@@ -123,6 +123,25 @@ export async function postaviKaoPodrazumevani(
   return { id: azuriran.id, sablon: sablonRedUPodatke(azuriran) };
 }
 
+export type ObrisiSablonRezultat = { ok: true } | { ok: false; razlog: string };
+
+// "Obriši ovaj šablon" (Korak 8d-7a dopuna, frejm Fak27 je NE pokazuje - stavka je u meniju, izveštaj).
+// Podrazumevani se nikad ne briše (zadatak tačka 2) - provereno OVDE, na serveru, ne samo u dugmetu u
+// interfejsu (koje je samo onemogućeno, da se ne osloni samo na to). Bezbedno je obrisati red: Invoice
+// NEMA polje koje upućuje na konkretan InvoiceTemplate.id (poslate fakture crtaju iz templateSnapshot-a,
+// zamrznute kopije podataka, ne iz žive veze ka ovom redu; nacrti uvek prate TRENUTNO podrazumevani šablon
+// firme, biran dinamički po businessId, ne po id-u nekog određenog šablona) - brisanje bilo kog
+// NE-podrazumevanog šablona zato ne može da ostavi "obešenu" referencu nigde (izveštaj).
+export async function obrisiSablon(businessId: string, id: string): Promise<ObrisiSablonRezultat> {
+  const postojeci = await prisma.invoiceTemplate.findFirst({ where: { id, businessId } });
+  if (!postojeci) return { ok: false, razlog: "Šablon ne postoji." };
+  if (postojeci.isDefault) {
+    return { ok: false, razlog: "Podrazumevani šablon se ne može obrisati. Prvo postavi drugi šablon kao podrazumevani." };
+  }
+  await prisma.invoiceTemplate.delete({ where: { id } });
+  return { ok: true };
+}
+
 // Podrazumevani šablon firme, kao čisti podaci (koristi se za NOVU fakturu koja još ne postoji u bazi -
 // nema šta da bude "zamrznuto", i za postojeću fakturu bez templateSnapshot-a).
 export async function ucitajPodrazumevaniSablon(businessId: string): Promise<PodaciSablona> {

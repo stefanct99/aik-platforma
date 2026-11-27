@@ -14,12 +14,14 @@ import {
   duplirajSablon,
   preimenujSablon,
   postaviKaoPodrazumevani,
+  obrisiSablon,
+  osigurajPodrazumevaniSablon,
   type IzmenaSablona,
   type StavkaListeSablona,
 } from "@/lib/invoice-templates-db";
 
 export type { StavkaListeSablona };
-import type { PodaciSablona } from "@/lib/invoice-templates";
+import { sablonRedUPodatke, type PodaciSablona } from "@/lib/invoice-templates";
 import {
   markInvoicePaid,
   promeniBrojFakture,
@@ -528,4 +530,22 @@ export async function postaviKaoPodrazumevaniAction(templateId: string): Promise
   revalidatePath("/fakture/nova");
   revalidatePath("/fakture/sablon");
   return { ok: true, ...rezultat };
+}
+
+// "Obriši ovaj šablon" (Korak 8d-7a dopuna) - podrazumevani se ne može obrisati, provereno u obrisiSablon
+// (ne samo onemogućenim dugmetom u interfejsu). Posle brisanja editor učitava podrazumevani šablon firme
+// (zadatak tačka 4) - zato se ovde, posle uspešnog brisanja, odmah vraća i taj šablon, isti oblik
+// (SablonStanje) kao ostale akcije, da klijent može direktno da ga učita bez dodatnog poziva.
+export async function obrisiSablonAction(templateId: string): Promise<SablonStanje> {
+  const korisnik = await trenutniKorisnik();
+  const biznis = await getBusinessForUser(korisnik.id);
+  if (!biznis) return { ok: false, greska: "Firma ne postoji." };
+
+  const rezultat = await obrisiSablon(biznis.id, templateId);
+  if (!rezultat.ok) return { ok: false, greska: rezultat.razlog };
+
+  const podrazumevani = await osigurajPodrazumevaniSablon(biznis.id);
+  revalidatePath("/fakture/nova");
+  revalidatePath("/fakture/sablon");
+  return { ok: true, id: podrazumevani.id, sablon: sablonRedUPodatke(podrazumevani) };
 }

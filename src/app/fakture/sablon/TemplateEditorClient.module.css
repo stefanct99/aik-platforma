@@ -171,6 +171,22 @@
   background: var(--color-bg);
 }
 
+.sablonAkcija:disabled {
+  opacity: 0.5;
+  cursor: default;
+  color: var(--color-text-muted);
+}
+
+.sablonAkcija:disabled:hover {
+  background: none;
+}
+
+/* "Obriši ovaj šablon" (Korak 8d-7a dopuna) - crven tekst, isti token kao druge "opasne" stavke padajućih
+   menija u aplikaciji (RedMenija.module.css .opasno - ista vrsta elementa, stavka menija, ne dugme). */
+.sablonAkcijaOpasna {
+  color: var(--color-alert-danger-text);
+}
+
 .znacka {
   display: inline-flex;
   align-items: center;
@@ -213,6 +229,18 @@
   background: var(--btn-primary-bg);
   color: var(--btn-primary-text);
   border: 0;
+}
+
+/* Dugme "Obriši" u dijalogu potvrde (Korak 8d-7a dopuna) - ista boja kao Button.module.css .opasno
+   (var(--color-danger)), isti princip kao postojeća potvrda brisanja ponavljajuće fakture. */
+.dugmeOpasno {
+  background: var(--color-danger);
+  color: #ffffff;
+  border: 0;
+}
+
+.dugmeOpasno:hover {
+  filter: brightness(0.92);
 }
 
 .greskaTraka {

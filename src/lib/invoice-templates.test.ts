@@ -38,6 +38,7 @@ import {
   duplirajSablon,
   preimenujSablon,
   postaviKaoPodrazumevani,
+  obrisiSablon,
   type IzmenaSablona,
 } from "./invoice-templates-db";
 
@@ -893,5 +894,112 @@ describe("Više šablona (Korak 8d-7a, padajući meni 'Šablon: <ime>')", () => 
     // isDefault:false (zadatak 8d-7a tačka 5: "ime i status podrazumevanog ostaju").
     const vraceno = await vratiSablonNaPodrazumevano(biznis.id, drugiId);
     expect(vraceno).toEqual({ ...napraviPodrazumevaniSablonPodatke(), name: "Drugi šablon", isDefault: false });
+  });
+});
+
+describe("obrisiSablon (Korak 8d-7a dopuna, brisanje šablona)", () => {
+  it("briše NE-podrazumevani šablon", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const { id } = await kreirajSablon(biznis.id, "Za brisanje");
+
+    const rezultat = await obrisiSablon(biznis.id, id);
+    expect(rezultat).toEqual({ ok: true });
+
+    expect(await ucitajSablonPoId(biznis.id, id)).toBeNull();
+    const lista = await listaSablona(biznis.id);
+    expect(lista.find((s) => s.id === id)).toBeUndefined();
+  });
+
+  it("odbija brisanje PODRAZUMEVANOG šablona, čak i ako je to jedini šablon firme", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const { id } = await osigurajPodrazumevaniSablon(biznis.id);
+
+    const rezultat = await obrisiSablon(biznis.id, id);
+    expect(rezultat.ok).toBe(false);
+    if (rezultat.ok) throw new Error("ne treba da se desi");
+    expect(rezultat.razlog).toBe(
+      "Podrazumevani šablon se ne može obrisati. Prvo postavi drugi šablon kao podrazumevani.",
+    );
+
+    // Ništa nije obrisano - šablon i dalje postoji, i dalje podrazumevani.
+    const ucitan = await ucitajSablonPoId(biznis.id, id);
+    expect(ucitan?.sablon.isDefault).toBe(true);
+  });
+
+  it("odbija brisanje šablona koji je POSTAO podrazumevani preko postaviKaoPodrazumevani", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const { id: noviId } = await kreirajSablon(biznis.id, "Budući podrazumevani");
+    await postaviKaoPodrazumevani(biznis.id, noviId);
+
+    const rezultat = await obrisiSablon(biznis.id, noviId);
+    expect(rezultat.ok).toBe(false);
+  });
+
+  it("odbija brisanje tuđeg šablona (provera vlasništva) i ne diraju druge firme", async () => {
+    const { biznis: biznisA } = await napraviKorisnikaSaFirmom();
+    const { biznis: biznisB } = await napraviKorisnikaSaFirmom();
+    const { id } = await kreirajSablon(biznisA.id, "Šablon firme A");
+
+    const rezultat = await obrisiSablon(biznisB.id, id);
+    expect(rezultat.ok).toBe(false);
+
+    // Nije obrisan - i dalje ga vidi prava firma.
+    expect(await ucitajSablonPoId(biznisA.id, id)).not.toBeNull();
+  });
+
+  it("brisanje ne dira šablon druge firme ni njen podrazumevani", async () => {
+    const { biznis: biznisA } = await napraviKorisnikaSaFirmom();
+    const { biznis: biznisB } = await napraviKorisnikaSaFirmom();
+    const podrazumevaniB = await osigurajPodrazumevaniSablon(biznisB.id);
+    const { id: zaBrisanjeA } = await kreirajSablon(biznisA.id, "Za brisanje A");
+
+    await obrisiSablon(biznisA.id, zaBrisanjeA);
+
+    const ucitanB = await ucitajSablonPoId(biznisB.id, podrazumevaniB.id);
+    expect(ucitanB?.sablon.isDefault).toBe(true);
+  });
+
+  it("poslata faktura (zamrznuta kopija) ostaje nepromenjena posle brisanja šablona koji je koristila", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const klijent = await prisma.client.create({
+      data: { businessId: biznis.id, name: "Test klijent", billingEmail: "klijent@primer.rs", address: "Adresa 1" },
+    });
+    const { id: obrisivId, sablon: podaciObrisivog } = await kreirajSablon(biznis.id, "Biće obrisan");
+    const zamrznutSablon = { ...podaciObrisivog, accentColor: "#8A5A00" };
+    const faktura = await prisma.invoice.create({
+      data: {
+        businessId: biznis.id,
+        clientId: klijent.id,
+        number: "1/26-4",
+        currency: "EUR",
+        lang: "sr",
+        issueDate: new Date("2026-01-01T00:00:00.000Z"),
+        dueDays: 7,
+        status: "poslata",
+        sentAt: new Date("2026-01-01T00:00:00.000Z"),
+        templateSnapshot: zamrznutSablon,
+      },
+    });
+
+    const rezultat = await obrisiSablon(biznis.id, obrisivId);
+    expect(rezultat).toEqual({ ok: true });
+
+    const ucitanZaFakturu = await ucitajSablonZaFakturu(faktura);
+    expect(ucitanZaFakturu.accentColor).toBe("#8A5A00"); // i dalje zamrznuta boja, šablon je obrisan ali svejedno ne utiče
+  });
+
+  it("nacrt (bez zamrznute kopije) i dalje prati podrazumevani šablon posle brisanja drugog šablona", async () => {
+    const { biznis } = await napraviKorisnikaSaFirmom();
+    const podrazumevani = await osigurajPodrazumevaniSablon(biznis.id);
+    const { id: drugiId } = await kreirajSablon(biznis.id, "Drugi šablon");
+
+    await obrisiSablon(biznis.id, drugiId);
+
+    // Nacrt nema templateSnapshot - ucitajSablonZaFakturu vraća podrazumevani šablon firme, kao i pre
+    // brisanja (nacrti ne upućuju na konkretan id šablona, videti komentar u invoice-templates-db.ts).
+    const ucitanZaNacrt = await ucitajSablonZaFakturu({ businessId: biznis.id, templateSnapshot: null });
+    expect(ucitanZaNacrt.name).toBe("Moj izgled");
+    expect(ucitanZaNacrt.isDefault).toBe(true);
+    expect(podrazumevani.id).not.toBe(drugiId);
   });
 });

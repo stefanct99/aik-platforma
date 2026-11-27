@@ -40,6 +40,7 @@ import {
   duplirajSablonAction,
   preimenujSablonAction,
   postaviKaoPodrazumevaniAction,
+  obrisiSablonAction,
   type StavkaListeSablona,
 } from "@/app/(app)/fakture/actions";
 import styles from "./TemplateEditorClient.module.css";
@@ -301,6 +302,7 @@ export function TemplateEditorClient({
   const [preimenujOtvoren, setPreimenujOtvoren] = useState(false);
   const [preimenujUnos, setPreimenujUnos] = useState("");
   const [potvrdaNapustanja, setPotvrdaNapustanja] = useState<{ akcija: () => void } | null>(null);
+  const [brisanjeOtvoreno, setBrisanjeOtvoreno] = useState(false);
   const [izmenjeno, setIzmenjeno] = useState(false);
   const [izabran, setIzabran] = useState<BlokKljuc>("firma");
   const [nivo, setNivo] = useState<"blok" | "tabela" | "cela">("blok");
@@ -475,6 +477,28 @@ export function TemplateEditorClient({
     );
   }
 
+  // "Obriši ovaj šablon" (Korak 8d-7a dopuna) - frejm (Fak27) ne pokazuje ovu stavku, zato je na dnu
+  // menija, odvojena linijom (izveštaj). Dugme je onemogućeno za podrazumevani šablon (zadatak tačka 2);
+  // server (obrisiSablonAction) proverava isto, nezavisno od dugmeta. Potvrda ide kroz sopstveni dijalog
+  // (ne window.confirm, isti razlog kao i kod ostalih dijaloga u ovom fajlu).
+  function naObrisi() {
+    setSablonOtvoren(false);
+    if (sablon.isDefault) return;
+    setBrisanjeOtvoreno(true);
+  }
+
+  async function naPotvrdiBrisanje() {
+    const rezultat = await obrisiSablonAction(sablonId);
+    if (!rezultat.ok) {
+      setGreska(rezultat.greska);
+      setBrisanjeOtvoreno(false);
+      return;
+    }
+    setBrisanjeOtvoreno(false);
+    setLista(await listaSablonaAction());
+    ucitajUEditor(rezultat.id, rezultat.sablon);
+  }
+
   const bp = sablon.blockProps[izabran];
   const bpGreske = validirajSvojstvaBloka(bp);
 
@@ -532,6 +556,16 @@ export function TemplateEditorClient({
                         Postavi kao podrazumevani
                       </button>
                     )}
+                    <div className={styles.sablonRazdvajac} />
+                    <button
+                      type="button"
+                      className={`${styles.sablonAkcija} ${styles.sablonAkcijaOpasna}`}
+                      disabled={sablon.isDefault}
+                      title={sablon.isDefault ? "Prvo postavi drugi šablon kao podrazumevani" : undefined}
+                      onClick={naObrisi}
+                    >
+                      Obriši ovaj šablon
+                    </button>
                   </div>
                 )}
               </div>
@@ -1127,6 +1161,25 @@ export function TemplateEditorClient({
                 onClick={naPotvrdiPreimenovanje}
               >
                 Sačuvaj ime
+              </button>
+            </div>
+          </Modal>
+        )}
+        {brisanjeOtvoreno && (
+          <Modal naslov="Obriši šablon" onClose={() => setBrisanjeOtvoreno(false)}>
+            <span className={styles.rasporedPodnaslov}>
+              Šablon &quot;{sablon.name}&quot; će biti trajno obrisan. Ovo se ne može poništiti.
+            </span>
+            <div className={styles.unosDugmad}>
+              <button type="button" className={styles.dugmeMalo} onClick={() => setBrisanjeOtvoreno(false)}>
+                Odustani
+              </button>
+              <button
+                type="button"
+                className={`${styles.dugmeMalo} ${styles.dugmeOpasno}`}
+                onClick={naPotvrdiBrisanje}
+              >
+                Obriši
               </button>
             </div>
           </Modal>

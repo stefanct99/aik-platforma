@@ -158,7 +158,10 @@
 
 /* Pilula aktivnog podtaba je NAMERNO ista (skoro crna) boja u OBE teme, ne var(--color-text)/
    var(--color-bg) kao slični filteri drugde (npr. FaktureListTab .cipAktivan) - potvrđeno frejmom
-   (Kp1, identičan heks u svetlom i tamnom panelu). */
+   (Kp1, identičan heks u svetlom i tamnom panelu).
+   Neaktivan podtab (pozadina/tekst/ivica/brojač) je već tačan iz tokena teme (--color-surface,
+   --color-nav-text, --color-text-muted se poklapaju heks u heks sa Kp1/Kp3 u obe teme) - jedino ivica u
+   tamnoj temi ispod nije važila zbog iste greške kao .traka/.otvoriLink (nedostajao :global()). */
 .podtab,
 .podtabAktivan {
   display: inline-flex;
@@ -174,11 +177,12 @@
   background: var(--color-surface);
   color: var(--color-nav-text);
 }
-.appShell[data-theme="tamni"] .podtab {
+:global(.appShell[data-theme="tamni"]) .podtab {
   border-color: rgba(255, 255, 255, 0.148);
 }
 @media (prefers-color-scheme: dark) {
-  .appShell:not([data-theme="svetli"]):not([data-theme="tamni"]) .podtab {
+  :global(.appShell:not([data-theme="svetli"]):not([data-theme="tamni"]))
+    .podtab {
     border-color: rgba(255, 255, 255, 0.148);
   }
 }

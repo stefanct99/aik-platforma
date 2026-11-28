@@ -25,7 +25,7 @@ test.afterAll(() => {
 });
 
 for (const tema of ["light", "dark"] as const) {
-  test(`${tema}: traka napretka i link 'Otvori' imaju boje iz frejma (Kp1/Kp4)`, async ({
+  test(`${tema}: traka napretka, podtabovi i link 'Otvori' imaju boje iz frejma (Kp1/Kp3/Kp4)`, async ({
     page,
   }) => {
     await page.emulateMedia({ colorScheme: tema });
@@ -39,7 +39,29 @@ for (const tema of ["light", "dark"] as const) {
       tema === "dark" ? "rgb(38, 44, 40)" : "rgb(237, 234, 230)",
     );
 
-    await page.getByRole("button", { name: /^Dinarski prihodi/ }).click();
+    // Podtab "Devizni prihodi" je aktivan po podrazumevanom stanju - NAMERNO ista (skoro crna) boja u
+    // obe teme (potvrđeno frejmom Kp1). "Dinarski prihodi" je neaktivan - pozadina/tekst su već iz tokena
+    // teme (ispravni), samo ivica u tamnoj temi nije važila (ista greška kao .traka/.otvoriLink).
+    const aktivan = page.getByRole("button", { name: /^Devizni prihodi/ });
+    await expect(aktivan).toHaveCSS("background-color", "rgb(22, 26, 23)");
+    await expect(aktivan).toHaveCSS("color", "rgb(255, 255, 255)");
+
+    const neaktivan = page.getByRole("button", { name: /^Dinarski prihodi/ });
+    await expect(neaktivan).toHaveCSS(
+      "background-color",
+      tema === "dark" ? "rgb(23, 27, 24)" : "rgb(255, 255, 255)",
+    );
+    await expect(neaktivan).toHaveCSS(
+      "color",
+      tema === "dark" ? "rgb(196, 202, 197)" : "rgb(74, 82, 76)",
+    );
+    // Pregledač zaokružuje alfa kanal computed-style vrednosti (0.148 -> 0.15) - potvrđeno uživo.
+    await expect(neaktivan).toHaveCSS(
+      "border-color",
+      tema === "dark" ? "rgba(255, 255, 255, 0.15)" : "rgba(22, 26, 23, 0.12)",
+    );
+
+    await neaktivan.click();
     await page.locator("tbody tr", { hasText: "Acme" }).first().click();
     const link = page.getByRole("link", { name: "Otvori", exact: true });
     await expect(link).toHaveCSS(

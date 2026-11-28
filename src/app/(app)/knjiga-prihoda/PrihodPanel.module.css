@@ -1,0 +1,92 @@
+.glavnaVrednost {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.labelaMuted {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+.vrednostVelika {
+  font-size: 2rem;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+/* Redovi Datum uplate/Klijent/Faktura/Izvor/Kurs/U dinarima/Opis (Kp4) - BEZ razmaka između njih (samo
+   .kv svoj border-top razdvaja redove), za razliku od .telo (SidePanel.module.css) čiji gap razdvaja
+   OVU celu grupu od iznosa iznad i napomene ispod. */
+.redovi {
+  display: flex;
+  flex-direction: column;
+}
+.kv {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 12px 0;
+  border-top: 1px solid var(--color-border);
+  font-size: 1rem;
+}
+.k {
+  color: var(--color-text-muted);
+}
+.v {
+  text-align: right;
+}
+.podebljano {
+  font-weight: 500;
+}
+
+.napomena {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+/* "Otvori"/"Otvori mejl" (Kp4): NAMERNO različita boja po temi (potvrđeno frejmom, svetli i tamni panel) -
+   svetla tema koristi isti zeleni akcenat kao primarna dugmad (--color-mark-bg, tačan heks #0F2A22 =
+   frejm), tamna tema običnu tekst boju (--color-text, tačan heks #F1F3EF = frejm) - nema JEDNOG
+   zajedničkog tokena koji pokriva oba, zato eksplicitna ispravka po temi kao i drugde u ovom tabu
+   (KnjigaPrihodaTab.module.css .traka/.podtab). */
+.otvoriLink {
+  font-size: 0.875rem;
+  color: var(--color-mark-bg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.appShell[data-theme="tamni"] .otvoriLink {
+  color: var(--color-text);
+}
+@media (prefers-color-scheme: dark) {
+  .appShell:not([data-theme="svetli"]):not([data-theme="tamni"]) .otvoriLink {
+    color: var(--color-text);
+  }
+}
+
+/* Podnožje: "Obriši prihod" (levo) + Zatvori/Ispravi ili Odustani/Sačuvaj (desno) - isti obrazac kao
+   ClientPanel.module.css (.podnozjeRed/.obrisiLink/.podnozjeDugmad), frejm Kp4 heks (#B4281E svetla,
+   #FF8A80 tamna) se poklapa sa --color-alert-danger-text u obe teme (tamna tačno, svetla za 1 bit boje -
+   zanemarljivo, isti token se već koristi za ISTU namenu drugde u aplikaciji). */
+.podnozjeRed {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: var(--space-3);
+}
+.obrisiLink {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 1rem;
+  color: var(--color-alert-danger-text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.podnozjeDugmad {
+  display: flex;
+  gap: var(--space-3);
+}

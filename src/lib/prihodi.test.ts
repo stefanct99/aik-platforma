@@ -25,6 +25,7 @@ function red(delimicno: Partial<PrihodRed>): PrihodRed {
     brojFakture: "1/26-6",
     klijentId: "k1",
     klijentIme: "Acme Inc.",
+    opis: null,
     ...delimicno,
   };
 }

@@ -12,12 +12,20 @@ const SIRINE = [1280, 1440, 1920, 2560];
 const TEME: ("light" | "dark")[] = ["light", "dark"];
 const FOLDER = "test-results/screenshots";
 
-type Nalaz = { stranica: string; sirina: number; tema: string; problemi: string[] };
+type Nalaz = {
+  stranica: string;
+  sirina: number;
+  tema: string;
+  problemi: string[];
+};
 
 async function proveriRaspored(page: Page): Promise<string[]> {
   return page.evaluate(() => {
     const problemi: string[] = [];
-    if (document.documentElement.scrollWidth > document.documentElement.clientWidth + 1) {
+    if (
+      document.documentElement.scrollWidth >
+      document.documentElement.clientWidth + 1
+    ) {
       problemi.push(
         `Horizontalni skrol: scrollWidth=${document.documentElement.scrollWidth} > clientWidth=${document.documentElement.clientWidth}`,
       );
@@ -30,22 +38,38 @@ async function proveriRaspored(page: Page): Promise<string[]> {
     document.querySelectorAll("table td, table th").forEach((cel) => {
       if (cel.scrollWidth <= cel.clientWidth + 2) return;
       const stil = getComputedStyle(cel);
-      const imaElipsu = stil.textOverflow === "ellipsis" && stil.overflow === "hidden" && stil.whiteSpace === "nowrap";
-      const imaNaslov = cel.hasAttribute("title") || cel.querySelector("[title]") !== null;
+      const imaElipsu =
+        stil.textOverflow === "ellipsis" &&
+        stil.overflow === "hidden" &&
+        stil.whiteSpace === "nowrap";
+      const imaNaslov =
+        cel.hasAttribute("title") || cel.querySelector("[title]") !== null;
       if (imaElipsu && imaNaslov) return;
-      problemi.push(`Tabela: tekst ne staje u ćeliju "${cel.textContent?.trim().slice(0, 40)}"`);
+      problemi.push(
+        `Tabela: tekst ne staje u ćeliju "${cel.textContent?.trim().slice(0, 40)}"`,
+      );
     });
     // Preklapanje glavnih blokova: bočni meni (već ima aria-label u aplikaciji, bez izmene koda) i glavni
     // sadržaj (semantički <main>, već postoji u AppShell-u) ne smeju geometrijski da se seku. Stranice bez
     // ljuske aplikacije (editor fakture/šablona - pun ekran, namerno bez menija) nemaju ova dva elementa
     // istovremeno, pa se provera za njih tiho preskače.
-    const meni = document.querySelector<HTMLElement>('nav[aria-label="Glavni meni"]');
+    const meni = document.querySelector<HTMLElement>(
+      'nav[aria-label="Glavni meni"]',
+    );
     const sadrzaj = document.querySelector<HTMLElement>("main");
     if (meni && sadrzaj) {
       const a = meni.getBoundingClientRect();
       const b = sadrzaj.getBoundingClientRect();
-      const preklapanje = !(a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top);
-      if (preklapanje) problemi.push("Preklapanje: bočni meni i glavni sadržaj (<main>) se geometrijski seku.");
+      const preklapanje = !(
+        a.right <= b.left ||
+        b.right <= a.left ||
+        a.bottom <= b.top ||
+        b.bottom <= a.top
+      );
+      if (preklapanje)
+        problemi.push(
+          "Preklapanje: bočni meni i glavni sadržaj (<main>) se geometrijski seku.",
+        );
     }
     return problemi;
   });
@@ -84,29 +108,73 @@ test.afterAll(async () => {
 
 for (const tema of TEME) {
   for (const sirina of SIRINE) {
-    test(`${tema}/${sirina}px: ključne stranice`, async ({ page }, testInfo) => {
+    test(`${tema}/${sirina}px: ključne stranice`, async ({
+      page,
+    }, testInfo) => {
       await page.emulateMedia({ colorScheme: tema });
       await page.setViewportSize({ width: sirina, height: 900 });
 
-      const sveStranice = [...STRANICE, { naziv: "detalj-fakture", putanja: detaljPutanja }];
+      const sveStranice = [
+        ...STRANICE,
+        { naziv: "detalj-fakture", putanja: detaljPutanja },
+      ];
       const naliziUkupno: Nalaz[] = [];
 
       for (const { naziv, putanja } of sveStranice) {
         await page.goto(putanja);
         await page.waitForLoadState("networkidle").catch(() => {});
         const problemi = await proveriRaspored(page);
-        if (problemi.length > 0) naliziUkupno.push({ stranica: naziv, sirina, tema, problemi });
+        if (problemi.length > 0)
+          naliziUkupno.push({ stranica: naziv, sirina, tema, problemi });
 
         const fajl = `${FOLDER}/${naziv}_${tema}_${sirina}.png`;
         await page.screenshot({ path: fajl, fullPage: true }).catch(() => {});
+
+        // Korak 9c: bočni panel "Prihod [datum]" (klik na red tabele) - proveren samo ovde, ne kao
+        // posebna stranica u STRANICE (nije ruta, nego overlay nad istom stranicom). Redovi postoje jer
+        // knjiga-prihoda.spec.ts (abecedno pre ovog fajla) ostavi fakture za sobom - ako slučajno nema
+        // reda, .catch() ovo tiho preskače (ista blaga filozofija kao ostatak ove provere).
+        if (naziv === "knjiga-prihoda") {
+          const otvoren = await page
+            .locator("tbody tr")
+            .first()
+            .click({ timeout: 2000 })
+            .then(() => true)
+            .catch(() => false);
+          if (otvoren) {
+            const problemiPanela = await proveriRaspored(page);
+            if (problemiPanela.length > 0) {
+              naliziUkupno.push({
+                stranica: "knjiga-prihoda-panel",
+                sirina,
+                tema,
+                problemi: problemiPanela,
+              });
+            }
+            await page
+              .screenshot({
+                path: `${FOLDER}/knjiga-prihoda-panel_${tema}_${sirina}.png`,
+                fullPage: true,
+              })
+              .catch(() => {});
+          }
+        }
       }
 
       if (naliziUkupno.length > 0) {
         const tekst = naliziUkupno
-          .map((n) => `${n.stranica} (${n.tema}, ${n.sirina}px):\n  - ${n.problemi.join("\n  - ")}`)
+          .map(
+            (n) =>
+              `${n.stranica} (${n.tema}, ${n.sirina}px):\n  - ${n.problemi.join("\n  - ")}`,
+          )
           .join("\n\n");
-        console.log(`\n[vizuelna provera - nalazi, NE obaraju test]\n${tekst}\n`);
-        await testInfo.attach(`nalazi-${tema}-${sirina}`, { body: tekst, contentType: "text/plain" });
+        console.log(
+          `\n[vizuelna provera - nalazi, NE obaraju test]\n${tekst}\n`,
+        );
+        await testInfo.attach(`nalazi-${tema}-${sirina}`, {
+          body: tekst,
+          contentType: "text/plain",
+        });
       }
       // Namerno NEMA expect() ovde - zadatak tačka 5: ovaj test nikad ne sme da padne.
     });

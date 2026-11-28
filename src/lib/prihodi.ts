@@ -17,6 +17,7 @@ export type PrihodRed = {
   brojFakture: string | null;
   klijentId: string | null;
   klijentIme: string | null;
+  opis: string | null;
 };
 
 // Izbor godine (Kp3/27. krug u prototipu): mora da uključi i NAREDNU godinu (da prazno stanje naredne
@@ -38,9 +39,13 @@ export function pripadaMesecu(red: PrihodRed, mesec: number): boolean {
 // Redovi za IZABRANU godinu, razdvojeni po vrsti, sortirani po datumu uplate (najnoviji prvo) - isto
 // razdvajanje kao podtabovi "Devizni prihodi"/"Dinarski prihodi" u okvirima (Kp1/Kp2). Ovo je i osnova za
 // brojeve na pilulama podtabova (NE menja se filterom meseca/klijenta - zadatak tačka 2).
-export function grupisiPoGodini(redovi: PrihodRed[], godina: number): { devizni: PrihodRed[]; dinarski: PrihodRed[] } {
+export function grupisiPoGodini(
+  redovi: PrihodRed[],
+  godina: number,
+): { devizni: PrihodRed[]; dinarski: PrihodRed[] } {
   const zaGodinu = redovi.filter((r) => pripadaGodini(r, godina));
-  const noviPre = (a: PrihodRed, b: PrihodRed) => new Date(b.datumIso).getTime() - new Date(a.datumIso).getTime();
+  const noviPre = (a: PrihodRed, b: PrihodRed) =>
+    new Date(b.datumIso).getTime() - new Date(a.datumIso).getTime();
   return {
     devizni: zaGodinu.filter((r) => r.vrsta === "devizni").sort(noviPre),
     dinarski: zaGodinu.filter((r) => r.vrsta === "dinarski").sort(noviPre),
@@ -49,7 +54,11 @@ export function grupisiPoGodini(redovi: PrihodRed[], godina: number): { devizni:
 
 // Dodatni filteri za PRIKAZ U TABELI (Mesec, Klijent) - kartice zbira (grupisiPoGodini/ukupanPrihod) se
 // NE diraju ovim (zadatak tačka 2: "Filter Godina menja kartice, filteri Mesec i Klijent ih ne menjaju").
-export function filtrirajRedove(redovi: PrihodRed[], mesec: number | null, klijentId: string | null): PrihodRed[] {
+export function filtrirajRedove(
+  redovi: PrihodRed[],
+  mesec: number | null,
+  klijentId: string | null,
+): PrihodRed[] {
   return redovi
     .filter((r) => mesec == null || pripadaMesecu(r, mesec))
     .filter((r) => klijentId == null || r.klijentId === klijentId);
@@ -57,8 +66,12 @@ export function filtrirajRedove(redovi: PrihodRed[], mesec: number | null, klije
 
 // Ukupan prihod u kalendarskoj godini (zadatak, odluka 1: ZASEBNO od kliznog limita u pausalni-limit.ts) -
 // zbir RSD protivvrednosti oba podtaba, isključujući redove bez upisanog kursa (iznosRsd null).
-export function ukupanPrihodUGodini(devizni: PrihodRed[], dinarski: PrihodRed[]): number {
-  const zbir = (redovi: PrihodRed[]) => redovi.reduce((s, r) => s + (r.iznosRsd ?? 0), 0);
+export function ukupanPrihodUGodini(
+  devizni: PrihodRed[],
+  dinarski: PrihodRed[],
+): number {
+  const zbir = (redovi: PrihodRed[]) =>
+    redovi.reduce((s, r) => s + (r.iznosRsd ?? 0), 0);
   return zbir(devizni) + zbir(dinarski);
 }
 
@@ -83,7 +96,10 @@ export function uplataRec(n: number): string {
 // aritmetika - direktno iznos*kurs (oba kao floating point) bi za pojedine kurseve unelo grešku
 // zaokruživanja pre finalnog zaokruživanja na paru. Dinarski prihodi nemaju kurs, ova funkcija ih se ne
 // tiče (iznosRsd im je uvek jednak iznosu, videti prihodi-db.ts).
-export function izracunajIznosRsd(iznosUNajmanjojJedinici: number, kurs: number): number {
+export function izracunajIznosRsd(
+  iznosUNajmanjojJedinici: number,
+  kurs: number,
+): number {
   if (!Number.isFinite(kurs) || kurs <= 0) {
     throw new Error("Kurs mora biti broj veći od 0.");
   }
@@ -91,12 +107,18 @@ export function izracunajIznosRsd(iznosUNajmanjojJedinici: number, kurs: number)
   return Math.round((iznosUNajmanjojJedinici * kursNa10000) / 10000);
 }
 
-export type BrojUplataPoKlijentu = { klijentId: string; klijentIme: string; broj: number }[];
+export type BrojUplataPoKlijentu = {
+  klijentId: string;
+  klijentIme: string;
+  broj: number;
+}[];
 
 // Za padajući meni filtera "Klijent" (Kp9): broj uplata PO KLIJENTU, računat iz redova TRENUTNOG podtaba
 // i meseca (ali PRE filtera po klijentu - isti obrazac kao prototip, da brojevi ne nestanu kad se klijent
 // izabere). Samo klijenti koji imaju bar jednu uplatu se prikazuju.
-export function brojUplataPoKlijentu(redovi: PrihodRed[]): BrojUplataPoKlijentu {
+export function brojUplataPoKlijentu(
+  redovi: PrihodRed[],
+): BrojUplataPoKlijentu {
   const mapa = new Map<string, { klijentIme: string; broj: number }>();
   for (const r of redovi) {
     if (!r.klijentId) continue;

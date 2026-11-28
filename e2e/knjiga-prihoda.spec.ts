@@ -507,17 +507,11 @@ test("panel 'Ispravi': prvi upis kursa - panel, tabela, kartica i limit se osve�
   await expect(page.getByText("172.200,00 din").first()).toBeVisible();
 });
 
-test("filter Godina menja kartice, dugmad Izvezi/Dodaj prihod ne rade ništa (još)", async ({
-  page,
-}) => {
+test("filter Godina menja kartice", async ({ page }) => {
+  // Dugmad "Izvezi"/"Dodaj prihod" (zaglavlje) imaju sopstvene, posebne spec datoteke
+  // (izvoz-prihoda.spec.ts/dodaj-prihod.spec.ts) - ovaj test ostaje samo za filter Godina.
   await page.getByRole("combobox").first().selectOption("2024");
   await expect(page.getByText("Ukupan prihod u 2024.")).toBeVisible();
   await page.getByRole("combobox").first().selectOption("2026");
-  await expect(page.getByText("Ukupan prihod u 2026.")).toBeVisible();
-
-  // Nijedan dijalog/navigacija - dugmad su namerno inertna u ovom koraku.
-  await page.getByRole("button", { name: "Izvezi", exact: true }).click();
-  await page.getByRole("button", { name: "Dodaj prihod", exact: true }).click();
-  await expect(page).toHaveURL(/\/knjiga-prihoda$/);
   await expect(page.getByText("Ukupan prihod u 2026.")).toBeVisible();
 });

@@ -266,6 +266,47 @@ async function main() {
       console.log(JSON.stringify({ obrisano: rezultat.count }));
       break;
     }
+    case "create-manual-income": {
+      // Izvoz Knjige prihoda (Korak 9g-1, e2e/izvoz-prihoda.spec.ts) - direktan upis reda sa TAČNO
+      // zadatim datumom/valutom/kursom (potrebno za granice kvartala/meseca, mešovite devizne/dinarske
+      // redove i "bez fakture", što create-paid-invoice ne ume da zada precizno). "kind" podrazumevano
+      // "devizni" (zadatak ne traži dinarski podrazumevano - svaki pozivač ga zadaje eksplicitno gde
+      // treba).
+      const biznis = await prisma.business.findFirstOrThrow({
+        where: { name: "E2E Probna Firma" },
+      });
+      let clientId: string | null = null;
+      if (argumenti.klijent) {
+        const klijent = await prisma.client.findFirstOrThrow({
+          where: {
+            businessId: biznis.id,
+            name: { contains: argumenti.klijent as string },
+          },
+        });
+        clientId = klijent.id;
+      }
+      const prihod = await prisma.income.create({
+        data: {
+          businessId: biznis.id,
+          clientId,
+          date: new Date(argumenti.datum as string),
+          currency: argumenti.valuta as string,
+          amount: argumenti.iznos as number,
+          rate: (argumenti.kurs as number | undefined) ?? null,
+          amountRsd: (argumenti.iznosRsd as number | undefined) ?? null,
+          kind: (argumenti.kind as string) ?? "devizni",
+          source: "rucno",
+          description: (argumenti.opis as string | undefined) ?? null,
+        },
+      });
+      console.log(JSON.stringify({ id: prihod.id }));
+      break;
+    }
+    case "delete-income": {
+      await prisma.income.deleteMany({ where: { id: argumenti.id } });
+      console.log(JSON.stringify({ ok: true }));
+      break;
+    }
     default:
       throw new Error(`Nepoznata komanda: ${komanda}`);
   }

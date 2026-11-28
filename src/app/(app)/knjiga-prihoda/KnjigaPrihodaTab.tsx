@@ -3,9 +3,11 @@
 // "Ispravi") je Korak 9c (PrihodPanel.tsx) - klik na red OTVARA PANEL, ne fakturu (fakturi se prilazi
 // preko linka "Otvori" u panelu). "Dodaj prihod" (bočni panel, Korak 9d-2, DodajPrihodPanel.tsx) - SAMO
 // dugme U ZAGLAVLJU otvara panel (zadatak); dugme u praznom stanju namerno ostaje inertno (zadatak ga ne
-// pominje, videti izveštaj). Baner upozorenja na limit je Korak 9f (LimitBaner.tsx). NAMERNO ne grade se
-// (sledeći koraci, zadatak): baner "uplata bez fakture", brisanje (dugme "Obriši prihod" u panelu je
-// inertno - Korak 9e), izvoz, telefon - dugme "Izvezi" je zato i dalje bez onClick.
+// pominje, videti izveštaj). Baner upozorenja na limit je Korak 9f (LimitBaner.tsx). Izvoz (dugme
+// "Izvezi" u zaglavlju) je Korak 9g-1 (IzveziDialog.tsx) - Excel stvarno preuzima fajl, PDF je i dalje
+// privremena poruka (Korak 9g-2). Brisanje (dugme "Obriši prihod" u panelu) je Korak 9e
+// (ObrisiPrihodDialog.tsx, povezano preko PrihodPanel.tsx). NAMERNO ne grade se (sledeći koraci,
+// zadatak): baner "uplata bez fakture", telefon.
 "use client";
 
 import { useMemo, useState } from "react";
@@ -28,6 +30,7 @@ import {
   type PrihodRed,
 } from "@/lib/prihodi";
 import { DodajPrihodPanel } from "./DodajPrihodPanel";
+import { IzveziDialog } from "./IzveziDialog";
 import { LimitBaner } from "./LimitBaner";
 import { PrihodPanel } from "./PrihodPanel";
 import styles from "./KnjigaPrihodaTab.module.css";
@@ -72,6 +75,7 @@ export function KnjigaPrihodaTab({
   const [klijentOtvoren, setKlijentOtvoren] = useState(false);
   const [detaljId, setDetaljId] = useState<string | null>(null);
   const [dodajOtvoren, setDodajOtvoren] = useState(false);
+  const [izvozOtvoren, setIzvozOtvoren] = useState(false);
 
   const { devizni, dinarski } = useMemo(
     () => grupisiPoGodini(redovi, godina),
@@ -132,7 +136,11 @@ export function KnjigaPrihodaTab({
             <p className={styles.opis}>Prihodi se vode po datumu uplate.</p>
           </div>
           <div className={styles.akcije}>
-            <Button type="button" varijanta="sekundarno">
+            <Button
+              type="button"
+              varijanta="sekundarno"
+              onClick={() => setIzvozOtvoren(true)}
+            >
               Izvezi
             </Button>
             <Button
@@ -571,6 +579,13 @@ export function KnjigaPrihodaTab({
           klijenti={klijenti}
           danasIso={danasIso}
           onClose={() => setDodajOtvoren(false)}
+        />
+      )}
+      {izvozOtvoren && (
+        <IzveziDialog
+          godina={godina}
+          godine={godine}
+          onClose={() => setIzvozOtvoren(false)}
         />
       )}
     </>

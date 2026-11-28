@@ -266,6 +266,52 @@ for (const tema of TEME) {
                 fullPage: true,
               })
               .catch(() => {});
+            await page
+              .getByRole("button", { name: "Odustani", exact: true })
+              .click({ timeout: 2000 })
+              .catch(() => {});
+          }
+
+          // Korak 9g-1: dijalog izvoza ("Izvezi" u zaglavlju) - isti princip, bez stvarnog izvoza
+          // (zatvoren preko "Odustani", ne preko slanja). Posebna provera sa Format=Excel (drugi segment
+          // aktivan) jer se PDF/Excel razlikuju vizuelno (Kp6).
+          const izvozOtvoren = await page
+            .getByRole("button", { name: "Izvezi", exact: true })
+            .click({ timeout: 2000 })
+            .then(() => true)
+            .catch(() => false);
+          if (izvozOtvoren) {
+            const problemiIzvoz = await proveriRaspored(page);
+            if (problemiIzvoz.length > 0) {
+              naliziUkupno.push({
+                stranica: "knjiga-prihoda-izvoz",
+                sirina,
+                tema,
+                problemi: problemiIzvoz,
+              });
+            }
+            await page
+              .screenshot({
+                path: `${FOLDER}/knjiga-prihoda-izvoz_${tema}_${sirina}.png`,
+                fullPage: true,
+              })
+              .catch(() => {});
+
+            await page
+              .getByRole("button", { name: "Excel", exact: true })
+              .click({ timeout: 2000 })
+              .catch(() => {});
+            await page
+              .screenshot({
+                path: `${FOLDER}/knjiga-prihoda-izvoz-excel_${tema}_${sirina}.png`,
+                fullPage: true,
+              })
+              .catch(() => {});
+
+            await page
+              .getByRole("button", { name: "Odustani", exact: true })
+              .click({ timeout: 2000 })
+              .catch(() => {});
           }
         }
       }

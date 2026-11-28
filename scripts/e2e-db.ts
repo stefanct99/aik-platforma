@@ -307,6 +307,52 @@ async function main() {
       console.log(JSON.stringify({ ok: true }));
       break;
     }
+    case "create-manual-incomes-bulk": {
+      // PDF izvoz, "mnogo redova" (Korak 9g-2, e2e/izvoz-prihoda.spec.ts) - createMany umesto 80+
+      // odvojenih create-manual-income poziva (svaki je sopstven tsx proces, previše sporo). Vraća samo
+      // broj, ne ID-jeve (Prisma createMany na postgres ih ne vraća) - čišćenje ide preko "opis" prefiksa
+      // (delete-manual-incomes-sa-opisom), ne preko ID liste.
+      const biznis = await prisma.business.findFirstOrThrow({
+        where: { name: "E2E Probna Firma" },
+      });
+      const redovi = argumenti.redovi as Array<{
+        datum: string;
+        valuta: string;
+        iznos: number;
+        kurs?: number;
+        iznosRsd?: number;
+        kind?: string;
+        opis?: string;
+      }>;
+      await prisma.income.createMany({
+        data: redovi.map((r) => ({
+          businessId: biznis.id,
+          date: new Date(r.datum),
+          currency: r.valuta,
+          amount: r.iznos,
+          rate: r.kurs ?? null,
+          amountRsd: r.iznosRsd ?? null,
+          kind: r.kind ?? "devizni",
+          source: "rucno",
+          description: r.opis ?? null,
+        })),
+      });
+      console.log(JSON.stringify({ ok: true, broj: redovi.length }));
+      break;
+    }
+    case "delete-manual-incomes-sa-opisom": {
+      const biznis = await prisma.business.findFirstOrThrow({
+        where: { name: "E2E Probna Firma" },
+      });
+      const rezultat = await prisma.income.deleteMany({
+        where: {
+          businessId: biznis.id,
+          description: { startsWith: argumenti.prefiks as string },
+        },
+      });
+      console.log(JSON.stringify({ obrisano: rezultat.count }));
+      break;
+    }
     default:
       throw new Error(`Nepoznata komanda: ${komanda}`);
   }

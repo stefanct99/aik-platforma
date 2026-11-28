@@ -36,6 +36,7 @@
     "dotenv": "^18.0.10",
     "eslint": "^9",
     "eslint-config-next": "16.4.6",
+    "pdfjs-dist": "^6.5.438",
     "prettier": "^3.10.1",
     "prisma": "^7.10.1",
     "tsx": "^4.23.15",

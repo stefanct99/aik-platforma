@@ -59,13 +59,6 @@ export function IzveziDialog({
   const [uToku, setUToku] = useState(false);
 
   async function izvezi() {
-    // Privremena grana (Korak 9g-1, zadatak): PDF izvoz je Korak 9g-2 - ruta ga i sama odbija (vidi
-    // route.ts), ali dijalog je ovde da ne zove rutu uopšte za PDF, baš kao što zadatak traži.
-    if (format === "pdf") {
-      setPoruka("PDF izvoz stiže uskoro.");
-      return;
-    }
-
     setUToku(true);
     setPoruka(null);
     try {
@@ -77,17 +70,21 @@ export function IzveziDialog({
         zbir: zbir ? "1" : "0",
       });
       const odgovor = await fetch(`/knjiga-prihoda/izvoz?${parametri}`);
-      if (!odgovor.ok) {
-        setPoruka("Nije moguće izvesti knjigu prihoda. Pokušaj ponovo.");
-        return;
-      }
+
+      // JSON odgovor = nešto nije uspelo (prazan period, pogrešni parametri, PDF render nije uspeo -
+      // Korak 9g-2) - "greska" je tekst koji ruta sama smisli (route.ts), prikazuje se direktno, bez
+      // nagađanja ovde KOJA je poruka u pitanju.
       if ((odgovor.headers.get("content-type") ?? "").includes("application/json")) {
         const podaci = await odgovor.json();
         setPoruka(
           podaci.prazno
             ? "Nema uplata za izabrani period."
-            : "Nije moguće izvesti knjigu prihoda. Pokušaj ponovo.",
+            : (podaci.greska ?? "Nije moguće izvesti knjigu prihoda. Pokušaj ponovo."),
         );
+        return;
+      }
+      if (!odgovor.ok) {
+        setPoruka("Nije moguće izvesti knjigu prihoda. Pokušaj ponovo.");
         return;
       }
 
@@ -98,7 +95,7 @@ export function IzveziDialog({
       privremeniLink.download = imeFajlaIzvoza(
         godinaIzabrana,
         parsirajPeriod(period)!,
-        "excel",
+        format,
       );
       document.body.appendChild(privremeniLink);
       privremeniLink.click();

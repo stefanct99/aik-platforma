@@ -4,10 +4,11 @@
 // preko linka "Otvori" u panelu). "Dodaj prihod" (bočni panel, Korak 9d-2, DodajPrihodPanel.tsx) - SAMO
 // dugme U ZAGLAVLJU otvara panel (zadatak); dugme u praznom stanju namerno ostaje inertno (zadatak ga ne
 // pominje, videti izveštaj). Baner upozorenja na limit je Korak 9f (LimitBaner.tsx). Izvoz (dugme
-// "Izvezi" u zaglavlju) je Korak 9g-1 (IzveziDialog.tsx) - Excel stvarno preuzima fajl, PDF je i dalje
-// privremena poruka (Korak 9g-2). Brisanje (dugme "Obriši prihod" u panelu) je Korak 9e
-// (ObrisiPrihodDialog.tsx, povezano preko PrihodPanel.tsx). NAMERNO ne grade se (sledeći koraci,
-// zadatak): baner "uplata bez fakture", telefon.
+// "Izvezi" u zaglavlju) je Korak 9g-1/9g-2 (IzveziDialog.tsx) - Excel i PDF oba stvarno preuzimaju fajl
+// (Excel preko xlsx biblioteke, PDF preko puppeteer-core, nema frejma za sam dokument, videti izveštaj
+// Koraka 9g-2). Brisanje (dugme "Obriši prihod" u panelu) je Korak 9e (ObrisiPrihodDialog.tsx, povezano
+// preko PrihodPanel.tsx). NAMERNO ne grade se (sledeći koraci, zadatak): baner "uplata bez fakture",
+// telefon.
 "use client";
 
 import { useMemo, useState } from "react";

@@ -60,3 +60,33 @@ export async function renderujFakturuUPdf(url: string, kolacic: string): Promise
     await browser.close();
   }
 }
+
+// Izvoz Knjige prihoda (Korak 9g-2) - BEZ navigacije na stvarnu stranicu aplikacije (nema frejm/izgled
+// koji bi React komponenta crtala, zadatak ga opisuje tekstualno) - page.setContent(html) direktno, isti
+// Chrome/puppeteer-core kao fakture, ali POTPUNO odvojena funkcija: faktura je fiksne veličine i JEDNA
+// strana (pageRanges:"1"), Knjiga prihoda je A4 pejzaž sa promenljivim brojem redova/strana - zato
+// renderujFakturuUPdf ostaje netaknuta, ne sme da se ponovo iskoristi za ovo (zadatak).
+export async function renderujIzvozUPdf(html: string): Promise<Buffer> {
+  const browser = await puppeteer.launch({ executablePath: pronadjiChrome(), headless: true });
+  try {
+    const page = await browser.newPage();
+    await page.setContent(html, { waitUntil: "load" });
+    const pdf = await page.pdf({
+      format: "A4",
+      landscape: true,
+      printBackground: true,
+      margin: { top: "14mm", bottom: "16mm", left: "12mm", right: "12mm" },
+      // "Strana X od Y" (zadatak) - Puppeteer-ov ugrađeni footerTemplate mehanizam (pageNumber/
+      // totalPages su posebne klase koje Puppeteer sam popunjava, ne obična promenljiva). headerTemplate
+      // mora biti neprazan string - prazan div ovde SAMO gasi Puppeteer-ov PODRAZUMEVANI header (naslov
+      // stranice + datum), koji ne želimo; stvarno zaglavlje dokumenta (firma/period/datum izrade) je deo
+      // HTML sadržaja (napraviIzvozHtml), prikazuje se SAMO na prvoj strani (zadatak), ne na svakoj.
+      displayHeaderFooter: true,
+      headerTemplate: "<div></div>",
+      footerTemplate: `<div style="width:100%;font-size:9px;text-align:center;color:#4a524c;font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">Strana <span class="pageNumber"></span> od <span class="totalPages"></span></div>`,
+    });
+    return Buffer.from(pdf);
+  } finally {
+    await browser.close();
+  }
+}

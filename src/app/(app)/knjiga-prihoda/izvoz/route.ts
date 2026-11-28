@@ -1,12 +1,13 @@
-// Izvoz Knjige prihoda (Korak 9g-1, dijalog Kp6, "Izvezi") - GET ruta, isti obrazac kao
+// Izvoz Knjige prihoda (Korak 9g-1/9g-2, dijalog Kp6, "Izvezi") - GET ruta, isti obrazac kao
 // /api/izvoz-podataka (sesija -> 401, inače obrada -> binarni odgovor). businessId NIKAD iz parametara -
 // uvek iz sesije (pripremiIzvoz -> getBusinessForUser(userId), ista izolacija kao ostatak Knjige prihoda).
-// Ruta je namerno TANKA (sva logika je u izvoz-prihoda.ts/-db.ts, koji se testiraju vitest-om) - isti
-// razlog kao actions.ts, zato ova datoteka nema sopstveni vitest test (vidi izveštaj).
+// Ruta je namerno TANKA (sva logika je u izvoz-prihoda*.ts, koji se testiraju vitest-om) - isti razlog kao
+// actions.ts, zato ova datoteka nema sopstveni vitest test (vidi izveštaj).
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { napraviIzvozExcel } from "@/lib/izvoz-prihoda-xlsx";
+import { napraviIzvozHtml } from "@/lib/izvoz-prihoda-pdf";
 import {
   imeFajlaIzvoza,
   jePrazanIzvoz,
@@ -16,6 +17,7 @@ import {
   parsirajPeriod,
 } from "@/lib/izvoz-prihoda";
 import { pripremiIzvoz } from "@/lib/izvoz-prihoda-db";
+import { renderujIzvozUPdf } from "@/lib/pdf";
 import { godinePrihoda } from "@/lib/prihodi";
 
 export async function GET(request: Request) {
@@ -38,15 +40,6 @@ export async function GET(request: Request) {
   if (godina == null || period == null || format == null) {
     return NextResponse.json({ greska: "Nevažeći parametri." }, { status: 400 });
   }
-  // PDF (Korak 9g-2) - dijalog ovu granu ne zove (poruku "PDF izvoz stiže uskoro." prikazuje sam, bez
-  // poziva rute, vidi IzveziDialog.tsx), ali ruta ipak ne sme tiho da "uspe" za format koji ne ume da
-  // napravi ako je neko pozove direktno.
-  if (format === "pdf") {
-    return NextResponse.json(
-      { greska: "PDF izvoz stiže uskoro." },
-      { status: 400 },
-    );
-  }
 
   const podaci = await pripremiIzvoz(
     session.user.id,
@@ -62,6 +55,29 @@ export async function GET(request: Request) {
 
   if (jePrazanIzvoz(podaci.tabele)) {
     return NextResponse.json({ prazno: true });
+  }
+
+  if (format === "pdf") {
+    let bafer: Buffer;
+    try {
+      const html = napraviIzvozHtml(podaci.tabele, podaci.firma, godina, period, danas);
+      bafer = await renderujIzvozUPdf(html);
+    } catch {
+      // Chrome nije dostupan ili render nije uspeo (zadatak) - jedina dodata poruka, dijalog je prikazuje
+      // direktno (IzveziDialog.tsx čita "greska" iz JSON odgovora).
+      return NextResponse.json(
+        { greska: "Izvoz nije uspeo. Pokušaj ponovo." },
+        { status: 500 },
+      );
+    }
+    const imeFajla = imeFajlaIzvoza(godina, period, "pdf");
+    return new NextResponse(new Uint8Array(bafer), {
+      status: 200,
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename="${imeFajla}"`,
+      },
+    });
   }
 
   const bafer = napraviIzvozExcel(

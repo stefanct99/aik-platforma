@@ -48,18 +48,22 @@
    svetla tema koristi isti zeleni akcenat kao primarna dugmad (--color-mark-bg, tačan heks #0F2A22 =
    frejm), tamna tema običnu tekst boju (--color-text, tačan heks #F1F3EF = frejm) - nema JEDNOG
    zajedničkog tokena koji pokriva oba, zato eksplicitna ispravka po temi kao i drugde u ovom tabu
-   (KnjigaPrihodaTab.module.css .traka/.podtab). */
+   (KnjigaPrihodaTab.module.css .traka/.podtab).
+   Popravka (nađeno u Koraku 9f/9g): ":global(...)" je OBAVEZAN oko ".appShell[data-theme=...]" - bez
+   njega CSS moduli skaliraju i "appShell" u lokalno ime, pa selektor nikad ne pogodi pravu, globalnu
+   klasu, i tamna boja ispod tiho nikad nije važila. */
 .otvoriLink {
   font-size: 0.875rem;
   color: var(--color-mark-bg);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-.appShell[data-theme="tamni"] .otvoriLink {
+:global(.appShell[data-theme="tamni"]) .otvoriLink {
   color: var(--color-text);
 }
 @media (prefers-color-scheme: dark) {
-  .appShell:not([data-theme="svetli"]):not([data-theme="tamni"]) .otvoriLink {
+  :global(.appShell:not([data-theme="svetli"]):not([data-theme="tamni"]))
+    .otvoriLink {
     color: var(--color-text);
   }
 }

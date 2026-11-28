@@ -77,18 +77,22 @@
 }
 
 /* Traka i boja "blizu limita" (#D98E04) nisu iz tokena teme - frejm (Kp1/Kp7) pokazuje ISTE heks
-   vrednosti u obe teme (nema tamne varijante), zato su ovde doslovne, ne var(--color-*). */
+   vrednosti u obe teme (nema tamne varijante), zato su ovde doslovne, ne var(--color-*).
+   Popravka (nađeno u Koraku 9f/9g): ".appShell[data-theme=...]" BEZ :global() ne radi - CSS moduli
+   skaliraju i samu "appShell" klasu u lokalno ime ovog fajla, pa se nikad ne poklopi sa pravom,
+   globalnom "appShell" klasom iz AppShell komponente - tamna boja ispod tiho nikad nije važila. */
 .traka {
   height: 8px;
   border-radius: var(--radius-full);
   background: #edeae6;
   overflow: hidden;
 }
-.appShell[data-theme="tamni"] .traka {
+:global(.appShell[data-theme="tamni"]) .traka {
   background: #262c28;
 }
 @media (prefers-color-scheme: dark) {
-  .appShell:not([data-theme="svetli"]):not([data-theme="tamni"]) .traka {
+  :global(.appShell:not([data-theme="svetli"]):not([data-theme="tamni"]))
+    .traka {
     background: #262c28;
   }
 }

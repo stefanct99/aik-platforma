@@ -8,6 +8,13 @@ import { izracunajIznosRsd, type PrihodRed } from "./prihodi";
 // Devizni: Income.amountRsd/rate su null dok kurs nije upisan (ručno, Korak 9b - nema još NBS
 // integracije, videti schema.prisma). Dinarski NEMA kurs - RSD protivvrednost je trivijalno jednaka
 // iznosu, zato se ovde IZVODI, ne čita se iz baze.
+//
+// Klijent (Korak 9d-1): kad postoji faktura, klijent se čita preko nje (invoice.client) - isto kao do
+// sada. Ručni prihod BEZ fakture ("Dodaj prihod") nema fakturu da bi klijenta izvukao preko nje, zato
+// čita direktno Income.clientId/client. Kad nema NI jedno (klijent nepoznat/obrisan), klijentIme je
+// tekst "Nije poznat" (zadatak, ne prazno/"–" kao što UI inače prikazuje za null - namerno drugačije:
+// ovo NIJE "podatak koji nedostaje" kao kod drugih null polja, nego stvarna, imenovana vrednost iz
+// prototipa/okvira AddIncomeModal-a, "Nije poznat" je prva stavka padajućeg menija Klijent).
 function uPrihodRed(red: {
   id: string;
   date: Date;
@@ -24,6 +31,8 @@ function uPrihodRed(red: {
     clientId: string;
     client: { name: string };
   } | null;
+  clientId: string | null;
+  client: { name: string } | null;
 }): PrihodRed {
   const vrsta = red.kind === "dinarski" ? "dinarski" : "devizni";
   return {
@@ -37,8 +46,8 @@ function uPrihodRed(red: {
     izvor: red.source === "mejl_banke" ? "mejl_banke" : "rucno",
     fakturaId: red.invoiceId,
     brojFakture: red.invoice?.number ?? null,
-    klijentId: red.invoice?.clientId ?? null,
-    klijentIme: red.invoice?.client.name ?? null,
+    klijentId: red.invoice?.clientId ?? red.clientId ?? null,
+    klijentIme: red.invoice?.client.name ?? red.client?.name ?? "Nije poznat",
     opis: red.description,
   };
 }
@@ -58,6 +67,7 @@ export async function getPrihodiZaKorisnika(
           client: { select: { name: true } },
         },
       },
+      client: { select: { name: true } },
     },
     orderBy: { date: "desc" },
   });
@@ -100,6 +110,89 @@ export async function ispraviPrihod(
     await prisma.income.update({
       where: { id: red.id },
       data: { description: podaci.opis },
+    });
+  }
+  return { ok: true };
+}
+
+// Isti spisak kao AccountPanel.tsx VALUTE (devizni računi) - prototip (js/knjiga.js AddIncomeModal) nudi
+// iste četiri valute za devizni ručni prihod.
+const DOZVOLJENE_VALUTE = ["EUR", "USD", "GBP", "CHF"];
+
+export type DodajPrihodPodaci = {
+  vrsta: "dinarski" | "devizni";
+  datum: Date;
+  clientId: string | null;
+  valuta: string; // ignoriše se za dinarski (uvek RSD)
+  iznos: number; // VEĆ u najmanjoj jedinici valute (para/cent) - konverzija je na akciji (actions.ts)
+  kurs: number | null; // samo za devizni
+  opis: string | null;
+};
+
+export type DodajPrihodRezultat = { ok: true } | { ok: false; razlog: string };
+
+// "Dodaj prihod" (Korak 9d-1, frejm Kp5): ručni prihod BEZ fakture - invoiceId uvek null, izvor uvek
+// "rucno", businessId UVEK iz sesije (nikad iz ulaza). Ulazi normalno u zbir i limit (odluka zadatka) -
+// nema posebnog tretmana kao "uplata bez fakture preko mejla banke" (ta siva/neuračunata logika je za
+// NEPOVEZANE mejl-banke uplate, vidi izveštaj Koraka 9d - potpuno druga stvar).
+export async function dodajPrihod(
+  userId: string,
+  podaci: DodajPrihodPodaci,
+): Promise<DodajPrihodRezultat> {
+  const biznis = await getBusinessForUser(userId);
+  if (!biznis) return { ok: false, razlog: "Firma ne postoji." };
+
+  if (!podaci.datum || Number.isNaN(podaci.datum.getTime())) {
+    return { ok: false, razlog: "Unesi ispravan datum uplate." };
+  }
+  if (!Number.isFinite(podaci.iznos) || podaci.iznos <= 0) {
+    return { ok: false, razlog: "Iznos mora biti broj veći od 0." };
+  }
+  if (podaci.clientId) {
+    const klijent = await prisma.client.findFirst({
+      where: { id: podaci.clientId, businessId: biznis.id },
+    });
+    if (!klijent) return { ok: false, razlog: "Klijent ne postoji." };
+  }
+
+  if (podaci.vrsta === "devizni") {
+    if (!DOZVOLJENE_VALUTE.includes(podaci.valuta)) {
+      return { ok: false, razlog: "Izaberi valutu." };
+    }
+    let amountRsd: number;
+    try {
+      amountRsd = izracunajIznosRsd(podaci.iznos, podaci.kurs as number);
+    } catch {
+      return { ok: false, razlog: "Kurs mora biti broj veći od 0." };
+    }
+    await prisma.income.create({
+      data: {
+        businessId: biznis.id,
+        clientId: podaci.clientId,
+        date: podaci.datum,
+        currency: podaci.valuta,
+        amount: podaci.iznos,
+        rate: podaci.kurs,
+        amountRsd,
+        source: "rucno",
+        kind: "devizni",
+        description: podaci.opis,
+      },
+    });
+  } else {
+    await prisma.income.create({
+      data: {
+        businessId: biznis.id,
+        clientId: podaci.clientId,
+        date: podaci.datum,
+        currency: "RSD",
+        amount: podaci.iznos,
+        rate: null,
+        amountRsd: podaci.iznos,
+        source: "rucno",
+        kind: "dinarski",
+        description: podaci.opis,
+      },
     });
   }
   return { ok: true };

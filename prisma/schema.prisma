@@ -249,6 +249,7 @@ model Client {
 
   invoices          Invoice[]
   recurringInvoices RecurringInvoice[]
+  incomes           Income[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -429,9 +430,10 @@ model InvoiceEvent {
   @@map("invoice_event")
 }
 
-// Uplata/Prihod (Korak 8a, spec 3.6) - OGRANIČENO na ono što "Označi kao plaćenu" pravi: izvor uvek
-// "rucno". Kurs i iznos u dinarima za devizne uplate OSTAJU prazni (ne izmišljaj kurs) - popunjava ih
-// budući korak Knjiga prihoda.
+// Uplata/Prihod (Korak 8a, spec 3.6) - nastaje ili preko "Označi kao plaćenu" (uvek sa invoiceId, izvor
+// "rucno"), ili ručno preko "Dodaj prihod" (Korak 9d-1, invoiceId null, source "rucno", opciono
+// clientId). Kurs i iznos u dinarima za devizne uplate ostaju prazni dok korisnik ne upiše kurs (Korak
+// 9b/9c) - ne izmišlja se.
 model Income {
   id         String   @id @default(cuid())
   businessId String
@@ -439,6 +441,13 @@ model Income {
 
   invoiceId String?
   invoice   Invoice? @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+
+  // Samo za ručne prihode BEZ fakture (Korak 9d-1, "Dodaj prihod") - kad invoiceId postoji, klijent se i
+  // dalje čita preko fakture (invoice.client), ovo polje ostaje null (videti prihodi-db.ts). SetNull (ne
+  // Restrict kao Invoice.client) - isti obrazac kao Client.defaultAccountId: klijent SME da se obriše dok
+  // ovakav prihod ostaje u knjizi (samo mu "Klijent" postaje "Nije poznat", ne briše se prihod).
+  clientId String?
+  client   Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)
 
   date     DateTime
   currency String
@@ -459,5 +468,6 @@ model Income {
 
   @@index([businessId])
   @@index([invoiceId])
+  @@index([clientId])
   @@map("income")
 }

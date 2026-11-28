@@ -147,6 +147,8 @@ model Business {
   incomes           Income[]
   recurringInvoices RecurringInvoice[]
   invoiceTemplates  InvoiceTemplate[]
+  taxDecisions      TaxDecision[]
+  taxPayments       TaxPayment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -278,7 +280,7 @@ model RecurringInvoice {
   desc   String?
   amount Int? // null = "Iznos se upisuje pri slanju" (spec 3.5, zadatak tačka 3: tad mode mora biti "ask")
 
-  frequency  String   @default("mesecno") // samo "mesecno" postoji u ovoj verziji (spec 3.5)
+  frequency  String    @default("mesecno") // samo "mesecno" postoji u ovoj verziji (spec 3.5)
   dayOfMonth Int // 1-31; ako mesec ima manje dana, koristi se poslednji dan tog meseca
   startDate  DateTime
   endDate    DateTime? // null = "Nikad"
@@ -470,4 +472,85 @@ model Income {
   @@index([invoiceId])
   @@index([clientId])
   @@map("income")
+}
+
+// Rešenje Poreske uprave (Korak 10a, spec 3.9/6.2/8.7) - JEDNO po firmi i godinu (@@unique ispod), ne
+// istorija verzija unutar iste godine: kad stigne novo rešenje za VEĆ postojeću godinu (retko - rešenja
+// idu godišnje), aplikacija bi ga morala MENJATI (update), ne dodavati novi red (isto ponašanje kao
+// prototip applyNewResenje, koji prepisuje postojeći taxDecision). Ručni unos (Korak 10b) i buduće
+// čitanje fajla (Korak 10e) dele isti red - "source" razlikuje kako je nastao, isto polje/vrednosti kao
+// Income.source ("rucno" | kasnije "procitano").
+model TaxDecision {
+  id         String   @id @default(cuid())
+  businessId String
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  year Int
+
+  // PIB PROČITAN SA REŠENJA (ne Business.pib) - upoređuje se sa Business.pib da bi se otkrila greška
+  // "ovo rešenje nije za tvoju firmu" (frejm Rez5); null dok se ne upiše/pročita.
+  pib String?
+
+  // Null za ručni unos (Korak 10b, Rez6b nema fajl) - popunjava se tek kad postoji stvarno učitavanje
+  // fajla (Korak 10e).
+  fileName String?
+
+  source String @default("rucno") // "rucno" (jedino danas) | kasnije "procitano"
+
+  createdAt DateTime @default(now())
+
+  obligations TaxObligation[]
+
+  @@unique([businessId, year])
+  @@index([businessId])
+  @@map("tax_decision")
+}
+
+// Stavka rešenja (Korak 10a) - tačno četiri po rešenju u praksi (porez/pio/zdravstveno/nezaposlenost,
+// spec 3.9), ali šema ne nameće broj četiri - to je pravilo APLIKACIJE (isti princip kao "jedan
+// podrazumevani račun po valuti" na BankAccount, ne šema). racunPrimaoca/pozivNaBroj (racunPrimaoca =
+// recipientAccount, pozivNaBroj = referenceNumber) su TEKSTUALNA polja koja korisnik prepisuje sa
+// rešenja - ne računaju se (zadatak, spec 8.7 [PROVERITI] tačna šema).
+model TaxObligation {
+  id         String      @id @default(cuid())
+  decisionId String
+  decision   TaxDecision @relation(fields: [decisionId], references: [id], onDelete: Cascade)
+
+  kind String // "porez" | "pio" | "zdravstveno" | "nezaposlenost"
+
+  monthlyAmount Int // najmanja jedinica (para), isto kao Income.amount
+
+  recipientAccount String?
+  referenceNumber  String?
+
+  payments TaxPayment[]
+
+  @@unique([decisionId, kind])
+  @@index([decisionId])
+  @@map("tax_obligation")
+}
+
+// Uplata za jednu stavku, za jedan mesec USLUGE (Korak 10a, spec 3.9/6.3/8.7) - "mesec usluge" je mesec
+// ZA KOJI se akontacija plaća (npr. akontacija za oktobar dospeva 15. novembra), ne mesec/datum same
+// uplate (taj je u paidDate). businessId je namerno OVDE TAKOĐE (ne samo kroz obligation->decision->
+// business) - direktan upit "sve uplate firme za mesec X" bez dva spoja, isti razlog kao Income.
+// businessId pored invoiceId.
+model TaxPayment {
+  id           String        @id @default(cuid())
+  businessId   String
+  business     Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  obligationId String
+  obligation   TaxObligation @relation(fields: [obligationId], references: [id], onDelete: Cascade)
+
+  year  Int
+  month Int // 1-12
+
+  status   String    @default("neplaceno") // "neplaceno" | "placeno"
+  paidDate DateTime?
+  method   String? // "qr" | "trajni_nalog" | "rucno"
+
+  @@unique([obligationId, year, month])
+  @@index([businessId, year, month])
+  @@index([obligationId])
+  @@map("tax_payment")
 }

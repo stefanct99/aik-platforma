@@ -41,25 +41,55 @@ export function PrihodPanel({
 }) {
   const router = useRouter();
   const [izmena, setIzmena] = useState(false);
+  const [kursUnos, setKursUnos] = useState("");
+  const [opisUnos, setOpisUnos] = useState("");
+  const [kursGreska, setKursGreska] = useState<string | null>(null);
+  const [brojUspesnih, setBrojUspesnih] = useState(0);
   const action = ispraviPrihodAction.bind(null, red.id);
   const [stanje, formAction, uToku] = useActionState(action, POCETNO_STANJE);
   const jeDevizni = red.vrsta === "devizni";
 
-  // Vraća panel iz režima izmene u pregled ODMAH po uspešnom čuvanju - namerno TOKOM renderovanja
-  // ("Adjusting state when a prop changes" iz React dokumentacije), ne u useEffect-u, da bi se izbeglo
-  // react-hooks/set-state-in-effect (sinhrono pozivanje setState unutar efekta).
-  const [poslednjeSacuvano, setPoslednjeSacuvano] = useState(stanje.sacuvano);
-  if (stanje.sacuvano !== poslednjeSacuvano) {
-    setPoslednjeSacuvano(stanje.sacuvano);
-    if (stanje.sacuvano) setIzmena(false);
+  // Ispravka: "stanje.sacuvano" ostaje true posle PRVOG uspešnog čuvanja (useActionState ga ne vraća na
+  // false), pa poređenje sa njegovom prethodnom vrednošću (kao ranije) ne primeti DRUGO/TREĆE uspešno
+  // čuvanje u istom otvorenom panelu - zato se prati prelazak "uToku" (menja se pri SVAKOM pokušaju: true
+  // dok se čuva, false kad se završi), ne "sacuvano". I dalje TOKOM renderovanja ("Adjusting state when a
+  // prop changes"), ne u efektu (react-hooks/set-state-in-effect).
+  const [bioUToku, setBioUToku] = useState(uToku);
+  if (uToku !== bioUToku) {
+    setBioUToku(uToku);
+    if (!uToku) {
+      if (stanje.sacuvano) {
+        setIzmena(false);
+        setKursGreska(null);
+        setBrojUspesnih((n) => n + 1);
+      } else if (stanje.greska) {
+        // Greška se prikazuje tek SAD (kraj pokušaja), ne postavlja se dok korisnik kuca - vidi onChange
+        // ispod koji je odmah čisti pri sledećem unosu.
+        setKursGreska(stanje.greska);
+      }
+    }
   }
 
   useEffect(() => {
     // router.refresh() nije React setState - ovde je u redu (sinhronizacija sa spoljnim sistemom,
-    // ponovno učitavanje server podataka posle uspešnog čuvanja).
-    if (stanje.sacuvano) router.refresh();
+    // ponovno učitavanje server podataka posle uspešnog čuvanja). brojUspesnih (ne stanje.sacuvano) jer
+    // raste pri SVAKOM uspešnom čuvanju, ne samo prvom.
+    if (brojUspesnih > 0) router.refresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stanje.sacuvano]);
+  }, [brojUspesnih]);
+
+  function otvoriIspravi() {
+    // Sveže vrednosti iz SAČUVANOG reda (ne ono što je prethodno otkucano i odbačeno preko "Odustani").
+    setKursUnos(red.kurs != null ? String(red.kurs) : "");
+    setOpisUnos(red.opis ?? "");
+    setKursGreska(null);
+    setIzmena(true);
+  }
+
+  function odustani() {
+    setIzmena(false);
+    setKursGreska(null);
+  }
 
   const obrisiDugme = (
     <button type="button" className={styles.obrisiLink}>
@@ -81,7 +111,7 @@ export function PrihodPanel({
                   type="button"
                   varijanta="sekundarno"
                   disabled={uToku}
-                  onClick={() => setIzmena(false)}
+                  onClick={odustani}
                 >
                   Odustani
                 </Button>
@@ -106,15 +136,20 @@ export function PrihodPanel({
               name="kurs"
               type="number"
               step="0.01"
-              defaultValue={red.kurs ?? ""}
-              error={stanje.greska ?? undefined}
+              value={kursUnos}
+              onChange={(e) => {
+                setKursUnos(e.target.value);
+                setKursGreska(null);
+              }}
+              error={kursGreska ?? undefined}
               disabled={uToku}
             />
           )}
           <Polje
             label="Opis"
             name="opis"
-            defaultValue={red.opis ?? ""}
+            value={opisUnos}
+            onChange={(e) => setOpisUnos(e.target.value)}
             placeholder="Nije obavezno"
             disabled={uToku}
           />
@@ -134,11 +169,7 @@ export function PrihodPanel({
             <Button type="button" varijanta="sekundarno" onClick={onClose}>
               Zatvori
             </Button>
-            <Button
-              type="button"
-              varijanta="primarno"
-              onClick={() => setIzmena(true)}
-            >
+            <Button type="button" varijanta="primarno" onClick={otvoriIspravi}>
               Ispravi
             </Button>
           </div>

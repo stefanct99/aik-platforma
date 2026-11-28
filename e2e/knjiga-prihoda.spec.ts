@@ -28,6 +28,12 @@ let fakturaDugaDinarska: { id: string; broj: string };
 // jedna BEZ kursa (proverava da u istoj godini i dalje ostaje "–" i isključena iz zbira, uz onu sa kursom).
 let fakturaSaKursom: { id: string; broj: string };
 let fakturaBezKursa9b: { id: string; broj: string };
+// Regresija (panel "Ispravi" se ne vraća u prikaz posle DRUGOG uspešnog čuvanja u istom otvorenom
+// panelu) - godina 2025 (ista kao fakturaDugaDevizna/-Dinarska iznad), bira se po klijentu, pa ne menja
+// nijednu proveru zbira/broja uplata koje ostali testovi rade za 2025 (tamo se proverava samo
+// dužina/skraćivanje broja fakture, ne zbirovi).
+let fakturaDvaCuvanja: { id: string; broj: string };
+let fakturaGreskaOdustani: { id: string; broj: string };
 
 test.beforeAll(() => {
   fakturaDevizna = e2eDb("create-paid-invoice", {
@@ -68,6 +74,19 @@ test.beforeAll(() => {
     valuta: "EUR",
     iznos: 50000,
     datum: "2027-04-05",
+  });
+  fakturaDvaCuvanja = e2eDb("create-paid-invoice", {
+    klijent: "Acme",
+    valuta: "EUR",
+    iznos: 30000,
+    datum: "2025-07-01",
+  });
+  fakturaGreskaOdustani = e2eDb("create-paid-invoice", {
+    klijent: "Dinarska",
+    valuta: "EUR",
+    iznos: 40000,
+    datum: "2025-08-01",
+    kurs: 100,
   });
 });
 
@@ -152,7 +171,9 @@ test("panel: zatvara se dugmetom 'Zatvori' i klikom van panela, sadržaj devizno
   await expect(page.getByText("Datum uplate")).toBeVisible();
   await expect(panel.getByText("Ručno", { exact: true })).toBeVisible();
   await expect(panel.getByText("117,20", { exact: true })).toBeVisible();
-  await expect(panel.getByText("117.200,00 din", { exact: true })).toBeVisible(); // 1.000,00 € * 117,20
+  await expect(
+    panel.getByText("117.200,00 din", { exact: true }),
+  ).toBeVisible(); // 1.000,00 € * 117,20
   await expect(
     page.getByText(
       "Kurs je onaj po kom je banka preračunala priliv. Ako se razlikuje od onoga što vidiš u banci, ispravi ga ovde.",
@@ -163,7 +184,10 @@ test("panel: zatvara se dugmetom 'Zatvori' i klikom van panela, sadržaj devizno
   ).toBeVisible();
 
   // Dugme "Zatvori".
-  await page.getByRole("button", { name: "Zatvori", exact: true }).last().click();
+  await page
+    .getByRole("button", { name: "Zatvori", exact: true })
+    .last()
+    .click();
   await expect(panel).not.toBeVisible();
 
   // Klik van panela (senka/overlay, van 560px panela desno).
@@ -224,6 +248,74 @@ test("panel 'Ispravi' (dinarski): samo polje Opis, nema polje za kurs", async ({
 
   await expect(page.getByText("Opis", { exact: true })).toBeVisible();
   await expect(page.getByText("Gotovinska uplata")).toBeVisible();
+});
+
+test("panel 'Ispravi': DRUGO uzastopno čuvanje u istom panelu takođe vraća u prikaz (regresija)", async ({
+  page,
+}) => {
+  await page.getByRole("combobox").first().selectOption("2025");
+  await expect(
+    page.getByRole("button", { name: /^Devizni prihodi/ }),
+  ).toBeVisible();
+  const red = page.locator("tbody tr", { hasText: fakturaDvaCuvanja.broj });
+  await red.click();
+
+  const panel = page.locator('[class*="panel"]');
+  const dugmeIspravi = page.getByRole("button", { name: "Ispravi" });
+  const kursPolje = page.getByLabel("Kurs", { exact: true });
+
+  // Prvo čuvanje (prvi upis kursa) - ovo je radilo i pre popravke.
+  await dugmeIspravi.click();
+  await kursPolje.fill("100");
+  await page.getByRole("button", { name: "Sačuvaj" }).click();
+  await expect(dugmeIspravi).toBeVisible(); // nazad u pregled (dugme "Ispravi" postoji samo tamo)
+  await expect(panel.getByText("100,00", { exact: true })).toBeVisible();
+  await expect(panel.getByText("30.000,00 din", { exact: true })).toBeVisible(); // 300,00 € * 100
+
+  // DRUGO čuvanje, U ISTOM OTVORENOM PANELU - pre popravke je ovo ostajalo zaglavljeno u režimu izmene.
+  await dugmeIspravi.click();
+  await expect(kursPolje).toHaveValue("100"); // polje pokazuje UPRAVO sačuvanu vrednost
+  await kursPolje.fill("150");
+  await page.getByRole("button", { name: "Sačuvaj" }).click();
+  await expect(dugmeIspravi).toBeVisible();
+  await expect(panel.getByText("150,00", { exact: true })).toBeVisible();
+  await expect(panel.getByText("45.000,00 din", { exact: true })).toBeVisible(); // 300,00 € * 150
+});
+
+test("panel 'Ispravi': greška nestaje čim se vrednost promeni, 'Odustani' odbacuje izmenu", async ({
+  page,
+}) => {
+  await page.getByRole("combobox").first().selectOption("2025");
+  await expect(
+    page.getByRole("button", { name: /^Devizni prihodi/ }),
+  ).toBeVisible();
+  const red = page.locator("tbody tr", { hasText: fakturaGreskaOdustani.broj });
+  await red.click();
+
+  const panel = page.locator('[class*="panel"]');
+  await expect(panel.getByText("100,00", { exact: true })).toBeVisible(); // sačuvani kurs (fixture)
+
+  await page.getByRole("button", { name: "Ispravi" }).click();
+  const kursPolje = page.getByLabel("Kurs", { exact: true });
+  await expect(kursPolje).toHaveValue("100");
+
+  await kursPolje.fill("0");
+  await page.getByRole("button", { name: "Sačuvaj" }).click();
+  const greska = page.getByText("Kurs mora biti broj veći od 0.");
+  await expect(greska).toBeVisible();
+
+  // Greška nestaje ČIM korisnik promeni vrednost - PRE čuvanja, bez novog klika na "Sačuvaj".
+  await kursPolje.fill("50");
+  await expect(greska).not.toBeVisible();
+
+  // "Odustani" bez čuvanja - izmenjena vrednost (50) i greška se odbacuju.
+  await page.getByRole("button", { name: "Odustani" }).click();
+  await expect(panel.getByText("100,00", { exact: true })).toBeVisible(); // ostaje sačuvani kurs (100)
+  await expect(greska).not.toBeVisible();
+
+  // Sledeći "Ispravi" pokazuje SAČUVANI kurs (100), ne odbačenih 50.
+  await page.getByRole("button", { name: "Ispravi" }).click();
+  await expect(kursPolje).toHaveValue("100");
 });
 
 test("podtab dinarski, filter Mesec i Klijent, 'Očisti filtere'", async ({
@@ -398,7 +490,10 @@ test("panel 'Ispravi': prvi upis kursa - panel, tabela, kartica i limit se osve�
   await expect(page.getByText("55.000,00 din")).toBeVisible();
 
   // Zatvori panel, proveri tabelu/karticu/limit (router.refresh posle čuvanja).
-  await page.getByRole("button", { name: "Zatvori", exact: true }).last().click();
+  await page
+    .getByRole("button", { name: "Zatvori", exact: true })
+    .last()
+    .click();
   await expect(panel).not.toBeVisible();
   await expect(red.locator("td").nth(4)).toHaveText("110,00");
   await expect(red.locator("td").nth(5)).toHaveText("55.000,00");

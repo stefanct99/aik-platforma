@@ -1,9 +1,11 @@
 // Knjiga prihoda (Korak 9a, frejmovi Kp1/Kp2/Kp3/Kp9) - lista (desktop): kartice zbira, podtabovi
 // Devizni/Dinarski, filteri Godina/Mesec/Klijent, tabele, prazno stanje. Detalj uplate (bočni panel,
 // "Ispravi") je Korak 9c (PrihodPanel.tsx) - klik na red OTVARA PANEL, ne fakturu (fakturi se prilazi
-// preko linka "Otvori" u panelu). NAMERNO ne grade se (sledeći koraci, zadatak): upozorenje o limitu
-// (baner), baner "uplata bez fakture", dodavanje, brisanje (dugme "Obriši prihod" u panelu je inertno -
-// Korak 9e), izvoz, telefon - dugmad "Izvezi"/"Dodaj prihod" su zato bez onClick (još ne rade ništa).
+// preko linka "Otvori" u panelu). "Dodaj prihod" (bočni panel, Korak 9d-2, DodajPrihodPanel.tsx) - SAMO
+// dugme U ZAGLAVLJU otvara panel (zadatak); dugme u praznom stanju namerno ostaje inertno (zadatak ga ne
+// pominje, videti izveštaj). NAMERNO ne grade se (sledeći koraci, zadatak): upozorenje o limitu (baner),
+// baner "uplata bez fakture", brisanje (dugme "Obriši prihod" u panelu je inertno - Korak 9e), izvoz,
+// telefon - dugme "Izvezi" je zato i dalje bez onClick.
 "use client";
 
 import { useMemo, useState } from "react";
@@ -25,6 +27,7 @@ import {
   uplataRec,
   type PrihodRed,
 } from "@/lib/prihodi";
+import { DodajPrihodPanel } from "./DodajPrihodPanel";
 import { PrihodPanel } from "./PrihodPanel";
 import styles from "./KnjigaPrihodaTab.module.css";
 
@@ -74,6 +77,7 @@ export function KnjigaPrihodaTab({
   const [klijentId, setKlijentId] = useState<string | null>(null);
   const [klijentOtvoren, setKlijentOtvoren] = useState(false);
   const [detaljId, setDetaljId] = useState<string | null>(null);
+  const [dodajOtvoren, setDodajOtvoren] = useState(false);
 
   const { devizni, dinarski } = useMemo(
     () => grupisiPoGodini(redovi, godina),
@@ -137,7 +141,11 @@ export function KnjigaPrihodaTab({
             <Button type="button" varijanta="sekundarno">
               Izvezi
             </Button>
-            <Button type="button" varijanta="primarno">
+            <Button
+              type="button"
+              varijanta="primarno"
+              onClick={() => setDodajOtvoren(true)}
+            >
               <IkonaPlus size={18} /> Dodaj prihod
             </Button>
           </div>
@@ -561,6 +569,13 @@ export function KnjigaPrihodaTab({
       </div>
       {detaljRed && (
         <PrihodPanel red={detaljRed} onClose={() => setDetaljId(null)} />
+      )}
+      {dodajOtvoren && (
+        <DodajPrihodPanel
+          klijenti={klijenti}
+          danasIso={danasIso}
+          onClose={() => setDodajOtvoren(false)}
+        />
       )}
     </>
   );

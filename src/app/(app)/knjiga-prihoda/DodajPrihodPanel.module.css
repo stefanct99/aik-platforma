@@ -1,0 +1,79 @@
+/* Isti obrazac kao src/components/ui/Polje.module.css (dizajn sistem) za polja koja ovde NISU <Polje>
+   (Vrsta prihoda, Klijent, Valuta - select/segment, ne tekst/broj unos) - ponovljeno ovde namerno (isti
+   razlog kao PrihodPanel.module.css: svaki panel ima sopstveni, mali CSS modul, ne deljen fajl). */
+.polje {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+/* Frejm Kp5: labela NIJE podebljana (font-weight normalan), za razliku od <Polje> (dizajn sistem) čiji
+   label ima font-weight:600 - sitna razlika, zadržana ovde da se poklopi sa frejmom piksel po piksel za
+   OVA polja (Vrsta prihoda/Klijent/Valuta), dok <Polje> (Datum uplate/Iznos/Kurs/Opis) ostaje nepromenjen
+   (ponovo iskorišćena postojeća komponenta, zadatak - ne izmišljaj novu "Polje" varijantu zbog ovoga). */
+.labela {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.select {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-input);
+  background: var(--color-surface);
+  color: var(--color-text);
+  appearance: none;
+  cursor: pointer;
+}
+.select:disabled {
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  cursor: default;
+}
+
+.pomocniTekst {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+.greska .select {
+  border-color: var(--color-danger);
+}
+.greska .pomocniTekst {
+  color: var(--color-danger);
+}
+
+/* Vrsta prihoda (Kp5): dve pilule, aktivna ISTIM tokenima kao primarno dugme (--btn-primary-bg/-text) -
+   potvrđeno frejmom (svetla i tamna tema: heks aktivne pilule se tačno poklapa sa primarnim dugmetom). */
+.segment {
+  display: flex;
+  gap: 8px;
+}
+.segmentDugme,
+.segmentAktivan {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: var(--font-body);
+  cursor: pointer;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border-input);
+}
+.segmentAktivan {
+  border: 0;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+}
+
+.napomena {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}

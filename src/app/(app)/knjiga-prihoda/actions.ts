@@ -39,7 +39,32 @@ export async function ispraviPrihodAction(
   return { greska: null, sacuvano: true };
 }
 
-export type DodajPrihodStanje = { greska: string | null; sacuvano: boolean };
+// "polje" (Korak 9d-2): koje polje je greška - panel prikazuje poruku ISPOD odgovarajućeg polja, ne kao
+// jedinstvenu poruku na dnu forme (zadatak). dodajPrihod (prihodi-db.ts, Korak 9d-1) ostaje nepromenjen -
+// mapiranje teksta poruke na polje je ovde, u akciji, koja jedina zna redosled/značenje polja forme.
+export type DodajPrihodStanje = {
+  greska: string | null;
+  polje: "datum" | "iznos" | "valuta" | "kurs" | "klijent" | null;
+  sacuvano: boolean;
+};
+
+function poljeZaGresku(razlog: string): DodajPrihodStanje["polje"] {
+  switch (razlog) {
+    case "Unesi ispravan datum u formatu dd.mm.gggg.":
+    case "Unesi ispravan datum uplate.":
+      return "datum";
+    case "Iznos mora biti broj veći od 0.":
+      return "iznos";
+    case "Izaberi valutu.":
+      return "valuta";
+    case "Kurs mora biti broj veći od 0.":
+      return "kurs";
+    case "Klijent ne postoji.":
+      return "klijent";
+    default:
+      return null;
+  }
+}
 
 // Korak 9d-1 (podloga, dugme "Dodaj prihod" je i dalje inertno - povezuje ga tek 9d-2): "datumUplate" u
 // istom dd.mm.gggg. formatu kao "Ispravi"/OznaciPlacenomDialog (parseDatumSrpski), "iznos" kao obično
@@ -53,11 +78,13 @@ export async function dodajPrihodAction(
 
   const vrsta = formData.get("vrsta") === "devizni" ? "devizni" : "dinarski";
   const datum = parseDatumSrpski(String(formData.get("datumUplate") || ""));
-  if (!datum)
+  if (!datum) {
     return {
       greska: "Unesi ispravan datum u formatu dd.mm.gggg.",
+      polje: "datum",
       sacuvano: false,
     };
+  }
 
   const clientIdSirovo = String(formData.get("clientId") ?? "").trim();
   const clientId = clientIdSirovo || null;
@@ -85,8 +112,14 @@ export async function dodajPrihodAction(
     kurs,
     opis,
   });
-  if (!rezultat.ok) return { greska: rezultat.razlog, sacuvano: false };
+  if (!rezultat.ok) {
+    return {
+      greska: rezultat.razlog,
+      polje: poljeZaGresku(rezultat.razlog),
+      sacuvano: false,
+    };
+  }
 
   revalidatePath("/knjiga-prihoda");
-  return { greska: null, sacuvano: true };
+  return { greska: null, polje: null, sacuvano: true };
 }

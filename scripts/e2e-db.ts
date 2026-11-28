@@ -21,12 +21,16 @@ async function main() {
 
   switch (komanda) {
     case "invoice-by-number": {
-      const faktura = await prisma.invoice.findFirstOrThrow({ where: { number: argumenti.number } });
+      const faktura = await prisma.invoice.findFirstOrThrow({
+        where: { number: argumenti.number },
+      });
       console.log(JSON.stringify(faktura));
       break;
     }
     case "set-default-template-accent": {
-      const biznis = await prisma.business.findFirstOrThrow({ where: { name: "E2E Probna Firma" } });
+      const biznis = await prisma.business.findFirstOrThrow({
+        where: { name: "E2E Probna Firma" },
+      });
       await prisma.invoiceTemplate.updateMany({
         where: { businessId: biznis.id, isDefault: true },
         data: { accentColor: argumenti.accentColor },
@@ -35,7 +39,9 @@ async function main() {
       break;
     }
     case "create-draft-invoice": {
-      const biznis = await prisma.business.findFirstOrThrow({ where: { name: "E2E Probna Firma" } });
+      const biznis = await prisma.business.findFirstOrThrow({
+        where: { name: "E2E Probna Firma" },
+      });
       const klijent = await prisma.client.findFirstOrThrow({
         where: { businessId: biznis.id, name: { contains: "Acme" } },
       });
@@ -49,7 +55,9 @@ async function main() {
           issueDate: new Date(),
           dueDays: 7,
           status: "nacrt",
-          items: { create: [{ desc: "Vizuelna provera", qty: 1, price: 10000 }] },
+          items: {
+            create: [{ desc: "Vizuelna provera", qty: 1, price: 10000 }],
+          },
         },
       });
       console.log(JSON.stringify({ id: faktura.id }));
@@ -68,18 +76,30 @@ async function main() {
       // nikad - testu treba samo businessId/templateId, za pokušaj pristupa IZ sesije glavnog probnog naloga.
       const { randomBytes } = await import("node:crypto");
       const { auth } = await import("../src/lib/auth");
-      const { saveOnboardingStep1, saveOnboardingStep2, finishOnboarding, getBusinessForUser } = await import(
-        "../src/lib/business"
-      );
+      const {
+        saveOnboardingStep1,
+        saveOnboardingStep2,
+        finishOnboarding,
+        getBusinessForUser,
+      } = await import("../src/lib/business");
       const sufiks = randomBytes(6).toString("hex");
       const email = `e2e-druga-firma-${sufiks}@aik-test.local`;
       await auth.api.signUpEmail({
-        body: { name: "Druga Firma Vlasnik", email, password: `E2e-${randomBytes(9).toString("hex")}` },
+        body: {
+          name: "Druga Firma Vlasnik",
+          email,
+          password: `E2e-${randomBytes(9).toString("hex")}`,
+        },
         headers: new Headers(),
         asResponse: false,
       });
-      const korisnik = await prisma.user.findUniqueOrThrow({ where: { email } });
-      await prisma.user.update({ where: { id: korisnik.id }, data: { emailVerified: true } });
+      const korisnik = await prisma.user.findUniqueOrThrow({
+        where: { email },
+      });
+      await prisma.user.update({
+        where: { id: korisnik.id },
+        data: { emailVerified: true },
+      });
       await saveOnboardingStep1(korisnik.id, {
         ownerName: "Drugi Probni",
         name: "Druga Probna Firma (E2E)",
@@ -89,18 +109,30 @@ async function main() {
         delatnostName: "Računarsko programiranje",
         regDate: new Date("2024-01-01"),
       });
-      await saveOnboardingStep2(korisnik.id, { street: "Druga 2", city: "Novi Sad", zip: "21000" });
+      await saveOnboardingStep2(korisnik.id, {
+        street: "Druga 2",
+        city: "Novi Sad",
+        zip: "21000",
+      });
       await finishOnboarding(korisnik.id);
       const biznis = await getBusinessForUser(korisnik.id);
       if (!biznis) throw new Error("Druga probna firma nije napravljena.");
       // saveOnboardingStep1 već pravi podrazumevani šablon - samo ga preimenuj/oboji da bude
       // raspoznatljiv (ime/boja koji ne postoje ni u jednoj drugoj probnoj firmi).
-      const postojeciSablon = await prisma.invoiceTemplate.findFirstOrThrow({ where: { businessId: biznis.id } });
+      const postojeciSablon = await prisma.invoiceTemplate.findFirstOrThrow({
+        where: { businessId: biznis.id },
+      });
       const sablon = await prisma.invoiceTemplate.update({
         where: { id: postojeciSablon.id },
         data: { name: "Tuđi šablon (E2E izolacija)", accentColor: "#FF00FF" },
       });
-      console.log(JSON.stringify({ userId: korisnik.id, businessId: biznis.id, templateId: sablon.id }));
+      console.log(
+        JSON.stringify({
+          userId: korisnik.id,
+          businessId: biznis.id,
+          templateId: sablon.id,
+        }),
+      );
       break;
     }
     case "delete-other-business": {
@@ -115,9 +147,14 @@ async function main() {
       // Knjiga prihoda (Korak 9a) čita. Namerno BEZ rate/amountRsd (to je stvarno današnje stanje, Korak
       // 9b ih tek popunjava) - test:e2e za Knjigu prihoda ovo i proverava ("–" u koloni Kurs/U dinarima).
       const { createInvoiceWithHistory } = await import("../src/lib/invoices");
-      const biznis = await prisma.business.findFirstOrThrow({ where: { name: "E2E Probna Firma" } });
+      const biznis = await prisma.business.findFirstOrThrow({
+        where: { name: "E2E Probna Firma" },
+      });
       const klijent = await prisma.client.findFirstOrThrow({
-        where: { businessId: biznis.id, name: { contains: argumenti.klijent as string } },
+        where: {
+          businessId: biznis.id,
+          name: { contains: argumenti.klijent as string },
+        },
       });
       const datum = new Date(argumenti.datum as string);
       const faktura = await createInvoiceWithHistory(biznis.id, {
@@ -126,7 +163,9 @@ async function main() {
         lang: "en",
         issueDate: datum,
         dueDays: 7,
-        items: [{ desc: "E2E uplata", qty: 1, price: argumenti.iznos as number }],
+        items: [
+          { desc: "E2E uplata", qty: 1, price: argumenti.iznos as number },
+        ],
         status: "placena",
         sentAt: datum,
         paidDate: datum,
@@ -137,7 +176,10 @@ async function main() {
       let broj = faktura.number;
       if (argumenti.broj) {
         broj = argumenti.broj as string;
-        await prisma.invoice.update({ where: { id: faktura.id }, data: { number: broj } });
+        await prisma.invoice.update({
+          where: { id: faktura.id },
+          data: { number: broj },
+        });
       }
       // "kurs" opciono (Korak 9b) - createInvoiceWithHistory NIKAD sam ne upisuje rate/amountRsd (markPaid
       // tok to ne radi, videti izveštaj Korak 9b); test za PRIKAZ stvarnog kursa (ne "–") mora da ga upiše
@@ -145,13 +187,32 @@ async function main() {
       if (argumenti.kurs) {
         const { izracunajIznosRsd } = await import("../src/lib/prihodi");
         const kurs = argumenti.kurs as number;
-        const income = await prisma.income.findFirstOrThrow({ where: { invoiceId: faktura.id } });
+        const income = await prisma.income.findFirstOrThrow({
+          where: { invoiceId: faktura.id },
+        });
         await prisma.income.update({
           where: { id: income.id },
-          data: { rate: kurs, amountRsd: izracunajIznosRsd(income.amount, kurs) },
+          data: {
+            rate: kurs,
+            amountRsd: izracunajIznosRsd(income.amount, kurs),
+          },
         });
       }
       console.log(JSON.stringify({ id: faktura.id, broj }));
+      break;
+    }
+    case "delete-manual-incomes": {
+      // Čišćenje za e2e/dodaj-prihod.spec.ts (Korak 9d-2) - briše SAMO ono što "Dodaj prihod" pravi
+      // (invoiceId null, source "rucno"), bez obzira koliko je testova dodalo redove ili kojim redosledom
+      // su išli. Bezbedno za ostale spec fajlove: create-paid-invoice UVEK postavlja invoiceId, "Ispravi"
+      // (ispraviPrihod) samo MENJA postojeće redove, nikad ne pravi nove bez fakture.
+      const biznis = await prisma.business.findFirstOrThrow({
+        where: { name: "E2E Probna Firma" },
+      });
+      const rezultat = await prisma.income.deleteMany({
+        where: { businessId: biznis.id, invoiceId: null, source: "rucno" },
+      });
+      console.log(JSON.stringify({ obrisano: rezultat.count }));
       break;
     }
     default:

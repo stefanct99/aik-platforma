@@ -157,6 +157,39 @@ for (const tema of TEME) {
                 fullPage: true,
               })
               .catch(() => {});
+            // Zatvori (X u zaglavlju panela) pre nego što se otvori DRUGI panel ispod - oba su overlay nad
+            // istom stranicom, ne smeju da se preklope.
+            await page
+              .getByRole("button", { name: "Zatvori" })
+              .first()
+              .click({ timeout: 2000 })
+              .catch(() => {});
+          }
+
+          // Korak 9d-2: bočni panel "Dodaj prihod" (dugme u zaglavlju) - isti princip kao gore, provera
+          // rasporeda/preklapanja na sve 4 širine i obe teme, bez čuvanja (ne pravi redove u bazi).
+          const dodajOtvoren = await page
+            .getByRole("button", { name: "Dodaj prihod", exact: true })
+            .first()
+            .click({ timeout: 2000 })
+            .then(() => true)
+            .catch(() => false);
+          if (dodajOtvoren) {
+            const problemiDodaj = await proveriRaspored(page);
+            if (problemiDodaj.length > 0) {
+              naliziUkupno.push({
+                stranica: "knjiga-prihoda-dodaj-prihod",
+                sirina,
+                tema,
+                problemi: problemiDodaj,
+              });
+            }
+            await page
+              .screenshot({
+                path: `${FOLDER}/knjiga-prihoda-dodaj-prihod_${tema}_${sirina}.png`,
+                fullPage: true,
+              })
+              .catch(() => {});
           }
         }
       }

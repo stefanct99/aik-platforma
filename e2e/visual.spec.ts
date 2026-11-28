@@ -92,17 +92,32 @@ const STRANICE: { naziv: string; putanja: string; blokovi?: string }[] = [
 test.describe.configure({ mode: "serial" });
 
 let detaljPutanja = "";
+// Baner upozorenja na limit (Korak 9f) - JEDAN red, ažuriran po pragu unutar petlje ispod (ne pravi se
+// iznova za svaku temu/širinu) - vidi "set-limit-income" u scripts/e2e-db.ts.
+let limitIncomeId = "";
+const LIMIT_PRAGOVI: { naziv: string; procenat: number }[] = [
+  { naziv: "limit-80", procenat: 85 },
+  { naziv: "limit-90", procenat: 95 },
+  { naziv: "limit-100", procenat: 110 },
+];
 
 test.beforeAll(async () => {
   mkdirSync(FOLDER, { recursive: true });
   const { id } = e2eDb("create-draft-invoice");
   detaljPutanja = `/fakture/${id}`;
+  const { id: limitId } = e2eDb("set-limit-income", {
+    procenat: LIMIT_PRAGOVI[0].procenat,
+  });
+  limitIncomeId = limitId;
 });
 
 test.afterAll(async () => {
   if (detaljPutanja) {
     const id = detaljPutanja.split("/").pop()!;
     e2eDb("delete-invoice", { id });
+  }
+  if (limitIncomeId) {
+    e2eDb("delete-limit-income", { id: limitIncomeId });
   }
 });
 
@@ -135,6 +150,36 @@ for (const tema of TEME) {
         // knjiga-prihoda.spec.ts (abecedno pre ovog fajla) ostavi fakture za sobom - ako slučajno nema
         // reda, .catch() ovo tiho preskače (ista blaga filozofija kao ostatak ove provere).
         if (naziv === "knjiga-prihoda") {
+          // Korak 9f: baner upozorenja na limit, sva tri praga (red iz beforeAll je VEĆ na prvom pragu -
+          // zato ga gornji, opšti screenshot ove stranice već pokazuje; ovde se dodaju preostala dva i
+          // svoj, imenovan fajl za sva tri).
+          for (const prag of LIMIT_PRAGOVI) {
+            e2eDb("set-limit-income", { id: limitIncomeId, procenat: prag.procenat });
+            await page.goto(putanja);
+            await page.waitForLoadState("networkidle").catch(() => {});
+            const problemiPraga = await proveriRaspored(page);
+            if (problemiPraga.length > 0) {
+              naliziUkupno.push({
+                stranica: `knjiga-prihoda-${prag.naziv}`,
+                sirina,
+                tema,
+                problemi: problemiPraga,
+              });
+            }
+            await page
+              .screenshot({
+                path: `${FOLDER}/knjiga-prihoda-${prag.naziv}_${tema}_${sirina}.png`,
+                fullPage: true,
+              })
+              .catch(() => {});
+          }
+          // Vrati na prvi prag pre ostatka provere ispod (panel "Detalj uplate" itd. ne zavisi od ovoga,
+          // ali red treba da ostane u DOSLEDNOM stanju između iteracija tema/širina).
+          e2eDb("set-limit-income", {
+            id: limitIncomeId,
+            procenat: LIMIT_PRAGOVI[0].procenat,
+          });
+
           const otvoren = await page
             .locator("tbody tr")
             .first()

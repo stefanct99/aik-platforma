@@ -1,0 +1,99 @@
+/* Prag 80% (".upozorenje") - boje doslovno iz frejma Kp7, nisu iz tokena teme (ni badge-warning-bg ni
+   badge-warning-text se ne poklapaju tačno sa pozadinom/ivicom ovog banera - samo tekst naslova/ikonice
+   se slaže sa --color-badge-warning-text, ali je ovde zadržan doslovan heks da je baner nezavisan od
+   te značke). Pragovi 90/100 (".opasnost") - frejm ih ne prikazuje, zadatak traži postojeće
+   --color-alert-danger-* tokene, koji VEĆ imaju tamnu varijantu - zato "opasnost" nema svoje
+   [data-theme="tamni"] pravilo ispod (var(--color-*) se menja sam).
+
+   VAŽNO (nađeno uživo u pregledaču dok se ovo gradilo): ".appShell[data-theme=...]" BEZ :global() ne
+   radi - CSS Modules skaluje I "appShell" u sopstveno ime u ovom fajlu, pa se nikad ne poklopi sa
+   stvarnom, globalnom "appShell" klasom iz AppShell komponente. Ispravan oblik je
+   ":global(.appShell[data-theme=...])" (potvrđeno u TemplateEditorClient.module.css i
+   OnboardingBits.module.css). KnjigaPrihodaTab.module.css (.traka/.podtab) i PrihodPanel.module.css
+   (.otvoriLink) koriste POGREŠAN, bez-:global() oblik - van okvira ovog koraka (zadatak traži da se ne
+   dira traka/kartice), prijavljeno korisniku u izveštaju. */
+.baner {
+  display: flex;
+  gap: var(--space-3);
+  padding: 14px 16px;
+  border-radius: var(--radius-card);
+}
+
+.ikonica {
+  flex: none;
+}
+
+.tekst {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.naslov {
+  font-size: 1rem;
+}
+
+.poruka {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.link {
+  font-size: 0.875rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.upozorenje {
+  background: #fff9e6;
+  border: 1px solid #f0dca0;
+  color: #6b4600;
+}
+.upozorenje .poruka {
+  color: #4a524c;
+}
+.upozorenje .link {
+  color: #0f2a22;
+}
+:global(.appShell[data-theme="tamni"]) .upozorenje {
+  background: rgba(255, 190, 70, 0.08);
+  border-color: rgba(242, 196, 107, 0.38);
+  color: #f2c46b;
+}
+:global(.appShell[data-theme="tamni"]) .upozorenje .poruka {
+  color: #c4cac5;
+}
+:global(.appShell[data-theme="tamni"]) .upozorenje .link {
+  color: #f1f3ef;
+}
+@media (prefers-color-scheme: dark) {
+  :global(.appShell:not([data-theme="svetli"]):not([data-theme="tamni"]))
+    .upozorenje {
+    background: rgba(255, 190, 70, 0.08);
+    border-color: rgba(242, 196, 107, 0.38);
+    color: #f2c46b;
+  }
+  :global(.appShell:not([data-theme="svetli"]):not([data-theme="tamni"]))
+    .upozorenje
+    .poruka {
+    color: #c4cac5;
+  }
+  :global(.appShell:not([data-theme="svetli"]):not([data-theme="tamni"]))
+    .upozorenje
+    .link {
+    color: #f1f3ef;
+  }
+}
+
+/* Prag 90%/100% - crvenkasta varijanta, iz postojećih tokena (login/register greška), ne iz frejma. */
+.opasnost {
+  background: var(--color-alert-danger-bg);
+  border: 1px solid var(--color-alert-danger-border);
+  color: var(--color-alert-danger-text);
+}
+.opasnost .poruka {
+  color: var(--color-text-muted);
+}
+.opasnost .link {
+  color: var(--color-alert-danger-text);
+}

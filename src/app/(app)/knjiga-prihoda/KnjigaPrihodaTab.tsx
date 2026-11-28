@@ -3,9 +3,9 @@
 // "Ispravi") je Korak 9c (PrihodPanel.tsx) - klik na red OTVARA PANEL, ne fakturu (fakturi se prilazi
 // preko linka "Otvori" u panelu). "Dodaj prihod" (bočni panel, Korak 9d-2, DodajPrihodPanel.tsx) - SAMO
 // dugme U ZAGLAVLJU otvara panel (zadatak); dugme u praznom stanju namerno ostaje inertno (zadatak ga ne
-// pominje, videti izveštaj). NAMERNO ne grade se (sledeći koraci, zadatak): upozorenje o limitu (baner),
-// baner "uplata bez fakture", brisanje (dugme "Obriši prihod" u panelu je inertno - Korak 9e), izvoz,
-// telefon - dugme "Izvezi" je zato i dalje bez onClick.
+// pominje, videti izveštaj). Baner upozorenja na limit je Korak 9f (LimitBaner.tsx). NAMERNO ne grade se
+// (sledeći koraci, zadatak): baner "uplata bez fakture", brisanje (dugme "Obriši prihod" u panelu je
+// inertno - Korak 9e), izvoz, telefon - dugme "Izvezi" je zato i dalje bez onClick.
 "use client";
 
 import { useMemo, useState } from "react";
@@ -16,7 +16,7 @@ import {
   IkonaKnjigaPrihodaPrazno,
 } from "@/components/ui/icons";
 import { formatDatumSrpski } from "@/lib/datum";
-import { formatNovacPuno, formatNovacKompaktno } from "@/lib/money";
+import { formatNovacPuno, formatNovacKompaktno, formatProcenat } from "@/lib/money";
 import { izracunajPausalniLimit, LIMIT_PAUSALACA } from "@/lib/pausalni-limit";
 import {
   godinePrihoda,
@@ -28,6 +28,7 @@ import {
   type PrihodRed,
 } from "@/lib/prihodi";
 import { DodajPrihodPanel } from "./DodajPrihodPanel";
+import { LimitBaner } from "./LimitBaner";
 import { PrihodPanel } from "./PrihodPanel";
 import styles from "./KnjigaPrihodaTab.module.css";
 
@@ -50,13 +51,6 @@ const MESECI = [
 // replace(' din','')) - za razliku od kartica zbira, koje oznaku ZADRŽAVAJU (isti frejmovi, Kp1/Kp2).
 function dinBezOznake(iznosRsd: number): string {
   return formatNovacPuno(iznosRsd, "RSD").replace(" din", "");
-}
-
-function formatProcenat(p: number): string {
-  return p.toLocaleString("sr-RS", {
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1,
-  });
 }
 
 export function KnjigaPrihodaTab({
@@ -150,6 +144,8 @@ export function KnjigaPrihodaTab({
             </Button>
           </div>
         </div>
+
+        <LimitBaner procenat={limit.procenat} preostalo={limit.preostalo} />
 
         <div className={styles.kartice}>
           <div className={styles.glavnaKartica}>

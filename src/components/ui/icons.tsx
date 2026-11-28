@@ -335,3 +335,13 @@ export function IkonaSparkle(props: IkonicaProps) {
     </Ikonica>
   );
 }
+
+// Korak 9f (baner upozorenja na limit, frejm Kp7): trougao sa uzvičnikom, tačna putanja iz frejma.
+export function IkonaUpozorenje(props: IkonicaProps) {
+  return (
+    <Ikonica {...props}>
+      <path d="M12 4l9 16H3z" />
+      <path d="M12 10v4M12 17v.01" />
+    </Ikonica>
+  );
+}

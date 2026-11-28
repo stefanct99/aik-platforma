@@ -201,6 +201,57 @@ async function main() {
       console.log(JSON.stringify({ id: faktura.id, broj }));
       break;
     }
+    case "set-limit-income": {
+      // Vizuelna provera banera upozorenja na limit (Korak 9f, e2e/visual.spec.ts) - JEDAN red koji se
+      // ažurira (ne pravi novi svaki put) da ukupan klizni zbir (365 dana, ista logika kao
+      // izracunajPausalniLimit) ode na traženi "procenat". Iznos ovog reda se računa iz ostatka (zbir
+      // SVIH OSTALIH redova u istom periodu), ne iz apsolutnog broja - radi bez obzira koliko druge spec
+      // datoteke ostave iza sebe. "datum" je UVEK ponoć UTC (ne "new Date()" sa vremenom dana) -
+      // izracunajPausalniLimit poredi sa "danas" koje je isto ponoć (src/lib/datum.ts pocetakDanaUtc), pa
+      // bi vreme dana posle ponoći gurnulo red "u budućnost" i isključilo ga iz zbira (nađeno uživo dok
+      // se ovo gradilo).
+      const LIMIT = 600_000_000;
+      const biznis = await prisma.business.findFirstOrThrow({
+        where: { name: "E2E Probna Firma" },
+      });
+      const danasPonoc = new Date();
+      danasPonoc.setUTCHours(0, 0, 0, 0);
+      const pre365Dana = new Date(danasPonoc);
+      pre365Dana.setUTCDate(pre365Dana.getUTCDate() - 365);
+
+      const ostaliRedovi = await prisma.income.findMany({
+        where: {
+          businessId: biznis.id,
+          id: argumenti.id ? { not: argumenti.id } : undefined,
+          date: { gte: pre365Dana, lte: danasPonoc },
+        },
+      });
+      const ostatak = ostaliRedovi.reduce((s, r) => s + (r.amountRsd ?? 0), 0);
+      const amountRsd = Math.round((argumenti.procenat / 100) * LIMIT - ostatak);
+
+      const red = await prisma.income.upsert({
+        where: { id: argumenti.id ?? "" },
+        create: {
+          businessId: biznis.id,
+          date: danasPonoc,
+          currency: "RSD",
+          amount: amountRsd,
+          rate: null,
+          amountRsd,
+          source: "rucno",
+          kind: "dinarski",
+          description: "VIZUELNA PROVERA - Korak 9f, briše se preko delete-limit-income",
+        },
+        update: { amount: amountRsd, amountRsd },
+      });
+      console.log(JSON.stringify({ id: red.id }));
+      break;
+    }
+    case "delete-limit-income": {
+      await prisma.income.deleteMany({ where: { id: argumenti.id } });
+      console.log(JSON.stringify({ ok: true }));
+      break;
+    }
     case "delete-manual-incomes": {
       // Čišćenje za e2e/dodaj-prihod.spec.ts (Korak 9d-2) - briše SAMO ono što "Dodaj prihod" pravi
       // (invoiceId null, source "rucno"), bez obzira koliko je testova dodalo redove ili kojim redosledom

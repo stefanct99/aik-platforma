@@ -21,3 +21,13 @@ export function formatNovacKompaktno(iznosUNajmanjojJedinici: number, valuta: st
   const broj = iznos.toLocaleString("sr-RS", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
   return `${broj} ${simbolZaValutu(valuta)}`;
 }
+
+// Procenat limita (Korak 9a/9f: kartica "Ukupan prihod u [godina]" i baner upozorenja na limit) - jedna
+// decimala, srpski format (zarez). Premešteno ovde iz KnjigaPrihodaTab.tsx (Korak 9f) da je ne duplira
+// sadrzajLimitBanera u pausalni-limit.ts.
+export function formatProcenat(p: number): string {
+  return p.toLocaleString("sr-RS", {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
+}

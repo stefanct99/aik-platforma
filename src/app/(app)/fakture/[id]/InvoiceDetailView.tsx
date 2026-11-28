@@ -13,7 +13,11 @@ import { PodsetnikDialog } from "@/components/fakture/PodsetnikDialog";
 import { InvoiceDoc } from "@/components/invoice/InvoiceDoc";
 import { InvoiceDocPreview } from "@/components/invoice/InvoiceDocPreview";
 import type { PodaciSablona } from "@/lib/invoice-templates";
-import { efektivniStatus, izracunajUkupno, rokFakture } from "@/lib/invoice-status";
+import {
+  efektivniStatus,
+  izracunajUkupno,
+  rokFakture,
+} from "@/lib/invoice-status";
 import { labelaStatusa } from "@/lib/invoice-display";
 import { formatNovacPuno } from "@/lib/money";
 import { formatDatumSrpski } from "@/lib/datum";
@@ -30,7 +34,13 @@ type Faktura = {
   dueDays: number;
   note: string | null;
   voidedAt: string | null;
-  client: { id: string; name: string; billingEmail: string | null; address: string; country: string | null };
+  client: {
+    id: string;
+    name: string;
+    billingEmail: string | null;
+    address: string;
+    country: string | null;
+  };
   account: {
     bank: string;
     type: string;
@@ -44,7 +54,14 @@ type Faktura = {
   incomes: { source: string; date: string }[];
 };
 
-type Business = { ownerName: string; name: string; mb: string; pib: string; street: string | null; city: string | null };
+type Business = {
+  ownerName: string;
+  name: string;
+  mb: string;
+  pib: string;
+  street: string | null;
+  city: string | null;
+};
 
 const NAZIV_DOGADJAJA: Record<string, string> = {
   napravljena: "Napravljena",
@@ -52,6 +69,8 @@ const NAZIV_DOGADJAJA: Record<string, string> = {
   placena: "Plaćena",
   stornirana: "Stornirana",
   podsetnik_poslat: "Podsetnik poslat",
+  // Korak 9e ("Obriši prihod", Knjiga prihoda): faktura se vraća na "poslata" kad se obriše njena uplata.
+  uplata_obrisana: "Uplata obrisana",
 };
 
 export function InvoiceDetailView({
@@ -68,11 +87,18 @@ export function InvoiceDetailView({
   const router = useRouter();
   const danas = new Date(danasIso);
   const izdata = new Date(invoice.issueDate);
-  const efektivni = efektivniStatus(invoice.status, izdata, invoice.dueDays, danas);
+  const efektivni = efektivniStatus(
+    invoice.status,
+    izdata,
+    invoice.dueDays,
+    danas,
+  );
   const ukupno = izracunajUkupno(invoice.items);
   const rok = rokFakture(izdata, invoice.dueDays);
 
-  const [modal, setModal] = useState<"placeno" | "storno" | "podsetnik" | null>(null);
+  const [modal, setModal] = useState<"placeno" | "storno" | "podsetnik" | null>(
+    null,
+  );
 
   function osveziIZatvori() {
     setModal(null);
@@ -80,11 +106,32 @@ export function InvoiceDetailView({
   }
 
   const menuItems: StavkaMenija[] = [
-    { kljuc: "izmeni", tekst: "Izmeni fakturu", href: `/fakture/izmeni/${invoice.id}` },
-    { kljuc: "dupliraj", tekst: "Dupliraj fakturu", href: `/fakture/nova?dupliraj=${invoice.id}` },
-    { kljuc: "pdf", tekst: "Preuzmi PDF", href: `/api/fakture/${invoice.id}/pdf` },
-    { kljuc: "ponavljajuca", tekst: "Napravi ponavljajuću od ove", href: `/fakture/ponavljajuce?odFakture=${invoice.id}` },
-    { kljuc: "storno", tekst: "Storniraj fakturu", opasno: true, onClick: () => setModal("storno") },
+    {
+      kljuc: "izmeni",
+      tekst: "Izmeni fakturu",
+      href: `/fakture/izmeni/${invoice.id}`,
+    },
+    {
+      kljuc: "dupliraj",
+      tekst: "Dupliraj fakturu",
+      href: `/fakture/nova?dupliraj=${invoice.id}`,
+    },
+    {
+      kljuc: "pdf",
+      tekst: "Preuzmi PDF",
+      href: `/api/fakture/${invoice.id}/pdf`,
+    },
+    {
+      kljuc: "ponavljajuca",
+      tekst: "Napravi ponavljajuću od ove",
+      href: `/fakture/ponavljajuce?odFakture=${invoice.id}`,
+    },
+    {
+      kljuc: "storno",
+      tekst: "Storniraj fakturu",
+      opasno: true,
+      onClick: () => setModal("storno"),
+    },
   ];
 
   const racunOpis = invoice.account
@@ -97,8 +144,10 @@ export function InvoiceDetailView({
       const uplata = invoice.incomes[0];
       return `Uplata je stigla ${uplata ? formatDatumSrpski(new Date(uplata.date)) : ""} (ručno označeno kao plaćeno).`;
     }
-    if (efektivni === "kasni") return "Uplata još nije stigla. Svakog dana proveravam mejlove banke.";
-    if (efektivni === "stornirana") return "Stornirana faktura se ne prati za uplatu.";
+    if (efektivni === "kasni")
+      return "Uplata još nije stigla. Svakog dana proveravam mejlove banke.";
+    if (efektivni === "stornirana")
+      return "Stornirana faktura se ne prati za uplatu.";
     return "Uplata još nije stigla. Čim banka pošalje mejl, povezaću je sa ovom fakturom.";
   })();
 
@@ -114,7 +163,10 @@ export function InvoiceDetailView({
         <div className={styles.glavaTekst}>
           <h1 className={styles.naslov}>
             Faktura {invoice.number}{" "}
-            <StatusZnacka status={efektivni} tekst={labelaStatusa(efektivni, izdata, invoice.dueDays, danas)} />
+            <StatusZnacka
+              status={efektivni}
+              tekst={labelaStatusa(efektivni, izdata, invoice.dueDays, danas)}
+            />
           </h1>
           <p className={styles.opis}>
             {invoice.client.name}, {formatNovacPuno(ukupno, invoice.currency)}
@@ -123,7 +175,10 @@ export function InvoiceDetailView({
         <div className={styles.akcije}>
           {efektivni === "nacrt" && (
             <>
-              <Button varijanta="primarno" onClick={() => router.push(`/fakture/izmeni/${invoice.id}`)}>
+              <Button
+                varijanta="primarno"
+                onClick={() => router.push(`/fakture/izmeni/${invoice.id}`)}
+              >
                 Nastavi uređivanje
               </Button>
               <Button
@@ -139,7 +194,12 @@ export function InvoiceDetailView({
           )}
           {efektivni === "poslata" && (
             <>
-              <Button varijanta="sekundarno" onClick={() => router.push(`/fakture/posalji-ponovo/${invoice.id}`)}>
+              <Button
+                varijanta="sekundarno"
+                onClick={() =>
+                  router.push(`/fakture/posalji-ponovo/${invoice.id}`)
+                }
+              >
                 Pošalji ponovo
               </Button>
               <Button varijanta="primarno" onClick={() => setModal("placeno")}>
@@ -150,10 +210,16 @@ export function InvoiceDetailView({
           )}
           {efektivni === "kasni" && (
             <>
-              <Button varijanta="sekundarno" onClick={() => setModal("placeno")}>
+              <Button
+                varijanta="sekundarno"
+                onClick={() => setModal("placeno")}
+              >
                 Označi kao plaćenu
               </Button>
-              <Button varijanta="primarno" onClick={() => setModal("podsetnik")}>
+              <Button
+                varijanta="primarno"
+                onClick={() => setModal("podsetnik")}
+              >
                 Pošalji podsetnik
               </Button>
               <RedMenija stavke={menuItems} />
@@ -161,10 +227,18 @@ export function InvoiceDetailView({
           )}
           {efektivni === "placena" && (
             <>
-              <Button varijanta="sekundarno" onClick={() => router.push(`/api/fakture/${invoice.id}/pdf`)}>
+              <Button
+                varijanta="sekundarno"
+                onClick={() => router.push(`/api/fakture/${invoice.id}/pdf`)}
+              >
                 Preuzmi PDF
               </Button>
-              <Button varijanta="primarno" onClick={() => router.push(`/fakture/posalji-ponovo/${invoice.id}`)}>
+              <Button
+                varijanta="primarno"
+                onClick={() =>
+                  router.push(`/fakture/posalji-ponovo/${invoice.id}`)
+                }
+              >
                 Pošalji ponovo
               </Button>
             </>
@@ -175,9 +249,16 @@ export function InvoiceDetailView({
       {efektivni === "kasni" && (
         <div className={styles.banerKasni}>
           <b>
-            Klijent kasni {labelaStatusa(efektivni, izdata, invoice.dueDays, danas).replace("Kasni ", "")}
+            Klijent kasni{" "}
+            {labelaStatusa(efektivni, izdata, invoice.dueDays, danas).replace(
+              "Kasni ",
+              "",
+            )}
           </b>
-          <span>Rok je istekao {formatDatumSrpski(rok)} Mogu da mu pošaljem ljubazan podsetnik.</span>
+          <span>
+            Rok je istekao {formatDatumSrpski(rok)} Mogu da mu pošaljem ljubazan
+            podsetnik.
+          </span>
         </div>
       )}
 
@@ -192,14 +273,18 @@ export function InvoiceDetailView({
                 {invoice.client.billingEmail && (
                   <>
                     <br />
-                    <span className={styles.podnaslov}>{invoice.client.billingEmail}</span>
+                    <span className={styles.podnaslov}>
+                      {invoice.client.billingEmail}
+                    </span>
                   </>
                 )}
               </span>
             </div>
             <div className={styles.kv}>
               <span className={styles.k}>Iznos</span>
-              <span className={styles.v}>{formatNovacPuno(ukupno, invoice.currency)}</span>
+              <span className={styles.v}>
+                {formatNovacPuno(ukupno, invoice.currency)}
+              </span>
             </div>
             <div className={styles.kv}>
               <span className={styles.k}>Izdata</span>
@@ -207,7 +292,11 @@ export function InvoiceDetailView({
             </div>
             <div className={styles.kv}>
               <span className={styles.k}>Rok za uplatu</span>
-              <span className={styles.v}>{efektivni === "nacrt" ? "Nije poslata" : formatDatumSrpski(rok)}</span>
+              <span className={styles.v}>
+                {efektivni === "nacrt"
+                  ? "Nije poslata"
+                  : formatDatumSrpski(rok)}
+              </span>
             </div>
             <div className={`${styles.kv} ${styles.kvPoslednji}`}>
               <span className={styles.k}>Račun za uplatu</span>
@@ -236,7 +325,13 @@ export function InvoiceDetailView({
                 <div className={styles.linijaStavka}>
                   <span className={styles.t1}>Rok je istekao</span>
                   <span>
-                    {formatDatumSrpski(rok)}, {labelaStatusa(efektivni, izdata, invoice.dueDays, danas).toLowerCase()}
+                    {formatDatumSrpski(rok)},{" "}
+                    {labelaStatusa(
+                      efektivni,
+                      izdata,
+                      invoice.dueDays,
+                      danas,
+                    ).toLowerCase()}
                   </span>
                 </div>
               )}
@@ -258,7 +353,10 @@ export function InvoiceDetailView({
         <div className={styles.desnaKolona}>
           <div className={styles.desnaGlava}>
             <span>Kako je klijent vidi</span>
-            <Link href={`/api/fakture/${invoice.id}/pdf`} className={styles.preuzmiLink}>
+            <Link
+              href={`/api/fakture/${invoice.id}/pdf`}
+              className={styles.preuzmiLink}
+            >
               Preuzmi PDF
             </Link>
           </div>

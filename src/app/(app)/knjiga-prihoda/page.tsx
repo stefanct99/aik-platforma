@@ -12,8 +12,9 @@ export default async function KnjigaPrihodaPage() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/prijava");
 
+  const danas = pocetakDanaUtc();
   const [redovi, klijenti] = await Promise.all([
-    getPrihodiZaKorisnika(session.user.id),
+    getPrihodiZaKorisnika(session.user.id, danas),
     getClientsForUser(session.user.id),
   ]);
 
@@ -21,7 +22,7 @@ export default async function KnjigaPrihodaPage() {
     <KnjigaPrihodaTab
       redovi={redovi}
       klijenti={klijenti.map((k) => ({ id: k.id, name: k.name }))}
-      danasIso={pocetakDanaUtc().toISOString()}
+      danasIso={danas.toISOString()}
     />
   );
 }

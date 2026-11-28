@@ -3,7 +3,9 @@ import { afterAll, describe, expect, it } from "vitest";
 import { Prisma } from "../../generated/prisma/client";
 import { prisma } from "./prisma";
 import { saveOnboardingStep1 } from "./business";
-import { dodajPrihod, ispraviPrihod } from "./prihodi-db";
+import { createInvoiceWithHistory } from "./invoices";
+import { jeFakturaKasni } from "./invoice-status";
+import { dodajPrihod, ispraviPrihod, obrisiPrihod } from "./prihodi-db";
 
 // Integracioni testovi (aik_test), isti obrazac kao invoices.test.ts/clients.test.ts - svaki test pravi
 // sopstvenog korisnika/firmu sa nasumičnim podacima i briše sve na kraju.
@@ -55,8 +57,37 @@ function napraviPrihod(
   });
 }
 
+// "Plaćena" faktura (Korak 9e) - createInvoiceWithHistory je isti kod koji scripts/e2e-db.ts
+// create-paid-invoice koristi, pravi i njen Income zapis automatski.
+async function napraviPlacenuFakturu(
+  businessId: string,
+  opts: { izdata: Date; dueDays?: number; iznos?: number },
+) {
+  const klijent = await prisma.client.create({
+    data: { businessId, name: "Test klijent", address: "Test adresa 1" },
+  });
+  const faktura = await createInvoiceWithHistory(businessId, {
+    clientId: klijent.id,
+    currency: "RSD",
+    lang: "sr",
+    issueDate: opts.izdata,
+    dueDays: opts.dueDays ?? 7,
+    items: [{ desc: "Test", qty: 1, price: opts.iznos ?? 100_000 }],
+    status: "placena",
+    sentAt: opts.izdata,
+    paidDate: new Date(),
+  });
+  const prihod = await prisma.income.findFirstOrThrow({
+    where: { invoiceId: faktura.id },
+  });
+  return { faktura, prihod, klijent };
+}
+
 afterAll(async () => {
   await prisma.income.deleteMany({
+    where: { business: { ownerId: { in: napravljeniKorisnici } } },
+  });
+  await prisma.invoice.deleteMany({
     where: { business: { ownerId: { in: napravljeniKorisnici } } },
   });
   await prisma.business.deleteMany({
@@ -373,5 +404,126 @@ describe("dodajPrihod (Korak 9d-1, 'Dodaj prihod')", () => {
       where: { businessId: a.biznis.id },
     });
     expect(prihodiA).toBe(0);
+  });
+});
+
+describe("obrisiPrihod (Korak 9e, 'Obriši prihod')", () => {
+  it("prihod bez fakture: briše se, ne dira nijednu fakturu", async () => {
+    const { korisnik, biznis } = await napraviKorisnikaSaFirmom();
+    const prihod = await napraviPrihod(biznis.id);
+
+    const rezultat = await obrisiPrihod(korisnik.id, prihod.id);
+    expect(rezultat).toEqual({ ok: true, fakturaId: null });
+
+    await expect(
+      prisma.income.findUniqueOrThrow({ where: { id: prihod.id } }),
+    ).rejects.toThrow();
+  });
+
+  it("faktura čiji rok NIJE prošao: prelazi iz 'Plaćena' u 'poslata', paidDate se briše, upisuje se događaj", async () => {
+    const { korisnik, biznis } = await napraviKorisnikaSaFirmom();
+    const danas = new Date();
+    const { faktura, prihod } = await napraviPlacenuFakturu(biznis.id, {
+      izdata: danas,
+      dueDays: 30,
+    });
+
+    const rezultat = await obrisiPrihod(korisnik.id, prihod.id);
+    expect(rezultat).toEqual({ ok: true, fakturaId: faktura.id });
+
+    const ucitanaFaktura = await prisma.invoice.findUniqueOrThrow({
+      where: { id: faktura.id },
+    });
+    expect(ucitanaFaktura.status).toBe("poslata");
+    expect(ucitanaFaktura.paidDate).toBeNull();
+
+    const dogadjaji = await prisma.invoiceEvent.findMany({
+      where: { invoiceId: faktura.id, tip: "uplata_obrisana" },
+    });
+    expect(dogadjaji).toHaveLength(1);
+
+    await expect(
+      prisma.income.findUniqueOrThrow({ where: { id: prihod.id } }),
+    ).rejects.toThrow();
+  });
+
+  it("faktura čiji je rok PROŠAO: status u bazi je i dalje 'poslata' (ne postoji 'kasni' u bazi), ali je efektivno kasni", async () => {
+    const { korisnik, biznis } = await napraviKorisnikaSaFirmom();
+    const davno = new Date("2020-01-01");
+    const { faktura, prihod } = await napraviPlacenuFakturu(biznis.id, {
+      izdata: davno,
+      dueDays: 7,
+    });
+
+    const rezultat = await obrisiPrihod(korisnik.id, prihod.id);
+    expect(rezultat.ok).toBe(true);
+
+    const ucitanaFaktura = await prisma.invoice.findUniqueOrThrow({
+      where: { id: faktura.id },
+    });
+    // "kasni" se NIKAD ne upisuje - uvek se izvodi iz poslata+rok (invoice-status.ts).
+    expect(ucitanaFaktura.status).toBe("poslata");
+    expect(
+      jeFakturaKasni(
+        "poslata",
+        ucitanaFaktura.issueDate,
+        ucitanaFaktura.dueDays,
+        new Date(),
+      ),
+    ).toBe(true);
+  });
+
+  it("stornirana faktura ostaje stornirana (ne dira se, samo prihod nestaje)", async () => {
+    const { korisnik, biznis } = await napraviKorisnikaSaFirmom();
+    const { faktura, prihod } = await napraviPlacenuFakturu(biznis.id, {
+      izdata: new Date(),
+      dueDays: 7,
+    });
+    // Ručno postavljeno u testu (van normalnog toka - voidInvoice ne dozvoljava storno "placena"
+    // fakture bez potvrde; ovde samo proveravamo da obrisiPrihod poštuje VEĆ stornirano stanje).
+    await prisma.invoice.update({
+      where: { id: faktura.id },
+      data: { status: "stornirana" },
+    });
+
+    const rezultat = await obrisiPrihod(korisnik.id, prihod.id);
+    expect(rezultat).toEqual({ ok: true, fakturaId: faktura.id });
+
+    const ucitanaFaktura = await prisma.invoice.findUniqueOrThrow({
+      where: { id: faktura.id },
+    });
+    expect(ucitanaFaktura.status).toBe("stornirana");
+
+    const dogadjaji = await prisma.invoiceEvent.findMany({
+      where: { invoiceId: faktura.id, tip: "uplata_obrisana" },
+    });
+    expect(dogadjaji).toHaveLength(0);
+  });
+
+  it("izolacija: korisnik A ne može da obriše prihod korisnika B - ništa se ne menja (ni prihod ni faktura)", async () => {
+    const a = await napraviKorisnikaSaFirmom();
+    const b = await napraviKorisnikaSaFirmom();
+    const { faktura, prihod } = await napraviPlacenuFakturu(b.biznis.id, {
+      izdata: new Date(),
+      dueDays: 7,
+    });
+
+    const rezultat = await obrisiPrihod(a.korisnik.id, prihod.id);
+    expect(rezultat).toEqual({ ok: false, razlog: "Prihod ne postoji." });
+
+    // Transakcija se nikad nije ni pokrenula - ni prihod ni faktura nisu dirnuti.
+    await expect(
+      prisma.income.findUniqueOrThrow({ where: { id: prihod.id } }),
+    ).resolves.toBeTruthy();
+    const ucitanaFaktura = await prisma.invoice.findUniqueOrThrow({
+      where: { id: faktura.id },
+    });
+    expect(ucitanaFaktura.status).toBe("placena");
+  });
+
+  it("nepostojeći ID vraća grešku", async () => {
+    const { korisnik } = await napraviKorisnikaSaFirmom();
+    const rezultat = await obrisiPrihod(korisnik.id, "ne-postoji-123");
+    expect(rezultat).toEqual({ ok: false, razlog: "Prihod ne postoji." });
   });
 });

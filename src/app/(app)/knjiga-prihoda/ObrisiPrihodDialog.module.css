@@ -1,0 +1,22 @@
+.sadrzaj {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tekst {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.greska {
+  font-size: 0.875rem;
+  color: var(--color-danger);
+}
+
+.dugmad {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

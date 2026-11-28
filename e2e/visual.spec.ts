@@ -157,6 +157,37 @@ for (const tema of TEME) {
                 fullPage: true,
               })
               .catch(() => {});
+
+            // Korak 9e: dijalog potvrde brisanja ("Obriši prihod" u panelu) - BEZ stvarnog brisanja
+            // (klik na "Odustani" u dijalogu, ne na primarno dugme), samo provera rasporeda/preklapanja.
+            const dijalogOtvoren = await page
+              .getByRole("button", { name: "Obriši prihod" })
+              .click({ timeout: 2000 })
+              .then(() => true)
+              .catch(() => false);
+            if (dijalogOtvoren) {
+              const problemiDijaloga = await proveriRaspored(page);
+              if (problemiDijaloga.length > 0) {
+                naliziUkupno.push({
+                  stranica: "knjiga-prihoda-obrisi-prihod",
+                  sirina,
+                  tema,
+                  problemi: problemiDijaloga,
+                });
+              }
+              await page
+                .screenshot({
+                  path: `${FOLDER}/knjiga-prihoda-obrisi-prihod_${tema}_${sirina}.png`,
+                  fullPage: true,
+                })
+                .catch(() => {});
+              await page
+                .getByRole("button", { name: "Odustani", exact: true })
+                .last()
+                .click({ timeout: 2000 })
+                .catch(() => {});
+            }
+
             // Zatvori (X u zaglavlju panela) pre nego što se otvori DRUGI panel ispod - oba su overlay nad
             // istom stranicom, ne smeju da se preklope.
             await page

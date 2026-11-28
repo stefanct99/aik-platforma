@@ -19,6 +19,7 @@ import { formatDatumSrpski } from "@/lib/datum";
 import { formatNovacPuno } from "@/lib/money";
 import type { PrihodRed } from "@/lib/prihodi";
 import { ispraviPrihodAction, type IspraviPrihodStanje } from "./actions";
+import { ObrisiPrihodDialog } from "./ObrisiPrihodDialog";
 import styles from "./PrihodPanel.module.css";
 
 const POCETNO_STANJE: IspraviPrihodStanje = { greska: null, sacuvano: false };
@@ -41,6 +42,7 @@ export function PrihodPanel({
 }) {
   const router = useRouter();
   const [izmena, setIzmena] = useState(false);
+  const [potvrdaBrisanja, setPotvrdaBrisanja] = useState(false);
   const [kursUnos, setKursUnos] = useState("");
   const [opisUnos, setOpisUnos] = useState("");
   const [kursGreska, setKursGreska] = useState<string | null>(null);
@@ -92,179 +94,208 @@ export function PrihodPanel({
   }
 
   const obrisiDugme = (
-    <button type="button" className={styles.obrisiLink}>
+    <button
+      type="button"
+      className={styles.obrisiLink}
+      onClick={() => setPotvrdaBrisanja(true)}
+    >
       Obriši prihod
     </button>
   );
 
+  const dijalogBrisanja = potvrdaBrisanja && (
+    <ObrisiPrihodDialog
+      red={red}
+      onClose={() => setPotvrdaBrisanja(false)}
+      onObrisano={() => {
+        setPotvrdaBrisanja(false);
+        router.refresh();
+        onClose();
+      }}
+    />
+  );
+
   if (izmena) {
     return (
-      <form action={formAction}>
-        <SidePanel
-          naslov={`Prihod ${formatDatumSrpski(new Date(red.datumIso))}`}
-          onClose={onClose}
-          footer={
-            <div className={styles.podnozjeRed}>
-              {obrisiDugme}
-              <div className={styles.podnozjeDugmad}>
-                <Button
-                  type="button"
-                  varijanta="sekundarno"
-                  disabled={uToku}
-                  onClick={odustani}
-                >
-                  Odustani
-                </Button>
-                <Button type="submit" varijanta="primarno" disabled={uToku}>
-                  {uToku ? "Čuvam..." : "Sačuvaj"}
-                </Button>
+      <>
+        <form action={formAction}>
+          <SidePanel
+            naslov={`Prihod ${formatDatumSrpski(new Date(red.datumIso))}`}
+            onClose={onClose}
+            footer={
+              <div className={styles.podnozjeRed}>
+                {obrisiDugme}
+                <div className={styles.podnozjeDugmad}>
+                  <Button
+                    type="button"
+                    varijanta="sekundarno"
+                    disabled={uToku}
+                    onClick={odustani}
+                  >
+                    Odustani
+                  </Button>
+                  <Button type="submit" varijanta="primarno" disabled={uToku}>
+                    {uToku ? "Čuvam..." : "Sačuvaj"}
+                  </Button>
+                </div>
               </div>
+            }
+          >
+            <div className={styles.glavnaVrednost}>
+              <span className={styles.labelaMuted}>
+                Uplata od {red.klijentIme ?? "nepoznatog pošiljaoca"}
+              </span>
+              <span className={styles.vrednostVelika}>
+                {formatNovacPuno(red.iznos, red.valuta)}
+              </span>
             </div>
-          }
-        >
-          <div className={styles.glavnaVrednost}>
-            <span className={styles.labelaMuted}>
-              Uplata od {red.klijentIme ?? "nepoznatog pošiljaoca"}
-            </span>
-            <span className={styles.vrednostVelika}>
-              {formatNovacPuno(red.iznos, red.valuta)}
-            </span>
-          </div>
-          {jeDevizni && (
+            {jeDevizni && (
+              <Polje
+                label="Kurs"
+                name="kurs"
+                type="number"
+                step="0.01"
+                value={kursUnos}
+                onChange={(e) => {
+                  setKursUnos(e.target.value);
+                  setKursGreska(null);
+                }}
+                error={kursGreska ?? undefined}
+                disabled={uToku}
+              />
+            )}
             <Polje
-              label="Kurs"
-              name="kurs"
-              type="number"
-              step="0.01"
-              value={kursUnos}
-              onChange={(e) => {
-                setKursUnos(e.target.value);
-                setKursGreska(null);
-              }}
-              error={kursGreska ?? undefined}
+              label="Opis"
+              name="opis"
+              value={opisUnos}
+              onChange={(e) => setOpisUnos(e.target.value)}
+              placeholder="Nije obavezno"
               disabled={uToku}
             />
-          )}
-          <Polje
-            label="Opis"
-            name="opis"
-            value={opisUnos}
-            onChange={(e) => setOpisUnos(e.target.value)}
-            placeholder="Nije obavezno"
-            disabled={uToku}
-          />
-        </SidePanel>
-      </form>
+          </SidePanel>
+        </form>
+        {dijalogBrisanja}
+      </>
     );
   }
 
   return (
-    <SidePanel
-      naslov={`Prihod ${formatDatumSrpski(new Date(red.datumIso))}`}
-      onClose={onClose}
-      footer={
-        <div className={styles.podnozjeRed}>
-          {obrisiDugme}
-          <div className={styles.podnozjeDugmad}>
-            <Button type="button" varijanta="sekundarno" onClick={onClose}>
-              Zatvori
-            </Button>
-            <Button type="button" varijanta="primarno" onClick={otvoriIspravi}>
-              Ispravi
-            </Button>
+    <>
+      <SidePanel
+        naslov={`Prihod ${formatDatumSrpski(new Date(red.datumIso))}`}
+        onClose={onClose}
+        footer={
+          <div className={styles.podnozjeRed}>
+            {obrisiDugme}
+            <div className={styles.podnozjeDugmad}>
+              <Button type="button" varijanta="sekundarno" onClick={onClose}>
+                Zatvori
+              </Button>
+              <Button
+                type="button"
+                varijanta="primarno"
+                onClick={otvoriIspravi}
+              >
+                Ispravi
+              </Button>
+            </div>
           </div>
+        }
+      >
+        <div className={styles.glavnaVrednost}>
+          <span className={styles.labelaMuted}>
+            Uplata od {red.klijentIme ?? "nepoznatog pošiljaoca"}
+          </span>
+          <span className={styles.vrednostVelika}>
+            {formatNovacPuno(red.iznos, red.valuta)}
+          </span>
         </div>
-      }
-    >
-      <div className={styles.glavnaVrednost}>
-        <span className={styles.labelaMuted}>
-          Uplata od {red.klijentIme ?? "nepoznatog pošiljaoca"}
-        </span>
-        <span className={styles.vrednostVelika}>
-          {formatNovacPuno(red.iznos, red.valuta)}
-        </span>
-      </div>
 
-      <div className={styles.redovi}>
-        <KvRed k="Datum uplate" v={formatDatumSrpski(new Date(red.datumIso))} />
-        <KvRed k="Klijent" v={red.klijentIme ?? "–"} />
-        <KvRed
-          k="Faktura"
-          v={
-            red.fakturaId ? (
-              <>
-                {red.brojFakture}{" "}
-                <a
-                  href={`/fakture/${red.fakturaId}`}
-                  className={styles.otvoriLink}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onClose();
-                    router.push(`/fakture/${red.fakturaId}`);
-                  }}
-                >
-                  Otvori
-                </a>
-              </>
-            ) : (
-              "–"
-            )
-          }
-        />
-        <KvRed
-          k="Izvor"
-          v={
-            red.izvor === "mejl_banke" ? (
-              <>
-                {`Mejl banke od ${formatDatumSrpski(new Date(red.datumIso))}`}{" "}
-                {/* Mejlovi banke (povezivanje sa konkretnim mejlom) nisu još izgrađeni - link je zato
+        <div className={styles.redovi}>
+          <KvRed
+            k="Datum uplate"
+            v={formatDatumSrpski(new Date(red.datumIso))}
+          />
+          <KvRed k="Klijent" v={red.klijentIme ?? "–"} />
+          <KvRed
+            k="Faktura"
+            v={
+              red.fakturaId ? (
+                <>
+                  {red.brojFakture}{" "}
+                  <a
+                    href={`/fakture/${red.fakturaId}`}
+                    className={styles.otvoriLink}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onClose();
+                      router.push(`/fakture/${red.fakturaId}`);
+                    }}
+                  >
+                    Otvori
+                  </a>
+                </>
+              ) : (
+                "–"
+              )
+            }
+          />
+          <KvRed
+            k="Izvor"
+            v={
+              red.izvor === "mejl_banke" ? (
+                <>
+                  {`Mejl banke od ${formatDatumSrpski(new Date(red.datumIso))}`}{" "}
+                  {/* Mejlovi banke (povezivanje sa konkretnim mejlom) nisu još izgrađeni - link je zato
                     namerno inertan (isti obrazac kao "Izvezi"/"Dodaj prihod" u Koraku 9a). */}
-                <a
-                  href="#"
-                  className={styles.otvoriLink}
-                  onClick={(e) => e.preventDefault()}
-                >
-                  Otvori mejl
-                </a>
-              </>
-            ) : (
-              "Ručno"
-            )
-          }
-        />
+                  <a
+                    href="#"
+                    className={styles.otvoriLink}
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    Otvori mejl
+                  </a>
+                </>
+              ) : (
+                "Ručno"
+              )
+            }
+          />
+          {jeDevizni && (
+            <>
+              <KvRed
+                k="Kurs"
+                v={
+                  red.kurs != null
+                    ? red.kurs.toLocaleString("sr-RS", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })
+                    : "–"
+                }
+              />
+              <KvRed
+                k="Upisano u dinarima"
+                v={
+                  <b className={styles.podebljano}>
+                    {red.iznosRsd != null
+                      ? formatNovacPuno(red.iznosRsd, "RSD")
+                      : "–"}
+                  </b>
+                }
+              />
+            </>
+          )}
+          {red.opis && <KvRed k="Opis" v={red.opis} />}
+        </div>
         {jeDevizni && (
-          <>
-            <KvRed
-              k="Kurs"
-              v={
-                red.kurs != null
-                  ? red.kurs.toLocaleString("sr-RS", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })
-                  : "–"
-              }
-            />
-            <KvRed
-              k="Upisano u dinarima"
-              v={
-                <b className={styles.podebljano}>
-                  {red.iznosRsd != null
-                    ? formatNovacPuno(red.iznosRsd, "RSD")
-                    : "–"}
-                </b>
-              }
-            />
-          </>
+          <span className={styles.napomena}>
+            Kurs je onaj po kom je banka preračunala priliv. Ako se razlikuje od
+            onoga što vidiš u banci, ispravi ga ovde.
+          </span>
         )}
-        {red.opis && <KvRed k="Opis" v={red.opis} />}
-      </div>
-      {jeDevizni && (
-        <span className={styles.napomena}>
-          Kurs je onaj po kom je banka preračunala priliv. Ako se razlikuje od
-          onoga što vidiš u banci, ispravi ga ovde.
-        </span>
-      )}
-    </SidePanel>
+      </SidePanel>
+      {dijalogBrisanja}
+    </>
   );
 }

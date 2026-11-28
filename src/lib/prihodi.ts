@@ -18,6 +18,11 @@ export type PrihodRed = {
   klijentId: string | null;
   klijentIme: string | null;
   opis: string | null;
+  // Korak 9e ("Obriši prihod"): na šta bi faktura prešla AKO SE OVAJ prihod obriše - samo kad je faktura
+  // danas "Plaćena" (inače se njen status ne dira pri brisanju, pa nema prelaska). null kad nema fakture
+  // ili faktura nije "Plaćena" (npr. "Stornirana" - ne diramo je). Izvedeno pri mapiranju iz baze preko
+  // POSTOJEĆE jeFakturaKasni logike (invoice-status.ts), ne nova.
+  fakturaPrelazak: "poslata" | "kasni" | null;
 };
 
 // Izbor godine (Kp3/27. krug u prototipu): mora da uključi i NAREDNU godinu (da prazno stanje naredne

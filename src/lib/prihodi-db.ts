@@ -1,8 +1,10 @@
 // Knjiga prihoda (Korak 9a) - deo koji dotiče bazu, odvojen od prihodi.ts (čiste funkcije) iz istog
 // razloga kao invoice-templates-db.ts/invoice-templates.ts: KnjigaPrihodaTab.tsx je klijentska komponenta
 // i uvozi prihodi.ts direktno - uvoz Prisma klijenta tamo bi slomio build.
+import type { Prisma } from "../../generated/prisma/client";
 import { prisma } from "./prisma";
 import { getBusinessForUser } from "./business";
+import { jeFakturaKasni } from "./invoice-status";
 import { izracunajIznosRsd, type PrihodRed } from "./prihodi";
 
 // Devizni: Income.amountRsd/rate su null dok kurs nije upisan (ručno, Korak 9b - nema još NBS
@@ -15,26 +17,45 @@ import { izracunajIznosRsd, type PrihodRed } from "./prihodi";
 // tekst "Nije poznat" (zadatak, ne prazno/"–" kao što UI inače prikazuje za null - namerno drugačije:
 // ovo NIJE "podatak koji nedostaje" kao kod drugih null polja, nego stvarna, imenovana vrednost iz
 // prototipa/okvira AddIncomeModal-a, "Nije poznat" je prva stavka padajućeg menija Klijent).
-function uPrihodRed(red: {
-  id: string;
-  date: Date;
-  currency: string;
-  amount: number;
-  rate: number | null;
-  amountRsd: number | null;
-  source: string;
-  kind: string;
-  description: string | null;
-  invoiceId: string | null;
-  invoice: {
-    number: string;
-    clientId: string;
-    client: { name: string };
-  } | null;
-  clientId: string | null;
-  client: { name: string } | null;
-}): PrihodRed {
+function uPrihodRed(
+  red: {
+    id: string;
+    date: Date;
+    currency: string;
+    amount: number;
+    rate: number | null;
+    amountRsd: number | null;
+    source: string;
+    kind: string;
+    description: string | null;
+    invoiceId: string | null;
+    invoice: {
+      number: string;
+      clientId: string;
+      client: { name: string };
+      status: string;
+      issueDate: Date;
+      dueDays: number;
+    } | null;
+    clientId: string | null;
+    client: { name: string } | null;
+  },
+  danas: Date,
+): PrihodRed {
   const vrsta = red.kind === "dinarski" ? "dinarski" : "devizni";
+  // Korak 9e: SAMO kad je faktura danas "Plaćena" ima smisla pitanje "na šta prelazi ako obrišem ovaj
+  // prihod" - inače (nema fakture, ili je npr. "Stornirana") brisanje prihoda ne dira njen status uopšte.
+  const fakturaPrelazak: PrihodRed["fakturaPrelazak"] =
+    red.invoice && red.invoice.status === "placena"
+      ? jeFakturaKasni(
+          "poslata",
+          red.invoice.issueDate,
+          red.invoice.dueDays,
+          danas,
+        )
+        ? "kasni"
+        : "poslata"
+      : null;
   return {
     id: red.id,
     datumIso: red.date.toISOString(),
@@ -49,11 +70,13 @@ function uPrihodRed(red: {
     klijentId: red.invoice?.clientId ?? red.clientId ?? null,
     klijentIme: red.invoice?.client.name ?? red.client?.name ?? "Nije poznat",
     opis: red.description,
+    fakturaPrelazak,
   };
 }
 
 export async function getPrihodiZaKorisnika(
   userId: string,
+  danas: Date = new Date(),
 ): Promise<PrihodRed[]> {
   const biznis = await getBusinessForUser(userId);
   if (!biznis) return [];
@@ -65,13 +88,16 @@ export async function getPrihodiZaKorisnika(
           number: true,
           clientId: true,
           client: { select: { name: true } },
+          status: true,
+          issueDate: true,
+          dueDays: true,
         },
       },
       client: { select: { name: true } },
     },
     orderBy: { date: "desc" },
   });
-  return redovi.map(uPrihodRed);
+  return redovi.map((red) => uPrihodRed(red, danas));
 }
 
 export type IspraviPrihodRezultat =
@@ -196,4 +222,46 @@ export async function dodajPrihod(
     });
   }
   return { ok: true };
+}
+
+export type ObrisiPrihodRezultat =
+  { ok: true; fakturaId: string | null } | { ok: false; razlog: string };
+
+// "Obriši prihod" (Korak 9e, dijalog Kp8): TRAJNO brisanje, jedna transakcija. Ako je faktura (kad
+// postoji) "Plaćena", vraća se na "poslata" (DB nema poseban "kasni" status - to je UVEK samo izvedeno iz
+// poslata+rok, videti invoice-status.ts, pa se ovde ni ne upisuje "kasni" bukvalno) i upisuje se događaj
+// "uplata_obrisana". Faktura u BILO KOM DRUGOM statusu (npr. stornirana) se ne dira - samo prihod nestaje.
+// businessId UVEK iz sesije (findFirst sa businessId, ista izolacija kao ispraviPrihod/markInvoicePaid).
+export async function obrisiPrihod(
+  userId: string,
+  incomeId: string,
+): Promise<ObrisiPrihodRezultat> {
+  const biznis = await getBusinessForUser(userId);
+  if (!biznis) return { ok: false, razlog: "Prihod ne postoji." };
+
+  const red = await prisma.income.findFirst({
+    where: { id: incomeId, businessId: biznis.id },
+    include: { invoice: true },
+  });
+  if (!red) return { ok: false, razlog: "Prihod ne postoji." };
+
+  const operacije: Prisma.PrismaPromise<unknown>[] = [
+    prisma.income.delete({ where: { id: red.id } }),
+  ];
+
+  if (red.invoice && red.invoice.status === "placena") {
+    const sad = new Date();
+    operacije.push(
+      prisma.invoice.update({
+        where: { id: red.invoice.id },
+        data: { status: "poslata", paidDate: null },
+      }),
+      prisma.invoiceEvent.create({
+        data: { invoiceId: red.invoice.id, tip: "uplata_obrisana", datum: sad },
+      }),
+    );
+  }
+
+  await prisma.$transaction(operacije);
+  return { ok: true, fakturaId: red.invoiceId };
 }

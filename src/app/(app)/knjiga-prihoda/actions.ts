@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { parseDatumSrpski } from "@/lib/datum";
-import { dodajPrihod, ispraviPrihod } from "@/lib/prihodi-db";
+import { dodajPrihod, ispraviPrihod, obrisiPrihod } from "@/lib/prihodi-db";
 
 async function trenutniKorisnik() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -122,4 +122,21 @@ export async function dodajPrihodAction(
 
   revalidatePath("/knjiga-prihoda");
   return { greska: null, polje: null, sacuvano: true };
+}
+
+export type ObrisiPrihodStanje = { ok: true } | { ok: false; razlog: string };
+
+// "Obriši prihod" (Korak 9e, dijalog Kp8) - nema polja forme (samo potvrda), zato obična akcija (isti
+// obrazac kao obrisiIliArhivirajKlijentaAction u fakture/actions.ts), ne useActionState.
+export async function obrisiPrihodAction(
+  incomeId: string,
+): Promise<ObrisiPrihodStanje> {
+  const korisnik = await trenutniKorisnik();
+  const rezultat = await obrisiPrihod(korisnik.id, incomeId);
+  if (!rezultat.ok) return { ok: false, razlog: rezultat.razlog };
+
+  revalidatePath("/knjiga-prihoda");
+  revalidatePath("/fakture");
+  if (rezultat.fakturaId) revalidatePath(`/fakture/${rezultat.fakturaId}`);
+  return { ok: true };
 }
